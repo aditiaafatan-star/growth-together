@@ -1,0 +1,15 @@
+{
+  "name": "Growth Together — Plant Monitoring",
+  "short_name": "Growth Together",
+  "description": "Monitoring, perawatan, dan update tanaman Bougainvillea & Portulaca — Kelompok 4 X TE 3.",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F7F4EA",
+  "theme_color": "#1F4B37",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
