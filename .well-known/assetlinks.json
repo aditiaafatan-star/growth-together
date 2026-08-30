@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.aditiaafatan_star.twa",
+      "sha256_cert_fingerprints": [
+        "25:A8:46:C1:63:F6:BF:92:A1:1F:26:EE:90:6B:16:9B:42:00:EC:E0:97:A9:D2:F6:5A:E1:C4:7A:3D:05:86:03"
+      ]
+    }
+  }
+]
