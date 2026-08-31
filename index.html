@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Together — Kelompok 4 X TE 3, SMKN 2 Purwokerto</title>
+<meta name="description" content="Growth Together — proyek kolaborasi menanam Bougainvillea & Portulaca oleh Kelompok 4, X TE 3, SMK Negeri 2 Purwokerto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.css">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.31.0/dist/umd/lucide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style type="text/tailwindcss">
+  @theme {
+    --color-cream: #F7F4EA;
+    --color-ink: #0D1A13;
+    --color-ink-soft: #17281F;
+    --color-forest: #1F4B37;
+    --color-sage: #6F8F7B;
+    --color-mist: #E4E9E0;
+    --color-lime: #A6E06A;
+    --color-kertas: #C4487A;
+    --color-krokot: #D9863A;
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+
+  [id] { scroll-margin-top: 96px; }
+  body { font-family: var(--font-body); background: var(--color-cream); color: var(--color-ink); }
+  h1, h2, h3, h4 { font-family: var(--font-display); }
+  ::selection { background: var(--color-lime); color: var(--color-ink); }
+  .grow-stage { transition: opacity 0.15s linear; }
+  @keyframes bounce-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+  .scroll-cue { animation: bounce-y 1.8s ease-in-out infinite; }
+  .jf-btn, .sf-btn { color: var(--color-ink); opacity: 0.65; }
+  .jf-btn.active, .sf-btn.active { background: var(--color-ink); color: var(--color-cream); opacity: 1; border-color: var(--color-ink); }
+  .auth-tab { color: var(--color-ink); opacity: 0.55; }
+  .auth-tab.active { background: var(--color-cream); color: var(--color-ink); opacity: 1; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+
+  /* garis tipis ala blueprint/kisi teknis, dipakai sebagai tekstur latar yang subtle */
+  .bg-grid { background-image: linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px); background-size: 44px 44px; }
+
+  /* bingkai sudut ala viewfinder kamera — elemen visual khas di seluruh halaman */
+  .frame { position: relative; }
+  .frame::before, .frame::after { content: ''; position: absolute; width: 20px; height: 20px; pointer-events: none; }
+  .frame::before { top: -1px; left: -1px; border-top: 2px solid currentColor; border-left: 2px solid currentColor; }
+  .frame::after { bottom: -1px; right: -1px; border-bottom: 2px solid currentColor; border-right: 2px solid currentColor; }
+
+  .stem { stroke-dasharray: 300; stroke-dashoffset: 300; }
+  .navlink { position: relative; }
+  .navlink::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
+  .navlink:hover::after { transform: scaleX(1); transform-origin: left; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body class="bg-cream text-ink antialiased overflow-x-hidden">
+
+  <!-- ================= NAVBAR ================= -->
+  <nav id="siteNav" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-6 md:px-8 flex items-center justify-between py-5">
+      <a href="#home" class="flex items-center gap-2 font-display font-semibold text-lg tracking-tight">
+        <i data-lucide="leaf" class="w-5 h-5 text-forest"></i>
+        Growth Together
+      </a>
+      <div id="navLinks" class="hidden lg:flex items-center gap-7 text-sm font-medium text-ink/80">
+        <a href="#home" class="navlink">Home</a>
+        <a href="#story" class="navlink">Our Story</a>
+        <a href="#plants" class="navlink">Plants</a>
+        <a href="#growing" class="navlink">Growth</a>
+        <a href="#team" class="navlink">Our Team</a>
+        <a href="#timeline" class="navlink">Timeline</a>
+        <a href="#journal" class="navlink">Growth Journal</a>
+      </div>
+      <div id="authArea" class="hidden lg:flex items-center gap-4 text-sm ml-4">
+        <button id="openAuthBtn" type="button" class="font-semibold text-forest hover:text-ink transition-colors">Sign In</button>
+        <div id="userArea" class="hidden items-center gap-3">
+          <span id="welcomeText" class="text-ink/70"></span>
+          <button id="signOutBtn" type="button" class="text-ink/40 hover:text-ink text-xs font-medium border border-ink/15 rounded-full px-3 py-1.5">Logout</button>
+        </div>
+      </div>
+      <button id="navToggle" class="lg:hidden p-2 -mr-2" aria-label="Buka menu" aria-expanded="false">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
+    <div id="mobileMenu" class="lg:hidden max-h-0 overflow-hidden transition-all duration-300 bg-cream/95 backdrop-blur border-t border-ink/10">
+      <div class="flex flex-col px-6 py-2 text-sm font-medium">
+        <a href="#home" class="py-3 border-b border-ink/10">Home</a>
+        <a href="#story" class="py-3 border-b border-ink/10">Our Story</a>
+        <a href="#plants" class="py-3 border-b border-ink/10">Plants</a>
+        <a href="#growing" class="py-3 border-b border-ink/10">Growth</a>
+        <a href="#team" class="py-3 border-b border-ink/10">Our Team</a>
+        <a href="#timeline" class="py-3 border-b border-ink/10">Timeline</a>
+        <a href="#journal" class="py-3 border-b border-ink/10">Growth Journal</a>
+        <div class="py-3 flex items-center justify-between">
+          <button id="openAuthBtnMobile" type="button" class="font-semibold text-forest">Sign In</button>
+          <div id="userAreaMobile" class="hidden items-center gap-3">
+            <span id="welcomeTextMobile" class="text-ink/70 text-xs"></span>
+            <button id="signOutBtnMobile" type="button" class="text-ink/40 text-xs font-medium border border-ink/15 rounded-full px-3 py-1.5">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= AUTH MODAL ================= -->
+  <div id="authOverlay" class="fixed inset-0 z-[80] hidden items-center justify-center p-4 bg-ink/60 backdrop-blur-sm">
+    <div class="bg-cream rounded-3xl p-8 md:p-9 w-full max-w-sm relative">
+      <button type="button" id="closeAuthModal" class="absolute top-6 right-6 text-ink/40 hover:text-ink" aria-label="Tutup">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+      <div class="flex gap-1.5 mb-6 p-1 bg-ink/5 rounded-full">
+        <button type="button" id="tabSignIn" class="auth-tab flex-1 py-2 rounded-full text-sm font-semibold transition-colors">Sign In</button>
+        <button type="button" id="tabRegister" class="auth-tab flex-1 py-2 rounded-full text-sm font-semibold transition-colors">Register</button>
+      </div>
+
+      <form id="signInForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Email</label>
+          <input type="email" name="email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Password</label>
+          <input type="password" name="password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
+        </div>
+        <p id="signInError" class="text-xs text-kertas hidden"></p>
+        <button type="submit" class="w-full bg-forest text-cream py-3.5 rounded-full text-sm font-semibold hover:bg-ink transition-colors">Sign In</button>
+      </form>
+
+      <form id="registerForm" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Name</label>
+          <input type="text" name="name" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Email</label>
+          <input type="email" name="email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Password</label>
+          <input type="password" name="password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
+        </div>
+        <p id="registerError" class="text-xs text-kertas hidden"></p>
+        <p id="registerSuccess" class="text-xs text-forest hidden"></p>
+        <button type="submit" class="w-full bg-forest text-cream py-3.5 rounded-full text-sm font-semibold hover:bg-ink transition-colors">Create Account</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= TOAST (notifikasi update baru dari realtime) ================= -->
+  <div id="toast" class="fixed bottom-6 right-6 z-[90] hidden max-w-xs bg-ink text-cream rounded-2xl px-5 py-4 shadow-lg text-sm"></div>
+
+  <!-- ================= HERO ================= -->
+  <header id="home" class="hero-section relative pt-40 pb-28 md:pt-48 md:pb-36 overflow-hidden">
+    <div class="absolute inset-0 bg-grid text-forest/[0.05]" aria-hidden="true"></div>
+    <div class="max-w-6xl mx-auto px-6 md:px-8 relative grid md:grid-cols-2 gap-16 items-center">
+      <div>
+        <p class="hero-eyebrow font-mono text-xs tracking-[0.2em] text-forest/80 uppercase mb-5">Kelompok 4 · X TE 3 · SMKN 2 Purwokerto</p>
+        <h1 class="hero-title font-display font-semibold text-5xl md:text-6xl leading-[1.05] tracking-tight text-ink">Growth<br>Together</h1>
+        <p class="hero-slogan mt-5 text-lg md:text-xl font-display italic text-forest">"One Team, One Earth, One Future."</p>
+        <p class="hero-sub mt-6 text-base md:text-lg text-ink/70 max-w-md leading-relaxed">Growing plants, building teamwork, and creating a greener future together. Proyek kolaborasi menanam Bougainvillea &amp; Portulaca oleh siswa kelas X TE 3.</p>
+        <div class="hero-ctas mt-9 flex flex-wrap gap-4">
+          <a href="#story" class="inline-flex items-center gap-2 bg-forest text-cream px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-ink transition-colors duration-300">
+            Explore Our Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+          <a href="#team" class="inline-flex items-center gap-2 border border-ink/25 text-ink px-7 py-3.5 rounded-full text-sm font-semibold hover:border-ink hover:bg-ink hover:text-cream transition-colors duration-300">
+            Meet Our Team
+          </a>
+        </div>
+      </div>
+      <div class="hero-art relative flex justify-center">
+        <svg viewBox="0 0 320 360" class="w-64 md:w-80" role="img" aria-label="Ilustrasi garis ranting dan daun">
+          <path class="stem" d="M160,340 C150,280 190,250 165,190 C145,140 195,110 170,50" fill="none" stroke="#1F4B37" stroke-width="2.5" stroke-linecap="round"></path>
+          <path d="M165,190 C210,180 230,145 215,120 C185,130 160,160 165,190 Z" fill="#A6E06A" opacity="0.85"></path>
+          <path d="M170,120 C130,110 110,75 128,50 C160,58 178,90 170,120 Z" fill="#1F4B37" opacity="0.9"></path>
+          <path d="M162,240 C120,232 100,198 116,172 C150,180 168,208 162,240 Z" fill="#C4487A" opacity="0.8"></path>
+          <circle cx="170" cy="50" r="6" fill="#D9863A"></circle>
+          <circle cx="70" cy="90" r="2" fill="#1F4B37" opacity="0.4"></circle>
+          <circle cx="250" cy="220" r="2" fill="#1F4B37" opacity="0.4"></circle>
+          <circle cx="90" cy="300" r="2" fill="#1F4B37" opacity="0.4"></circle>
+        </svg>
+      </div>
+    </div>
+    <div class="relative flex justify-center mt-4 md:mt-8">
+      <a href="#story" class="scroll-cue flex flex-col items-center gap-2 text-ink/40 hover:text-ink/70 transition-colors text-xs font-mono tracking-wider uppercase">
+        Scroll to begin
+        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- ================= OUR STORY ================= -->
+  <section id="story" class="py-24 md:py-32">
+    <div class="max-w-4xl mx-auto px-6 md:px-8">
+      <div data-reveal>
+        <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase mb-4">Our Story</p>
+        <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight max-w-xl">Growing Something Bigger Than Plants</h2>
+      </div>
+      <div data-reveal class="mt-10 space-y-5 text-base md:text-lg text-ink/75 leading-relaxed max-w-2xl">
+        <p>Semua berawal dari tugas sederhana: menanam dan merawat tumbuhan sebagai bagian dari pembelajaran Teknik Elektronika Industri kelas X TE 3. Tapi buat Kelompok 4, ini jadi lebih dari sekadar tugas — enam orang dibagi jadi dua tim kecil, satu merawat Bougainvillea, satu lagi Portulaca, dan setiap orang belajar apa artinya bertanggung jawab atas sesuatu yang hidup.</p>
+        <p>Gak ada yang instan soal menanam. Ada hari kelupaan nyiram, ada tanaman yang layu duluan sebelum akhirnya tumbuh subur, ada jadwal rawat yang harus saling dikoordinasikan antar anggota. Justru dari situ, project ini ngajarin lebih banyak dari yang direncanakan — soal komunikasi tim, konsistensi, dan gimana rasanya kerja bareng menuju satu tujuan yang sama.</p>
+      </div>
+      <div data-reveal-group class="mt-14 grid grid-cols-3 gap-4 md:gap-6 max-w-2xl">
+        <div class="frame text-forest border border-ink/10 rounded-2xl p-5 md:p-6">
+          <i data-lucide="sprout" class="w-5 h-5 mb-3"></i>
+          <p class="font-display font-semibold text-sm md:text-base leading-snug">2 Spesies Tanaman</p>
+        </div>
+        <div class="frame text-forest border border-ink/10 rounded-2xl p-5 md:p-6">
+          <i data-lucide="users" class="w-5 h-5 mb-3"></i>
+          <p class="font-display font-semibold text-sm md:text-base leading-snug">6 Anggota Tim</p>
+        </div>
+        <div class="frame text-forest border border-ink/10 rounded-2xl p-5 md:p-6">
+          <i data-lucide="handshake" class="w-5 h-5 mb-3"></i>
+          <p class="font-display font-semibold text-sm md:text-base leading-snug">1 Tujuan Bersama</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PLANTS ================= -->
+  <section id="plants" class="py-24 md:py-32 bg-ink text-cream relative overflow-hidden">
+    <div class="absolute inset-0 bg-grid text-lime/[0.04]" aria-hidden="true"></div>
+    <div class="max-w-6xl mx-auto px-6 md:px-8 relative">
+      <div data-reveal class="max-w-xl">
+        <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-4">Our Plants</p>
+        <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight">Two Species, One Mission</h2>
+      </div>
+
+      <div data-reveal-group class="mt-14 grid md:grid-cols-2 gap-6 md:gap-8">
+        <!-- Bougainvillea -->
+        <article class="frame text-kertas border border-cream/15 rounded-3xl p-8 md:p-9 bg-ink-soft/60">
+          <div class="flex items-center justify-between mb-6">
+            <span class="font-mono text-[11px] tracking-[0.2em] text-kertas uppercase">Species 01</span>
+            <i data-lucide="flower-2" class="w-5 h-5 text-kertas"></i>
+          </div>
+          <h3 class="font-display font-semibold text-2xl md:text-[1.75rem] text-cream">Bougainvillea</h3>
+          <p class="text-sm text-cream/50 mt-1 mb-5">Bunga Kertas</p>
+
+          <div class="flex flex-wrap gap-x-2 gap-y-1 text-xs text-cream/60 mb-7 pb-7 border-b border-cream/10">
+            <span class="text-cream/40">Ditanam &amp; dirawat oleh</span>
+            <span class="text-cream/80">Hafidh Jaim T.S · Feliza Nuril A. · Firzansyah Alsy R.</span>
+          </div>
+
+          <dl class="space-y-4 text-sm">
+            <div>
+              <dt class="font-mono text-[11px] tracking-wider text-kertas/90 uppercase mb-1">Karakteristik</dt>
+              <dd class="text-cream/70 leading-relaxed">Batang berkayu dan berduri, dengan seludang bunga (bract) tipis menyerupai kertas — warnanya beragam, mulai merah, ungu, hingga putih.</dd>
+            </div>
+            <div>
+              <dt class="font-mono text-[11px] tracking-wider text-kertas/90 uppercase mb-1">Manfaat</dt>
+              <dd class="text-cream/70 leading-relaxed">Membantu menyerap polusi udara &amp; debu, akarnya menjaga kestabilan tanah, serta sangat tahan panas dan minim air — cocok untuk penghijauan.</dd>
+            </div>
+            <div>
+              <dt class="font-mono text-[11px] tracking-wider text-kertas/90 uppercase mb-1">Perawatan</dt>
+              <dd class="text-cream/70 leading-relaxed">Matahari penuh 6+ jam/hari, penyiraman secukupnya (tanah agak kering justru merangsang bunga), diperbanyak lewat stek batang.</dd>
+            </div>
+          </dl>
+
+          <div id="plantStatusKertas" class="mt-7 inline-flex items-center gap-2 text-xs font-medium text-kertas bg-kertas/10 px-3 py-1.5 rounded-full">
+            <i data-lucide="sprout" class="w-3.5 h-3.5"></i> <span class="status-text">Loading…</span>
+          </div>
+        </article>
+
+        <!-- Portulaca -->
+        <article class="frame text-krokot border border-cream/15 rounded-3xl p-8 md:p-9 bg-ink-soft/60">
+          <div class="flex items-center justify-between mb-6">
+            <span class="font-mono text-[11px] tracking-[0.2em] text-krokot uppercase">Species 02</span>
+            <i data-lucide="flower" class="w-5 h-5 text-krokot"></i>
+          </div>
+          <h3 class="font-display font-semibold text-2xl md:text-[1.75rem] text-cream">Portulaca</h3>
+          <p class="text-sm text-cream/50 mt-1 mb-5">Bunga Krokot</p>
+
+          <div class="flex flex-wrap gap-x-2 gap-y-1 text-xs text-cream/60 mb-7 pb-7 border-b border-cream/10">
+            <span class="text-cream/40">Ditanam &amp; dirawat oleh</span>
+            <span class="text-cream/80">Fatan Aditiansyah · Ghazy Alfi M. · Fadhil Muhammad A.</span>
+          </div>
+
+          <dl class="space-y-4 text-sm">
+            <div>
+              <dt class="font-mono text-[11px] tracking-wider text-krokot/90 uppercase mb-1">Karakteristik</dt>
+              <dd class="text-cream/70 leading-relaxed">Tanaman sukulen yang menjalar rendah, bunganya mekar setiap pagi dan kuncup lagi siang hari — sering dijuluki "bunga pukul sembilan".</dd>
+            </div>
+            <div>
+              <dt class="font-mono text-[11px] tracking-wider text-krokot/90 uppercase mb-1">Manfaat</dt>
+              <dd class="text-cream/70 leading-relaxed">Penutup tanah yang efektif, tanaman C4 dengan efisiensi fotosintesis tinggi di area panas, serta sangat tahan kekeringan dan lahan minim nutrisi.</dd>
+            </div>
+            <div>
+              <dt class="font-mono text-[11px] tracking-wider text-krokot/90 uppercase mb-1">Perawatan</dt>
+              <dd class="text-cream/70 leading-relaxed">Matahari penuh 6–8 jam/hari, cukup disiram 2–3x seminggu (menyimpan air di batangnya), diperbanyak lewat stek atau biji.</dd>
+            </div>
+          </dl>
+
+          <div id="plantStatusKrokot" class="mt-7 inline-flex items-center gap-2 text-xs font-medium text-krokot bg-krokot/10 px-3 py-1.5 rounded-full">
+            <i data-lucide="sprout" class="w-3.5 h-3.5"></i> <span class="status-text">Loading…</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GROWTH JOURNAL ================= -->
+  <section id="journal" class="py-24 md:py-32">
+    <div class="max-w-6xl mx-auto px-6 md:px-8">
+      <div data-reveal class="flex flex-wrap items-end justify-between gap-6">
+        <div class="max-w-lg">
+          <div class="flex items-center gap-3 mb-4">
+            <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase">Plant Monitoring</p>
+            <span id="liveIndicator" class="inline-flex items-center gap-1.5 text-[11px] font-mono text-ink/40">
+              <span id="liveDot" class="w-1.5 h-1.5 rounded-full bg-ink/30"></span>
+              <span id="liveText">Connecting…</span>
+            </span>
+          </div>
+          <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight">Monitor Our Plants' Journey</h2>
+          <p class="mt-5 text-base md:text-lg text-ink/70 leading-relaxed">Pantau perkembangan tanaman, kondisi terakhir, dan aktivitas perawatan secara bersama-sama.</p>
+          <p id="latestUpdateLine" class="mt-3 text-sm font-medium text-forest min-h-[1.25rem]"></p>
+        </div>
+        <button id="openAddForm" type="button" class="inline-flex items-center gap-2 bg-forest text-cream px-6 py-3.5 rounded-full text-sm font-semibold hover:bg-ink transition-colors shrink-0">
+          <i data-lucide="plus" class="w-4 h-4"></i> Add Monitoring Update
+        </button>
+      </div>
+
+      <div data-reveal class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3">
+        <div class="flex flex-wrap gap-2" id="plantFilters">
+          <button type="button" class="jf-btn active px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="semua">All Plants</button>
+          <button type="button" class="jf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="kertas">Bougainvillea</button>
+          <button type="button" class="jf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="krokot">Portulaca</button>
+        </div>
+        <div class="flex flex-wrap gap-2" id="stageFilters">
+          <button type="button" class="sf-btn active px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="semua">All Stages</button>
+          <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="seed">Seed</button>
+          <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="sprout">Sprout</button>
+          <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="growing">Growing</button>
+          <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="mature">Mature</button>
+          <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="bloom">Bloom</button>
+        </div>
+      </div>
+      <div data-reveal class="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3">
+        <div class="flex flex-wrap gap-2" id="conditionFilters">
+          <button type="button" class="cf-btn active px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="semua">All Conditions</button>
+          <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="healthy">🟢 Healthy</button>
+          <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="attention">🟡 Needs Attention</button>
+          <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="recovering">🔵 Recovering</button>
+          <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="critical">🔴 Critical</button>
+        </div>
+        <div class="relative flex-1 min-w-[180px] max-w-xs">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/30"></i>
+          <input id="journalSearch" type="text" placeholder="Search activity / notes…" class="w-full border border-ink/15 rounded-full pl-10 pr-4 py-2 text-xs bg-cream focus:border-forest focus:outline-none">
+        </div>
+      </div>
+
+      <div id="journalGrid" class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+      <div id="journalEmpty" class="hidden mt-10 text-center py-16 px-6 border border-dashed border-ink/15 rounded-2xl">
+        <i data-lucide="sprout" class="w-8 h-8 mx-auto text-forest/50 mb-4"></i>
+        <p class="font-display font-semibold text-lg">The journey has just begun.</p>
+        <p class="text-sm text-ink/50 mt-2 max-w-sm mx-auto">Belum ada catatan perkembangan tanaman. Tambahkan update pertama untuk memulai perjalanan.</p>
+        <button type="button" class="js-add-first mt-6 inline-flex items-center gap-2 bg-forest text-cream px-6 py-3 rounded-full text-sm font-semibold hover:bg-ink transition-colors">
+          <i data-lucide="plus" class="w-4 h-4"></i> Add First Update
+        </button>
+      </div>
+
+      <div id="journalErrorState" class="hidden mt-10 text-center py-16 px-6 border border-dashed border-kertas/30 rounded-2xl">
+        <i data-lucide="wifi-off" class="w-8 h-8 mx-auto text-kertas/60 mb-4"></i>
+        <p class="font-display font-semibold text-lg">Unable to load plant data.</p>
+        <button type="button" id="journalRetryBtn" class="mt-6 inline-flex items-center gap-2 bg-forest text-cream px-6 py-3 rounded-full text-sm font-semibold hover:bg-ink transition-colors">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i> Try Again
+        </button>
+      </div>
+    </div>
+
+    <!-- overlay form -->
+    <div id="addFormOverlay" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-ink/60 backdrop-blur-sm">
+      <form id="journalForm" class="bg-cream rounded-3xl p-8 md:p-9 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
+        <button type="button" id="closeAddForm" class="absolute top-6 right-6 text-ink/40 hover:text-ink" aria-label="Tutup form">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        <h3 class="font-display font-semibold text-xl mb-6">Add Growth Update</h3>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Plant</label>
+            <select name="plant" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream">
+              <option value="" disabled selected>Pilih tanaman</option>
+              <option value="kertas">Bougainvillea</option>
+              <option value="krokot">Portulaca</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Date</label>
+              <input type="date" name="date" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream">
+            </div>
+            <div>
+              <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Growth Stage</label>
+              <select name="stage" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream">
+                <option value="" disabled selected>Pilih tahap</option>
+                <option value="seed">Seed</option>
+                <option value="sprout">Sprout</option>
+                <option value="growing">Growing</option>
+                <option value="mature">Mature</option>
+                <option value="bloom">Bloom</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Condition</label>
+            <select name="condition" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream">
+              <option value="" disabled selected>Pilih kondisi</option>
+              <option value="healthy">Healthy</option>
+              <option value="attention">Needs Attention</option>
+              <option value="recovering">Recovering</option>
+              <option value="critical">Critical</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Activity</label>
+            <input type="text" name="activity" required maxlength="120" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream" placeholder="cth. Watered the plant and checked the soil">
+          </div>
+          <div>
+            <label class="block text-xs font-mono uppercase tracking-wider text-ink/50 mb-1.5">Notes <span class="normal-case text-ink/30">(optional)</span></label>
+            <textarea name="notes" rows="2" maxlength="200" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream resize-none" placeholder="Catatan tambahan..."></textarea>
+          </div>
+        </div>
+        <button type="submit" class="mt-6 w-full bg-forest text-cream py-3.5 rounded-full text-sm font-semibold hover:bg-ink transition-colors">Save Update</button>
+      </form>
+      <p id="journalFormError" class="hidden text-xs text-kertas text-center mt-3"></p>
+    </div>
+  </section>
+
+  <!-- ================= TEAM ================= -->
+  <section id="team" class="py-24 md:py-32">
+    <div class="max-w-6xl mx-auto px-6 md:px-8">
+      <div data-reveal class="max-w-xl">
+        <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase mb-4">Our Team</p>
+        <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight">Meet Our Team</h2>
+      </div>
+
+      <div data-reveal-group class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        <div class="frame text-kertas border border-ink/10 rounded-2xl p-6 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-kertas/10 text-kertas flex items-center justify-center font-display font-semibold text-sm shrink-0">HJ</div>
+          <div>
+            <p class="font-display font-semibold text-base">Hafidh Jaim T.S</p>
+            <p class="text-xs text-ink/50 mt-0.5">Bougainvillea Team</p>
+          </div>
+        </div>
+        <div class="frame text-kertas border border-ink/10 rounded-2xl p-6 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-kertas/10 text-kertas flex items-center justify-center font-display font-semibold text-sm shrink-0">FN</div>
+          <div>
+            <p class="font-display font-semibold text-base">Feliza Nuril A.</p>
+            <p class="text-xs text-ink/50 mt-0.5">Bougainvillea Team</p>
+          </div>
+        </div>
+        <div class="frame text-kertas border border-ink/10 rounded-2xl p-6 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-kertas/10 text-kertas flex items-center justify-center font-display font-semibold text-sm shrink-0">FR</div>
+          <div>
+            <p class="font-display font-semibold text-base">Firzansyah Alsy R.</p>
+            <p class="text-xs text-ink/50 mt-0.5">Bougainvillea Team</p>
+          </div>
+        </div>
+        <div class="frame text-krokot border border-ink/10 rounded-2xl p-6 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-krokot/10 text-krokot flex items-center justify-center font-display font-semibold text-sm shrink-0">FA</div>
+          <div>
+            <p class="font-display font-semibold text-base">Fatan Aditiansyah</p>
+            <p class="text-xs text-ink/50 mt-0.5">Portulaca Team</p>
+          </div>
+        </div>
+        <div class="frame text-krokot border border-ink/10 rounded-2xl p-6 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-krokot/10 text-krokot flex items-center justify-center font-display font-semibold text-sm shrink-0">GA</div>
+          <div>
+            <p class="font-display font-semibold text-base">Ghazy Alfi M.</p>
+            <p class="text-xs text-ink/50 mt-0.5">Portulaca Team</p>
+          </div>
+        </div>
+        <div class="frame text-krokot border border-ink/10 rounded-2xl p-6 flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-krokot/10 text-krokot flex items-center justify-center font-display font-semibold text-sm shrink-0">FM</div>
+          <div>
+            <p class="font-display font-semibold text-base">Fadhil Muhammad A.</p>
+            <p class="text-xs text-ink/50 mt-0.5">Portulaca Team</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GROWING TOGETHER ================= -->
+  <section id="growing" class="relative bg-ink text-cream" style="height: 350vh;">
+    <div class="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden px-6">
+      <div class="absolute top-20 md:top-24 left-0 right-0 text-center px-6" data-reveal>
+        <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-2">Growing Together</p>
+        <h2 class="font-display font-semibold text-2xl md:text-3xl tracking-tight">Watch It Grow</h2>
+      </div>
+
+      <div class="relative w-56 h-56 md:w-72 md:h-72">
+        <div class="grow-stage absolute inset-0 flex items-center justify-center" data-stage="0">
+          <svg viewBox="0 0 200 200" class="w-24"><ellipse cx="100" cy="160" rx="60" ry="10" fill="#F7F4EA" opacity="0.08"/><ellipse cx="100" cy="140" rx="16" ry="22" fill="#A6E06A"/></svg>
+        </div>
+        <div class="grow-stage absolute inset-0 flex items-center justify-center opacity-0" data-stage="1">
+          <svg viewBox="0 0 200 200" class="w-28"><ellipse cx="100" cy="160" rx="60" ry="10" fill="#F7F4EA" opacity="0.08"/><path d="M100,160 C98,140 104,125 100,105" fill="none" stroke="#A6E06A" stroke-width="4" stroke-linecap="round"/><path d="M100,120 C118,116 122,104 116,96 C104,100 97,110 100,120 Z" fill="#A6E06A"/></svg>
+        </div>
+        <div class="grow-stage absolute inset-0 flex items-center justify-center opacity-0" data-stage="2">
+          <svg viewBox="0 0 200 200" class="w-36"><ellipse cx="100" cy="170" rx="65" ry="10" fill="#F7F4EA" opacity="0.08"/><path d="M100,170 C94,140 108,120 100,90 C94,65 108,55 100,35" fill="none" stroke="#A6E06A" stroke-width="4" stroke-linecap="round"/><path d="M100,120 C135,113 142,90 130,76 C110,84 96,102 100,120 Z" fill="#A6E06A"/><path d="M96,90 C60,82 52,58 66,44 C88,53 100,74 96,90 Z" fill="#7FBF8E"/></svg>
+        </div>
+        <div class="grow-stage absolute inset-0 flex items-center justify-center opacity-0" data-stage="3">
+          <svg viewBox="0 0 200 200" class="w-44"><ellipse cx="100" cy="175" rx="68" ry="10" fill="#F7F4EA" opacity="0.08"/><path d="M100,175 C94,145 108,125 100,95 C94,70 108,60 100,38" fill="none" stroke="#A6E06A" stroke-width="4" stroke-linecap="round"/><path d="M100,125 C135,118 142,95 130,81 C110,89 96,107 100,125 Z" fill="#7FBF8E"/><path d="M96,95 C60,87 52,63 66,49 C88,58 100,79 96,95 Z" fill="#7FBF8E"/><circle cx="100" cy="34" r="9" fill="#D9863A"/><path d="M100,34 C112,22 128,24 132,36 C120,44 106,42 100,34 Z" fill="#C4487A"/><path d="M100,34 C88,22 72,24 68,36 C80,44 94,42 100,34 Z" fill="#C4487A"/><path d="M100,34 C108,20 106,6 96,2 C88,12 92,26 100,34 Z" fill="#C4487A" opacity="0.9"/></svg>
+        </div>
+      </div>
+
+      <p id="growCaption" class="font-display text-lg md:text-2xl text-center max-w-md px-6 mt-2 min-h-[3.5rem]">Everything starts from something small.</p>
+    </div>
+  </section>
+
+  <!-- ================= TIMELINE ================= -->
+  <section id="timeline" class="py-24 md:py-32 bg-ink text-cream relative overflow-hidden">
+    <div class="absolute inset-0 bg-grid text-lime/[0.04]" aria-hidden="true"></div>
+    <div class="max-w-3xl mx-auto px-6 md:px-8 relative">
+      <div data-reveal class="max-w-xl">
+        <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-4">Timeline</p>
+        <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight">How We Got Here</h2>
+      </div>
+
+      <div class="relative mt-16">
+        <div class="absolute left-[22px] top-2 bottom-2 w-px bg-cream/15">
+          <div id="timelineProgress" class="absolute inset-x-0 top-0 bg-lime" style="height:100%; transform: scaleY(0); transform-origin: top;"></div>
+        </div>
+
+        <div class="relative pl-16 pb-14" data-reveal>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-ink-soft border border-lime/40 flex items-center justify-center font-mono text-xs text-lime">01</div>
+          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Planning</h3>
+          <p class="text-sm md:text-base text-cream/60 leading-relaxed">Menentukan tanaman dan pembagian tugas.</p>
+        </div>
+        <div class="relative pl-16 pb-14" data-reveal>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-ink-soft border border-lime/40 flex items-center justify-center font-mono text-xs text-lime">02</div>
+          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Planting</h3>
+          <p class="text-sm md:text-base text-cream/60 leading-relaxed">Melakukan proses penanaman.</p>
+        </div>
+        <div class="relative pl-16 pb-14" data-reveal>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-ink-soft border border-lime/40 flex items-center justify-center font-mono text-xs text-lime">03</div>
+          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Caring</h3>
+          <p class="text-sm md:text-base text-cream/60 leading-relaxed">Merawat dan memantau perkembangan tanaman.</p>
+        </div>
+        <div class="relative pl-16 pb-14" data-reveal>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-ink-soft border border-lime/40 flex items-center justify-center font-mono text-xs text-lime">04</div>
+          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Growth</h3>
+          <p class="text-sm md:text-base text-cream/60 leading-relaxed">Mengamati perubahan dan perkembangan tanaman.</p>
+        </div>
+        <div class="relative pl-16" data-reveal>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-ink-soft border border-lime/40 flex items-center justify-center font-mono text-xs text-lime">05</div>
+          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Reflection</h3>
+          <p class="text-sm md:text-base text-cream/60 leading-relaxed">Mengevaluasi project dan pengalaman teamwork.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REFLECTION ================= -->
+  <section class="py-28 md:py-36 bg-ink text-cream">
+    <div data-reveal class="max-w-2xl mx-auto px-6 md:px-8 text-center">
+      <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-6">Reflection</p>
+      <h2 class="font-display font-semibold text-3xl md:text-5xl tracking-tight leading-tight">What Did We Learn?</h2>
+      <p class="mt-8 text-base md:text-lg text-cream/60 leading-relaxed max-w-lg mx-auto">Melalui project ini, kami belajar bahwa pertumbuhan membutuhkan waktu, konsistensi, dan kerja sama.</p>
+    </div>
+  </section>
+
+  <!-- ================= WHY WE GROW ================= -->
+  <section class="py-24 md:py-32">
+    <div class="max-w-6xl mx-auto px-6 md:px-8">
+      <div data-reveal class="max-w-xl">
+        <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase mb-4">Why We Grow</p>
+        <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight">More Than Just Growing Plants</h2>
+        <p class="mt-5 text-base md:text-lg text-ink/70 leading-relaxed">Menanam bukan hanya tentang membuat tanaman tumbuh, tetapi juga tentang belajar bertanggung jawab, bekerja sama, dan menjaga lingkungan.</p>
+      </div>
+
+      <div data-reveal-group class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+        <div class="frame text-forest border border-ink/10 rounded-2xl p-6">
+          <i data-lucide="wind" class="w-5 h-5 mb-4"></i>
+          <p class="font-display font-semibold text-base mb-1.5">Manfaat Lingkungan</p>
+          <p class="text-sm text-ink/60 leading-relaxed">Membantu menjaga kualitas udara dan kondisi tanah di sekitar area penanaman.</p>
+        </div>
+        <div class="frame text-forest border border-ink/10 rounded-2xl p-6">
+          <i data-lucide="users-round" class="w-5 h-5 mb-4"></i>
+          <p class="font-display font-semibold text-base mb-1.5">Kerja Sama Tim</p>
+          <p class="text-sm text-ink/60 leading-relaxed">Belajar berkoordinasi dan saling mengandalkan antar anggota kelompok.</p>
+        </div>
+        <div class="frame text-forest border border-ink/10 rounded-2xl p-6">
+          <i data-lucide="hand-heart" class="w-5 h-5 mb-4"></i>
+          <p class="font-display font-semibold text-base mb-1.5">Tanggung Jawab</p>
+          <p class="text-sm text-ink/60 leading-relaxed">Konsisten merawat sesuatu yang hidup, bukan cuma tugas sekali kumpul.</p>
+        </div>
+        <div class="frame text-forest border border-ink/10 rounded-2xl p-6">
+          <i data-lucide="globe" class="w-5 h-5 mb-4"></i>
+          <p class="font-display font-semibold text-base mb-1.5">Kesadaran Lingkungan</p>
+          <p class="text-sm text-ink/60 leading-relaxed">Memahami pentingnya penghijauan sejak dari lingkungan terdekat.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= THE FUTURE ================= -->
+  <section class="py-24 md:py-32">
+    <div data-reveal class="max-w-2xl mx-auto px-6 md:px-8 text-center">
+      <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase mb-6">The Future</p>
+      <h2 class="font-display font-semibold text-3xl md:text-5xl tracking-tight leading-tight">One Team, One Earth,<br>One Future.</h2>
+      <p class="mt-8 text-base md:text-lg text-ink/70 leading-relaxed max-w-lg mx-auto">Perjalanan ini mungkin dimulai dari beberapa tanaman kecil, tetapi kebiasaan untuk menjaga lingkungan dapat tumbuh menjadi sesuatu yang lebih besar.</p>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-ink text-cream pt-20 pb-10">
+    <div class="max-w-6xl mx-auto px-6 md:px-8">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-10 pb-10 border-b border-cream/10">
+        <div>
+          <div class="flex items-center gap-2 font-display font-semibold text-xl">
+            <i data-lucide="leaf" class="w-5 h-5 text-lime"></i> Growth Together
+          </div>
+          <p class="font-display italic text-cream/60 mt-2">"One Team, One Earth, One Future."</p>
+        </div>
+        <div class="text-sm text-cream/60 space-y-1">
+          <p class="text-cream/90 font-medium">Kelompok 4 — X TE 3</p>
+          <p>SMK Negeri 2 Purwokerto</p>
+          <a href="mailto:fatan.aditiansyah02@gmail.com" class="inline-flex items-center gap-1.5 mt-2 text-lime hover:text-cream transition-colors">
+            <i data-lucide="mail" class="w-3.5 h-3.5"></i> fatan.aditiansyah02@gmail.com
+          </a>
+        </div>
+      </div>
+      <p class="pt-8 text-xs text-cream/40 font-mono">© 2026 Growth Together — Kelompok 4, X TE 3, SMK Negeri 2 Purwokerto.</p>
+    </div>
+  </footer>
+
+  <script>
+    // 0) Render semua icon Lucide
+    lucide.createIcons();
+
+    // 1) Daftarkan plugin ScrollTrigger ke GSAP
+    gsap.registerPlugin(ScrollTrigger);
+
+    // 1.5) Cek preferensi reduced motion — dipakai buat nonaktifkan Lenis & animasi berat
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // 2) Lenis smooth scroll, disatukan ke gsap.ticker biar sinkron sama ScrollTrigger
+    let lenis = null;
+    if (!prefersReducedMotion) {
+      lenis = new Lenis({ anchors: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    // 3) Toggle menu mobile
+    const navToggle = document.getElementById('navToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+    navToggle.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.style.maxHeight = menuOpen ? mobileMenu.scrollHeight + 'px' : '0px';
+      navToggle.setAttribute('aria-expanded', menuOpen);
+      navToggle.innerHTML = menuOpen ? '<i data-lucide="x" class="w-6 h-6"></i>' : '<i data-lucide="menu" class="w-6 h-6"></i>';
+      lucide.createIcons();
+    });
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.style.maxHeight = '0px';
+        navToggle.setAttribute('aria-expanded', 'false');
+        navToggle.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+        lucide.createIcons();
+      });
+    });
+
+    // 4) Navbar berubah tampilan begitu halaman mulai discroll
+    const siteNav = document.getElementById('siteNav');
+    const updateNav = () => {
+      if (window.scrollY > 40) {
+        siteNav.classList.add('bg-cream/90', 'backdrop-blur-md', 'shadow-sm');
+      } else {
+        siteNav.classList.remove('bg-cream/90', 'backdrop-blur-md', 'shadow-sm');
+      }
+    };
+    window.addEventListener('scroll', updateNav);
+    updateNav();
+
+    // 5) Animasi & scroll-effect yang agak berat — dilewati kalau reduced motion aktif
+    if (!prefersReducedMotion) {
+      // Animasi masuk hero (jalan sekali begitu halaman dibuka)
+      gsap.timeline({ defaults: { ease: 'power3.out' } })
+        .from('.hero-eyebrow', { opacity: 0, y: 12, duration: 0.5 })
+        .from('.hero-title', { opacity: 0, y: 26, duration: 0.7 }, '-=0.25')
+        .from('.hero-slogan', { opacity: 0, y: 16, duration: 0.6 }, '-=0.35')
+        .from('.hero-sub', { opacity: 0, y: 14, duration: 0.6 }, '-=0.35')
+        .from('.hero-ctas', { opacity: 0, y: 14, duration: 0.6 }, '-=0.35')
+        .from('.hero-art', { opacity: 0, scale: 0.94, duration: 0.9 }, '-=0.6')
+        .from('.stem', { strokeDashoffset: 300, duration: 1.4, ease: 'power2.out' }, '-=0.9');
+
+      // Parallax halus buat ilustrasi hero
+      gsap.to('.hero-art', {
+        y: 50, ease: 'none',
+        scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: true },
+      });
+
+      // Fade-up buat elemen bertanda data-reveal begitu masuk layar
+      gsap.utils.toArray('[data-reveal]').forEach((el) => {
+        gsap.from(el, { opacity: 0, y: 34, duration: 0.8, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
+      });
+
+      // Reveal berurutan (stagger) buat grid kartu
+      gsap.utils.toArray('[data-reveal-group]').forEach((group) => {
+        gsap.from(group.children, { opacity: 0, y: 28, duration: 0.7, stagger: 0.12, ease: 'power2.out', scrollTrigger: { trigger: group, start: 'top 85%' } });
+      });
+
+      // Garis timeline "tumbuh" mengikuti scroll
+      gsap.to('#timelineProgress', {
+        scaleY: 1, ease: 'none',
+        scrollTrigger: { trigger: '#timeline', start: 'top 60%', end: 'bottom 70%', scrub: 1 },
+      });
+    } else {
+      // versi statis buat reduced motion: langsung tampil penuh, gak usah nunggu scroll
+      const tp = document.getElementById('timelineProgress');
+      if (tp) tp.style.transform = 'scaleY(1)';
+    }
+
+    // 6) GROWING TOGETHER — visual seed -> sprout -> plant -> bloom
+    // Pakai sticky + scroll-progress (bukan pin GSAP), lebih stabil dipadu Lenis & gak bikin layout jump.
+    const growSection = document.getElementById('growing');
+    const growStages = gsap.utils.toArray('.grow-stage');
+    const growCaption = document.getElementById('growCaption');
+    const growCaptions = [
+      'Everything starts from something small.',
+      'With care, small things begin to grow.',
+      'Growth takes patience and responsibility.',
+      'Together, our small efforts become something meaningful.',
+    ];
+
+    if (!prefersReducedMotion && growSection) {
+      ScrollTrigger.create({
+        trigger: growSection,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1,
+        onUpdate: (self) => {
+          const idx = Math.min(3, Math.floor(self.progress * 4));
+          growStages.forEach((el, i) => { el.style.opacity = i === idx ? 1 : 0; });
+          growCaption.textContent = growCaptions[idx];
+        },
+      });
+    } else if (growSection) {
+      // reduced motion: lepas tinggi raksasa & sticky-nya, langsung tampilkan tahap akhir (Bloom)
+      growSection.style.height = 'auto';
+      const stickyWrap = growSection.querySelector('.sticky');
+      if (stickyWrap) { stickyWrap.classList.remove('sticky', 'top-0', 'h-screen'); stickyWrap.classList.add('py-20', 'relative'); }
+      growStages.forEach((el, i) => { el.style.opacity = i === 3 ? 1 : 0; el.style.display = i === 3 ? 'flex' : 'none'; });
+      growCaption.textContent = growCaptions[3];
+    }
+
+    // =====================================================
+    // 7) SUPABASE CONFIG
+    // Ganti dua baris di bawah ini dengan URL & anon/publishable key
+    // dari project Supabase kalian (Settings -> API Keys). JANGAN pernah
+    // taruh service_role/secret key di sini -- cuma yang public/anon.
+    // =====================================================
+    const SUPABASE_URL = 'https://datqwjlpicdaoklgssxv.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_eZJxQQCRoljYYrKVVRMi9A_r2XLsuTA'; // <-- isi anon/publishable key kalian di sini
+    const isConfigured = !SUPABASE_URL.startsWith('YOUR_') && !SUPABASE_ANON_KEY.startsWith('YOUR_');
+    const sb = isConfigured ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+    let currentUser = null;
+
+    // =====================================================
+    // 8) AUTH -- modal, tab switch, sign in / register / logout
+    // =====================================================
+    const authOverlay = document.getElementById('authOverlay');
+    const tabSignIn = document.getElementById('tabSignIn');
+    const tabRegister = document.getElementById('tabRegister');
+    const signInForm = document.getElementById('signInForm');
+    const registerForm = document.getElementById('registerForm');
+
+    function switchAuthTab(tab) {
+      const isSignIn = tab === 'signin';
+      tabSignIn.classList.toggle('active', isSignIn);
+      tabRegister.classList.toggle('active', !isSignIn);
+      signInForm.classList.toggle('hidden', !isSignIn);
+      registerForm.classList.toggle('hidden', isSignIn);
+    }
+    function openAuthModal(tab) {
+      authOverlay.classList.remove('hidden');
+      authOverlay.classList.add('flex');
+      switchAuthTab(tab || 'signin');
+    }
+    function closeAuthModal() {
+      authOverlay.classList.add('hidden');
+      authOverlay.classList.remove('flex');
+    }
+    tabSignIn.addEventListener('click', () => switchAuthTab('signin'));
+    tabRegister.addEventListener('click', () => switchAuthTab('register'));
+    document.getElementById('closeAuthModal').addEventListener('click', closeAuthModal);
+    authOverlay.addEventListener('click', (e) => { if (e.target === authOverlay) closeAuthModal(); });
+    ['openAuthBtn', 'openAuthBtnMobile'].forEach((id) => {
+      const btn = document.getElementById(id);
+      if (btn) btn.addEventListener('click', () => openAuthModal('signin'));
+    });
+    ['signOutBtn', 'signOutBtnMobile'].forEach((id) => {
+      const btn = document.getElementById(id);
+      if (btn) btn.addEventListener('click', async () => { if (sb) await sb.auth.signOut(); });
+    });
+
+    function updateAuthUI() {
+      const loggedIn = !!currentUser;
+      const name = currentUser?.user_metadata?.name || currentUser?.email?.split('@')[0] || '';
+      document.querySelectorAll('#openAuthBtn, #openAuthBtnMobile').forEach((el) => el.classList.toggle('hidden', loggedIn));
+      document.querySelectorAll('#userArea, #userAreaMobile').forEach((el) => { el.classList.toggle('hidden', !loggedIn); el.classList.toggle('flex', loggedIn); });
+      [document.getElementById('welcomeText'), document.getElementById('welcomeTextMobile')].forEach((el) => { if (el) el.textContent = `Welcome, ${name}`; });
+    }
+
+    signInForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('signInError');
+      errEl.classList.add('hidden');
+      if (!sb) { errEl.textContent = 'Supabase belum dikonfigurasi.'; errEl.classList.remove('hidden'); return; }
+      const fd = new FormData(signInForm);
+      const { error } = await sb.auth.signInWithPassword({ email: fd.get('email'), password: fd.get('password') });
+      if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
+      signInForm.reset();
+      closeAuthModal();
+    });
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('registerError');
+      const okEl = document.getElementById('registerSuccess');
+      errEl.classList.add('hidden'); okEl.classList.add('hidden');
+      if (!sb) { errEl.textContent = 'Supabase belum dikonfigurasi.'; errEl.classList.remove('hidden'); return; }
+      const fd = new FormData(registerForm);
+      const { data, error } = await sb.auth.signUp({
+        email: fd.get('email'),
+        password: fd.get('password'),
+        options: { data: { name: fd.get('name') } },
+      });
+      if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
+      registerForm.reset();
+      if (data.session) {
+        closeAuthModal();
+      } else {
+        okEl.textContent = 'Akun dibuat! Cek email buat konfirmasi, lalu Sign In.';
+        okEl.classList.remove('hidden');
+        switchAuthTab('signin');
+      }
+    });
+
+    if (sb) {
+      sb.auth.onAuthStateChange((event, session) => {
+        currentUser = session?.user ?? null;
+        updateAuthUI();
+        renderJournalList();
+      });
+      sb.auth.getSession().then(({ data }) => {
+        currentUser = data.session?.user ?? null;
+        updateAuthUI();
+      });
+    }
+
+    // =====================================================
+    // 9) LIVE / OFFLINE INDICATOR
+    // =====================================================
+    function setLiveStatus(isLive) {
+      const dot = document.getElementById('liveDot');
+      const text = document.getElementById('liveText');
+      if (!dot || !text) return;
+      dot.className = 'w-1.5 h-1.5 rounded-full ' + (isLive ? 'bg-forest' : 'bg-kertas/60');
+      text.textContent = isLive ? 'Live' : 'Offline';
+    }
+
+    // =====================================================
+    // 10) TOAST (notifikasi update baru dari anggota lain)
+    // =====================================================
+    let toastTimer;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.remove('hidden');
+      if (!prefersReducedMotion) gsap.fromTo(toast, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3 });
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        if (!prefersReducedMotion) gsap.to(toast, { opacity: 0, y: 10, duration: 0.3, onComplete: () => toast.classList.add('hidden') });
+        else toast.classList.add('hidden');
+      }, 4000);
+    }
+
+    // =====================================================
+    // 11) PLANT MONITORING -- data dari Supabase (bukan localStorage)
+    // =====================================================
+    const plantLabel = { kertas: 'Bougainvillea', krokot: 'Portulaca' };
+    const stageLabel = { seed: 'Seed', sprout: 'Sprout', growing: 'Growing', mature: 'Mature', bloom: 'Bloom' };
+    const stagePercent = { seed: 20, sprout: 40, growing: 60, mature: 80, bloom: 100 };
+    const conditionLabel = { healthy: 'Healthy', attention: 'Needs Attention', recovering: 'Recovering', critical: 'Critical' };
+    const conditionDot = { healthy: '\u{1F7E2}', attention: '\u{1F7E1}', recovering: '\u{1F535}', critical: '\u{1F534}' };
+
+    let activePlantFilter = 'semua';
+    let activeStageFilter = 'semua';
+    let activeConditionFilter = 'semua';
+    let searchQuery = '';
+    let allEntries = [];
+
+    const journalGrid = document.getElementById('journalGrid');
+    const journalEmpty = document.getElementById('journalEmpty');
+    const journalErrorState = document.getElementById('journalErrorState');
+    const latestUpdateLine = document.getElementById('latestUpdateLine');
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str || '';
+      return div.innerHTML;
+    }
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return dateStr;
+      return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function journalCardHtml(entry) {
+      const isKertas = entry.plant_id === 'kertas';
+      const frameColor = isKertas ? 'text-kertas' : 'text-krokot';
+      const badgeClass = isKertas ? 'text-kertas bg-kertas/10' : 'text-krokot bg-krokot/10';
+      const ownerName = entry.profiles?.name || 'Anggota';
+      const canManage = currentUser && entry.user_id === currentUser.id;
+      return `
+        <article class="frame ${frameColor} border border-ink/10 rounded-2xl p-6" data-id="${entry.id}">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-mono uppercase tracking-wider ${badgeClass} px-2.5 py-1 rounded-full">${plantLabel[entry.plant_id] || entry.plant_id}</span>
+            ${canManage ? `<button type="button" class="js-delete text-ink/30 hover:text-ink/70" data-id="${entry.id}" aria-label="Hapus update ini"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+          </div>
+          <p class="font-mono text-xs text-ink/40 mt-4">${formatDate(entry.date)} \u00B7 by ${escapeHtml(ownerName)}</p>
+          <div class="mt-3 h-1.5 bg-ink/10 rounded-full overflow-hidden">
+            <div class="h-full bg-current" style="width:${stagePercent[entry.stage] || 0}%"></div>
+          </div>
+          <div class="flex items-center justify-between mt-2">
+            <span class="text-xs font-semibold">${stageLabel[entry.stage] || entry.stage}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-ink/5 text-ink/60">${conditionDot[entry.condition] || ''} ${conditionLabel[entry.condition] || entry.condition}</span>
+          </div>
+          <p class="mt-3 text-sm text-ink/70 leading-relaxed">${escapeHtml(entry.activity)}</p>
+          ${entry.notes ? `<p class="mt-1.5 text-xs text-ink/50 leading-relaxed">${escapeHtml(entry.notes)}</p>` : ''}
+        </article>`;
+    }
+
+    function applyJournalFilters() {
+      const q = searchQuery.trim().toLowerCase();
+      return allEntries.filter((e) =>
+        (activePlantFilter === 'semua' || e.plant_id === activePlantFilter) &&
+        (activeStageFilter === 'semua' || e.stage === activeStageFilter) &&
+        (activeConditionFilter === 'semua' || e.condition === activeConditionFilter) &&
+        (!q || (e.activity || '').toLowerCase().includes(q) || (e.notes || '').toLowerCase().includes(q))
+      );
+    }
+
+    function renderJournalList() {
+      if (allEntries.length === 0) {
+        journalGrid.classList.add('hidden');
+        journalEmpty.classList.remove('hidden');
+        latestUpdateLine.textContent = '';
+        return;
+      }
+      journalGrid.classList.remove('hidden');
+      journalEmpty.classList.add('hidden');
+
+      const filtered = applyJournalFilters();
+      journalGrid.innerHTML = filtered.length
+        ? filtered.map(journalCardHtml).join('')
+        : '<p class="text-sm text-ink/40 col-span-full text-center py-10">Gak ada update yang cocok sama filter/pencarian ini.</p>';
+      lucide.createIcons();
+
+      const latest = allEntries[0];
+      const latestName = latest.profiles?.name || 'Anggota';
+      latestUpdateLine.textContent = `Latest: ${plantLabel[latest.plant_id]} is currently ${stageLabel[latest.stage]}. (by ${latestName})`;
+
+      if (!prefersReducedMotion) {
+        gsap.from('#journalGrid [data-id]', { opacity: 0, y: 16, duration: 0.4, stagger: 0.05, ease: 'power2.out' });
+      }
+    }
+
+    async function loadJournal() {
+      journalErrorState.classList.add('hidden');
+      if (!sb) {
+        journalGrid.classList.add('hidden');
+        journalEmpty.classList.add('hidden');
+        journalErrorState.classList.remove('hidden');
+        setLiveStatus(false);
+        return;
+      }
+      const { data, error } = await sb
+        .from('growth_updates')
+        .select('*, profiles(name)')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        journalGrid.classList.add('hidden');
+        journalEmpty.classList.add('hidden');
+        journalErrorState.classList.remove('hidden');
+        return;
+      }
+      allEntries = data || [];
+      renderJournalList();
+    }
+
+    document.getElementById('journalRetryBtn').addEventListener('click', loadJournal);
+    document.getElementById('journalSearch').addEventListener('input', (e) => { searchQuery = e.target.value; renderJournalList(); });
+
+    document.querySelectorAll('#plantFilters .jf-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#plantFilters .jf-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        activePlantFilter = btn.dataset.filter;
+        renderJournalList();
+      });
+    });
+    document.querySelectorAll('#stageFilters .sf-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#stageFilters .sf-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeStageFilter = btn.dataset.filter;
+        renderJournalList();
+      });
+    });
+    document.querySelectorAll('#conditionFilters .cf-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#conditionFilters .cf-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeConditionFilter = btn.dataset.filter;
+        renderJournalList();
+      });
+    });
+
+    journalGrid.addEventListener('click', async (e) => {
+      const delBtn = e.target.closest('.js-delete');
+      if (!delBtn || !sb) return;
+      if (!window.confirm('Hapus update ini?')) return;
+      const { error } = await sb.from('growth_updates').delete().eq('id', delBtn.dataset.id);
+      if (!error) loadJournal();
+    });
+
+    // buka/tutup form tambah update -- auth-gated (harus login dulu)
+    const addFormOverlay = document.getElementById('addFormOverlay');
+    const journalForm = document.getElementById('journalForm');
+
+    function openJournalForm() {
+      if (!currentUser) { openAuthModal('signin'); return; }
+      addFormOverlay.classList.remove('hidden');
+      addFormOverlay.classList.add('flex');
+      if (!prefersReducedMotion) {
+        gsap.fromTo(addFormOverlay, { opacity: 0 }, { opacity: 1, duration: 0.25 });
+        gsap.fromTo(journalForm, { opacity: 0, y: 20, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: 'power2.out' });
+      }
+    }
+    function closeJournalForm() {
+      if (!prefersReducedMotion) {
+        gsap.to(addFormOverlay, { opacity: 0, duration: 0.2, onComplete: () => { addFormOverlay.classList.add('hidden'); addFormOverlay.classList.remove('flex'); } });
+      } else {
+        addFormOverlay.classList.add('hidden');
+        addFormOverlay.classList.remove('flex');
+      }
+    }
+    document.getElementById('openAddForm').addEventListener('click', openJournalForm);
+    document.getElementById('closeAddForm').addEventListener('click', closeJournalForm);
+    document.querySelectorAll('.js-add-first').forEach((b) => b.addEventListener('click', openJournalForm));
+    addFormOverlay.addEventListener('click', (e) => { if (e.target === addFormOverlay) closeJournalForm(); });
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !addFormOverlay.classList.contains('hidden')) closeJournalForm(); });
+
+    journalForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById('journalFormError');
+      errEl.classList.add('hidden');
+      if (!sb || !currentUser) { errEl.textContent = 'Sign in to add monitoring updates.'; errEl.classList.remove('hidden'); return; }
+
+      const fd = new FormData(journalForm);
+      const payload = {
+        plant_id: fd.get('plant'),
+        user_id: currentUser.id,
+        date: fd.get('date'),
+        stage: fd.get('stage'),
+        condition: fd.get('condition'),
+        activity: (fd.get('activity') || '').trim(),
+        notes: (fd.get('notes') || '').trim() || null,
+      };
+      if (!payload.plant_id || !payload.date || !payload.stage || !payload.condition || !payload.activity) return;
+
+      const { error } = await sb.from('growth_updates').insert(payload);
+      if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
+
+      journalForm.reset();
+      closeJournalForm();
+      loadJournal();
+      loadPlantStatus();
+    });
+
+    // =====================================================
+    // 12) STATUS TANAMAN (section Plants) -- live dari Supabase, bukan hard-coded
+    // =====================================================
+    async function loadPlantStatus() {
+      if (!sb) return;
+      const { data, error } = await sb.from('plants').select('*');
+      if (error || !data) return;
+      data.forEach((plant) => {
+        const el = document.getElementById(plant.id === 'kertas' ? 'plantStatusKertas' : 'plantStatusKrokot');
+        if (!el) return;
+        const label = plant.last_checked
+          ? `${conditionDot[plant.current_condition] || ''} ${stageLabel[plant.current_stage] || plant.current_stage} \u00B7 ${conditionLabel[plant.current_condition] || plant.current_condition}`
+          : 'Belum ada update';
+        const textEl = el.querySelector('.status-text');
+        if (textEl) textEl.textContent = label;
+      });
+    }
+
+    // =====================================================
+    // 13) REALTIME SUBSCRIPTION + INISIALISASI
+    // =====================================================
+    if (sb) {
+      sb.channel('growth-updates-changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'growth_updates' }, (payload) => {
+          if (payload.eventType === 'INSERT' && payload.new.user_id !== currentUser?.id) {
+            showToast(`A new update was added to ${plantLabel[payload.new.plant_id] || 'a plant'}.`);
+          }
+          loadJournal();
+          loadPlantStatus();
+        })
+        .subscribe((status) => setLiveStatus(status === 'SUBSCRIBED'));
+
+      window.addEventListener('online', () => setLiveStatus(true));
+      window.addEventListener('offline', () => setLiveStatus(false));
+    }
+
+    loadJournal();
+    loadPlantStatus();
+  </script>
+</body>
+</html>
