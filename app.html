@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Growth Together — Monitoring</title>
+<meta name="theme-color" content="#1F4B37">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.31.0/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style type="text/tailwindcss">
+  @theme {
+    --color-cream: #F7F4EA;
+    --color-ink: #0D1A13;
+    --color-forest: #1F4B37;
+    --color-sage: #6F8F7B;
+    --color-kertas: #C4487A;
+    --color-krokot: #D9863A;
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+  body { font-family: var(--font-body); background: var(--color-cream); color: var(--color-ink); }
+  h1, h2, h3 { font-family: var(--font-display); }
+  .jf-btn, .sf-btn { opacity: 0.6; }
+  .jf-btn.active, .sf-btn.active { background: var(--color-ink); color: var(--color-cream); opacity: 1; }
+</style>
+</head>
+<body class="min-h-screen pb-24">
+
+  <!-- top bar -->
+  <header class="sticky top-0 z-30 bg-cream/95 backdrop-blur border-b border-ink/10 px-5 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-2 font-display font-bold text-forest">
+      <i data-lucide="leaf" class="w-5 h-5"></i> Growth Together
+    </div>
+    <div id="authArea">
+      <button id="openAuthBtn" class="text-sm font-semibold text-forest">Sign In</button>
+      <div id="userArea" class="hidden items-center gap-3">
+        <span id="welcomeText" class="text-xs text-ink/60"></span>
+        <button id="signOutBtn" class="text-xs border border-ink/20 rounded-full px-3 py-1">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- auth screen (tampil kalau belum login) -->
+  <section id="authScreen" class="px-5 py-10 max-w-sm mx-auto">
+    <div class="flex gap-1.5 mb-6 p-1 bg-ink/5 rounded-full">
+      <button id="tabSignIn" class="jf-btn active flex-1 py-2 rounded-full text-sm font-semibold">Sign In</button>
+      <button id="tabRegister" class="jf-btn flex-1 py-2 rounded-full text-sm font-semibold">Register</button>
+    </div>
+    <form id="signInForm" class="space-y-3">
+      <input type="email" name="email" placeholder="Email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+      <input type="password" name="password" placeholder="Password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+      <p id="signInError" class="hidden text-xs text-kertas"></p>
+      <button type="submit" class="w-full bg-forest text-cream py-3 rounded-full text-sm font-semibold">Sign In</button>
+    </form>
+    <form id="registerForm" class="space-y-3 hidden">
+      <input type="text" name="name" placeholder="Nama" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+      <input type="email" name="email" placeholder="Email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+      <input type="password" name="password" placeholder="Password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+      <p id="registerError" class="hidden text-xs text-kertas"></p>
+      <p id="registerSuccess" class="hidden text-xs text-forest"></p>
+      <button type="submit" class="w-full bg-forest text-cream py-3 rounded-full text-sm font-semibold">Create Account</button>
+    </form>
+  </section>
+
+  <!-- main app (tampil kalau udah login) -->
+  <main id="mainApp" class="hidden px-5 py-6 max-w-lg mx-auto">
+    <div id="plantStatusRow" class="grid grid-cols-2 gap-3 mb-6"></div>
+
+    <button id="openAddForm" class="w-full flex items-center justify-center gap-2 bg-forest text-cream py-3.5 rounded-full text-sm font-semibold mb-5">
+      <i data-lucide="plus" class="w-4 h-4"></i> Tambah Update
+    </button>
+
+    <div class="flex gap-2 mb-3 overflow-x-auto" id="plantFilters">
+      <button class="jf-btn active px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="semua">Semua</button>
+      <button class="jf-btn px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="kertas">Bougainvillea</button>
+      <button class="jf-btn px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="krokot">Portulaca</button>
+    </div>
+    <div class="relative mb-5">
+      <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/30"></i>
+      <input id="journalSearch" type="text" placeholder="Cari catatan..." class="w-full border border-ink/15 rounded-full pl-10 pr-4 py-2.5 text-sm bg-white">
+    </div>
+
+    <div id="journalGrid" class="space-y-4"></div>
+    <div id="journalEmpty" class="hidden text-center py-16">
+      <i data-lucide="sprout" class="w-8 h-8 mx-auto text-forest/50 mb-3"></i>
+      <p class="text-sm text-ink/50">Belum ada update. Tambahkan yang pertama.</p>
+    </div>
+    <div id="journalErrorState" class="hidden text-center py-16">
+      <p class="text-sm text-kertas mb-3">Gagal memuat data.</p>
+      <button id="journalRetryBtn" class="text-sm font-semibold text-forest">Coba Lagi</button>
+    </div>
+  </main>
+
+  <!-- overlay form tambah update -->
+  <div id="addFormOverlay" class="fixed inset-0 z-50 hidden items-end justify-center bg-ink/60">
+    <form id="journalForm" class="bg-cream rounded-t-3xl p-6 w-full max-h-[88vh] overflow-y-auto">
+      <div class="w-10 h-1 bg-ink/20 rounded-full mx-auto mb-5"></div>
+      <h3 class="font-display font-bold text-lg mb-4">Tambah Update</h3>
+      <div class="space-y-3">
+        <select name="plant" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+          <option value="" disabled selected>Pilih tanaman</option>
+          <option value="kertas">Bougainvillea</option>
+          <option value="krokot">Portulaca</option>
+        </select>
+        <input type="date" name="date" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+        <select name="stage" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+          <option value="" disabled selected>Tahap pertumbuhan</option>
+          <option value="seed">Seed</option><option value="sprout">Sprout</option>
+          <option value="growing">Growing</option><option value="mature">Mature</option><option value="bloom">Bloom</option>
+        </select>
+        <select name="condition" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+          <option value="" disabled selected>Kondisi</option>
+          <option value="healthy">Healthy</option><option value="attention">Needs Attention</option>
+          <option value="recovering">Recovering</option><option value="critical">Critical</option>
+        </select>
+        <input type="text" name="activity" placeholder="Aktivitas (cth: disiram & dicek)" required maxlength="120" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+        <textarea name="notes" rows="2" placeholder="Catatan (opsional)" maxlength="200" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white resize-none"></textarea>
+
+        <label class="flex items-center justify-center gap-2 border border-dashed border-ink/25 rounded-xl px-4 py-4 text-sm text-ink/60 cursor-pointer">
+          <i data-lucide="camera" class="w-4 h-4"></i> <span id="photoLabel">Ambil Foto (opsional)</span>
+          <input type="file" name="photo" accept="image/*" capture="environment" class="hidden" id="photoInput">
+        </label>
+        <img id="photoPreview" class="hidden w-full h-40 object-cover rounded-xl" alt="Preview foto">
+      </div>
+      <p id="journalFormError" class="hidden text-xs text-kertas text-center mt-3"></p>
+      <div class="flex gap-3 mt-5">
+        <button type="button" id="closeAddForm" class="flex-1 border border-ink/20 py-3 rounded-full text-sm font-semibold">Batal</button>
+        <button type="submit" id="submitUpdateBtn" class="flex-1 bg-forest text-cream py-3 rounded-full text-sm font-semibold">Simpan</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden max-w-xs bg-ink text-cream rounded-2xl px-5 py-3 shadow-lg text-sm text-center"></div>
+
+<script>
+lucide.createIcons();
+
+// ===== SUPABASE CONFIG — samain persis dengan yang di index.html =====
+const SUPABASE_URL = 'https://datqwjp1cdaoklgssxv.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_eZJxQQCRoljYYrKVVRMi9A_r2XLsuTA'; // <-- isi anon/publishable key yang sama kayak di index.html
+const isConfigured = !SUPABASE_ANON_KEY.startsWith('YOUR_');
+const sb = isConfigured ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+let currentUser = null;
+const plantLabel = { kertas: 'Bougainvillea', krokot: 'Portulaca' };
+const stageLabel = { seed: 'Seed', sprout: 'Sprout', growing: 'Growing', mature: 'Mature', bloom: 'Bloom' };
+const stagePercent = { seed: 20, sprout: 40, growing: 60, mature: 80, bloom: 100 };
+const conditionLabel = { healthy: 'Healthy', attention: 'Needs Attention', recovering: 'Recovering', critical: 'Critical' };
+const conditionDot = { healthy: '🟢', attention: '🟡', recovering: '🔵', critical: '🔴' };
+
+function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+function formatDate(s) { const d = new Date(s); return isNaN(d.getTime()) ? s : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.remove('hidden');
+  setTimeout(() => t.classList.add('hidden'), 3000);
+}
+
+// ===== AUTH =====
+const authScreen = document.getElementById('authScreen');
+const mainApp = document.getElementById('mainApp');
+const signInForm = document.getElementById('signInForm');
+const registerForm = document.getElementById('registerForm');
+
+document.getElementById('tabSignIn').addEventListener('click', () => switchTab('signin'));
+document.getElementById('tabRegister').addEventListener('click', () => switchTab('register'));
+function switchTab(tab) {
+  const isSignIn = tab === 'signin';
+  document.getElementById('tabSignIn').classList.toggle('active', isSignIn);
+  document.getElementById('tabRegister').classList.toggle('active', !isSignIn);
+  signInForm.classList.toggle('hidden', !isSignIn);
+  registerForm.classList.toggle('hidden', isSignIn);
+}
+
+function updateAuthUI() {
+  const loggedIn = !!currentUser;
+  authScreen.classList.toggle('hidden', loggedIn);
+  mainApp.classList.toggle('hidden', !loggedIn);
+  document.getElementById('openAuthBtn').classList.toggle('hidden', loggedIn);
+  const userArea = document.getElementById('userArea');
+  userArea.classList.toggle('hidden', !loggedIn);
+  userArea.classList.toggle('flex', loggedIn);
+  if (loggedIn) {
+    const name = currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || '';
+    document.getElementById('welcomeText').textContent = name;
+  }
+}
+
+signInForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('signInError'); errEl.classList.add('hidden');
+  if (!sb) { errEl.textContent = 'Supabase belum dikonfigurasi.'; errEl.classList.remove('hidden'); return; }
+  const fd = new FormData(signInForm);
+  const { error } = await sb.auth.signInWithPassword({ email: fd.get('email'), password: fd.get('password') });
+  if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
+  signInForm.reset();
+});
+
+registerForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('registerError'); const okEl = document.getElementById('registerSuccess');
+  errEl.classList.add('hidden'); okEl.classList.add('hidden');
+  if (!sb) { errEl.textContent = 'Supabase belum dikonfigurasi.'; errEl.classList.remove('hidden'); return; }
+  const fd = new FormData(registerForm);
+  const { data, error } = await sb.auth.signUp({ email: fd.get('email'), password: fd.get('password'), options: { data: { name: fd.get('name') } } });
+  if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
+  registerForm.reset();
+  if (!data.session) { okEl.textContent = 'Cek email buat konfirmasi, lalu Sign In.'; okEl.classList.remove('hidden'); switchTab('signin'); }
+});
+
+document.getElementById('openAuthBtn').addEventListener('click', () => { authScreen.scrollIntoView({ behavior: 'smooth' }); });
+document.getElementById('signOutBtn').addEventListener('click', async () => { if (sb) await sb.auth.signOut(); });
+
+if (sb) {
+  sb.auth.onAuthStateChange((event, session) => {
+    currentUser = session?.user ?? null;
+    updateAuthUI();
+    if (currentUser) { loadJournal(); loadPlantStatus(); }
+  });
+  sb.auth.getSession().then(({ data }) => { currentUser = data.session?.user ?? null; updateAuthUI(); if (currentUser) { loadJournal(); loadPlantStatus(); } });
+}
+
+// ===== PLANT STATUS =====
+async function loadPlantStatus() {
+  if (!sb) return;
+  const { data, error } = await sb.from('plants').select('*');
+  if (error || !data) return;
+  const row = document.getElementById('plantStatusRow');
+  row.innerHTML = data.map((plant) => {
+    const isKertas = plant.id === 'kertas';
+    const label = plant.last_checked ? `${conditionDot[plant.current_condition] || ''} ${stageLabel[plant.current_stage] || ''}` : 'Belum ada data';
+    return `<div class="border ${isKertas ? 'border-kertas/30' : 'border-krokot/30'} rounded-2xl p-4">
+      <p class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas' : 'text-krokot'} mb-1">${plantLabel[plant.id]}</p>
+      <p class="text-sm font-semibold">${label}</p>
+    </div>`;
+  }).join('');
+}
+
+// ===== JOURNAL =====
+let activePlantFilter = 'semua';
+let searchQuery = '';
+let allEntries = [];
+const journalGrid = document.getElementById('journalGrid');
+const journalEmpty = document.getElementById('journalEmpty');
+const journalErrorState = document.getElementById('journalErrorState');
+
+function cardHtml(e) {
+  const isKertas = e.plant_id === 'kertas';
+  const owner = e.profiles?.name || 'Anggota';
+  const canManage = currentUser && e.user_id === currentUser.id;
+  return `<article class="border ${isKertas ? 'border-kertas/25' : 'border-krokot/25'} rounded-2xl p-4" data-id="${e.id}">
+    <div class="flex items-center justify-between">
+      <span class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas' : 'text-krokot'}">${plantLabel[e.plant_id]}</span>
+      ${canManage ? `<button class="js-delete text-ink/30" data-id="${e.id}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+    </div>
+    ${e.photo_url ? `<img src="${e.photo_url}" class="w-full h-32 object-cover rounded-lg mt-2" loading="lazy" alt="Foto update">` : ''}
+    <p class="font-mono text-[11px] text-ink/40 mt-2">${formatDate(e.date)} · ${escapeHtml(owner)}</p>
+    <div class="h-1.5 bg-ink/10 rounded-full overflow-hidden mt-2"><div class="h-full ${isKertas ? 'bg-kertas' : 'bg-krokot'}" style="width:${stagePercent[e.stage] || 0}%"></div></div>
+    <div class="flex items-center justify-between mt-1.5">
+      <span class="text-xs font-semibold">${stageLabel[e.stage] || e.stage}</span>
+      <span class="text-[10px] bg-ink/5 px-2 py-0.5 rounded-full">${conditionDot[e.condition] || ''} ${conditionLabel[e.condition] || e.condition}</span>
+    </div>
+    <p class="text-sm text-ink/70 mt-2">${escapeHtml(e.activity)}</p>
+    ${e.notes ? `<p class="text-xs text-ink/50 mt-1">${escapeHtml(e.notes)}</p>` : ''}
+  </article>`;
+}
+
+function renderList() {
+  if (allEntries.length === 0) { journalGrid.classList.add('hidden'); journalEmpty.classList.remove('hidden'); return; }
+  journalGrid.classList.remove('hidden'); journalEmpty.classList.add('hidden');
+  const q = searchQuery.trim().toLowerCase();
+  const filtered = allEntries.filter((e) => (activePlantFilter === 'semua' || e.plant_id === activePlantFilter) && (!q || (e.activity || '').toLowerCase().includes(q) || (e.notes || '').toLowerCase().includes(q)));
+  journalGrid.innerHTML = filtered.length ? filtered.map(cardHtml).join('') : '<p class="text-sm text-ink/40 text-center py-10">Gak ada yang cocok.</p>';
+  lucide.createIcons();
+}
+
+async function loadJournal() {
+  journalErrorState.classList.add('hidden');
+  if (!sb) { journalGrid.classList.add('hidden'); journalEmpty.classList.add('hidden'); journalErrorState.classList.remove('hidden'); return; }
+  const { data, error } = await sb.from('growth_updates').select('*, profiles(name)').order('created_at', { ascending: false });
+  if (error) { journalGrid.classList.add('hidden'); journalEmpty.classList.add('hidden'); journalErrorState.classList.remove('hidden'); return; }
+  allEntries = data || [];
+  renderList();
+}
+document.getElementById('journalRetryBtn').addEventListener('click', loadJournal);
+document.getElementById('journalSearch').addEventListener('input', (e) => { searchQuery = e.target.value; renderList(); });
+document.querySelectorAll('#plantFilters .jf-btn').forEach((btn) => btn.addEventListener('click', () => {
+  document.querySelectorAll('#plantFilters .jf-btn').forEach((b) => b.classList.remove('active'));
+  btn.classList.add('active'); activePlantFilter = btn.dataset.filter; renderList();
+}));
+journalGrid.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.js-delete'); if (!btn || !sb) return;
+  if (!confirm('Hapus update ini?')) return;
+  const { error } = await sb.from('growth_updates').delete().eq('id', btn.dataset.id);
+  if (!error) loadJournal();
+});
+
+// ===== ADD FORM + FOTO KAMERA =====
+const overlay = document.getElementById('addFormOverlay');
+const journalForm = document.getElementById('journalForm');
+const photoInput = document.getElementById('photoInput');
+const photoPreview = document.getElementById('photoPreview');
+let selectedPhotoFile = null;
+
+document.getElementById('openAddForm').addEventListener('click', () => { overlay.classList.remove('hidden'); overlay.classList.add('flex'); });
+document.getElementById('closeAddForm').addEventListener('click', closeForm);
+overlay.addEventListener('click', (e) => { if (e.target === overlay) closeForm(); });
+function closeForm() { overlay.classList.add('hidden'); overlay.classList.remove('flex'); }
+
+photoInput.addEventListener('change', () => {
+  const file = photoInput.files[0];
+  if (!file) return;
+  selectedPhotoFile = file;
+  document.getElementById('photoLabel').textContent = file.name;
+  photoPreview.src = URL.createObjectURL(file);
+  photoPreview.classList.remove('hidden');
+});
+
+async function uploadPhoto(file, userId) {
+  const ext = file.name.split('.').pop();
+  const path = `${userId}/${Date.now()}.${ext}`;
+  const { error } = await sb.storage.from('plant-photos').upload(path, file);
+  if (error) throw error;
+  const { data } = sb.storage.from('plant-photos').getPublicUrl(path);
+  return data.publicUrl;
+}
+
+journalForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const errEl = document.getElementById('journalFormError'); errEl.classList.add('hidden');
+  if (!sb || !currentUser) { errEl.textContent = 'Sign in dulu.'; errEl.classList.remove('hidden'); return; }
+  const fd = new FormData(journalForm);
+  const submitBtn = document.getElementById('submitUpdateBtn');
+  submitBtn.disabled = true; submitBtn.textContent = 'Menyimpan...';
+
+  try {
+    let photoUrl = null;
+    if (selectedPhotoFile) {
+      if (selectedPhotoFile.size > 5 * 1024 * 1024) throw new Error('Ukuran foto maksimal 5MB.');
+      photoUrl = await uploadPhoto(selectedPhotoFile, currentUser.id);
+    }
+    const payload = {
+      plant_id: fd.get('plant'), user_id: currentUser.id, date: fd.get('date'),
+      stage: fd.get('stage'), condition: fd.get('condition'),
+      activity: (fd.get('activity') || '').trim(), notes: (fd.get('notes') || '').trim() || null,
+      photo_url: photoUrl,
+    };
+    const { error } = await sb.from('growth_updates').insert(payload);
+    if (error) throw error;
+
+    journalForm.reset(); selectedPhotoFile = null; photoPreview.classList.add('hidden');
+    document.getElementById('photoLabel').textContent = 'Ambil Foto (opsional)';
+    closeForm(); showToast('Update tersimpan!'); loadJournal(); loadPlantStatus();
+  } catch (err) {
+    errEl.textContent = err.message || 'Gagal menyimpan.'; errEl.classList.remove('hidden');
+  } finally {
+    submitBtn.disabled = false; submitBtn.textContent = 'Simpan';
+  }
+});
+
+// ===== REALTIME =====
+if (sb) {
+  sb.channel('mobile-growth-updates')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'growth_updates' }, (payload) => {
+      if (payload.eventType === 'INSERT' && payload.new.user_id !== currentUser?.id) {
+        showToast(`Update baru: ${plantLabel[payload.new.plant_id] || 'tanaman'}`);
+      }
+      if (currentUser) { loadJournal(); loadPlantStatus(); }
+    })
+    .subscribe();
+}
+
+// ===== SERVICE WORKER =====
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').catch(() => {});
+}
+</script>
+</body>
+</html>

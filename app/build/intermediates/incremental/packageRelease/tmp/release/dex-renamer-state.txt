@@ -1,0 +1,4 @@
+#Sun Aug 30 13:41:12 WIB 2026
+base.0=C\:\\Users\\ftnaditiaazyrexx\\Downloads\\project apk\\app\\build\\intermediates\\dex\\release\\minifyReleaseWithR8\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
