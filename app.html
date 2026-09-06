@@ -41,11 +41,43 @@
     <div id="authArea">
       <button id="openAuthBtn" class="text-sm font-semibold text-forest">Sign In</button>
       <div id="userArea" class="hidden items-center gap-3">
+        <span id="streakBadge" class="hidden items-center gap-1 text-xs font-medium text-krokot"><i data-lucide="flame" class="w-3.5 h-3.5"></i><span id="streakCount">0</span></span>
+        <button id="helpBtn" type="button" class="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center text-ink/50" aria-label="Bantuan"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
         <span id="welcomeText" class="text-xs text-ink/60"></span>
         <button id="signOutBtn" class="text-xs border border-ink/20 rounded-full px-3 py-1">Logout</button>
       </div>
     </div>
   </header>
+
+  <!-- onboarding modal: 3 langkah, cuma tampil otomatis pertama kali (profiles.onboarded_at masih kosong) -->
+  <div id="onboardOverlay" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-ink/60 backdrop-blur-sm">
+    <div class="bg-cream rounded-3xl p-8 w-full max-w-sm text-center">
+      <div id="obStep0">
+        <i data-lucide="sprout" class="w-10 h-10 mx-auto text-forest mb-5"></i>
+        <h2 class="font-display font-bold text-xl mb-3">Welcome to Growth Together</h2>
+        <p class="text-sm text-ink/60 leading-relaxed">Aplikasi ini bantu kelompok kamu memantau pertumbuhan Bougainvillea &amp; Portulaca bareng-bareng, dari HP masing-masing.</p>
+      </div>
+      <div id="obStep1" class="hidden">
+        <i data-lucide="camera" class="w-10 h-10 mx-auto text-forest mb-5"></i>
+        <h2 class="font-display font-bold text-xl mb-3">Monitor your plants</h2>
+        <p class="text-sm text-ink/60 leading-relaxed">Tambahkan update kapan pun kamu cek tanaman — tahap pertumbuhan, kondisi, dan catatan singkat.</p>
+      </div>
+      <div id="obStep2" class="hidden">
+        <i data-lucide="flame" class="w-10 h-10 mx-auto text-krokot mb-5"></i>
+        <h2 class="font-display font-bold text-xl mb-3">Grow together</h2>
+        <p class="text-sm text-ink/60 leading-relaxed">Tiap update kasih kamu XP dan naikin level. Update tiap hari buat jaga streak — dan lihat progress kelompok di leaderboard.</p>
+      </div>
+      <div class="flex gap-2 justify-center mt-7 mb-6" id="obDots">
+        <span class="ob-dot w-1.5 h-1.5 rounded-full bg-forest" data-i="0"></span>
+        <span class="ob-dot w-1.5 h-1.5 rounded-full bg-ink/15" data-i="1"></span>
+        <span class="ob-dot w-1.5 h-1.5 rounded-full bg-ink/15" data-i="2"></span>
+      </div>
+      <div class="flex gap-3">
+        <button id="obBack" type="button" class="hidden flex-1 border border-ink/20 py-3 rounded-full text-sm font-semibold">Back</button>
+        <button id="obNext" type="button" class="flex-1 bg-forest text-cream py-3 rounded-full text-sm font-semibold">Next</button>
+      </div>
+    </div>
+  </div>
 
   <!-- auth screen (tampil kalau belum login) -->
   <section id="authScreen" class="px-5 py-10 max-w-sm mx-auto">
@@ -71,7 +103,34 @@
 
   <!-- main app (tampil kalau udah login) -->
   <main id="mainApp" class="hidden px-5 py-6 max-w-lg mx-auto">
+    <div id="missionsCard" class="hidden rounded-2xl border border-ink/10 p-4 mb-4">
+      <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-3">Today's Missions</p>
+      <div id="missionsList" class="space-y-2.5"></div>
+    </div>
+
+    <div id="levelCard" class="hidden rounded-2xl border border-ink/10 p-4 mb-4">
+      <div class="flex items-center justify-between mb-2">
+        <div>
+          <p id="levelLabel" class="text-xs font-mono uppercase tracking-wider text-ink/40">Level 1</p>
+          <p id="xpLabel" class="font-display font-bold text-xl">0 XP</p>
+        </div>
+        <span class="flex items-center gap-1.5 text-sm font-medium text-krokot bg-krokot/10 px-3 py-1.5 rounded-full">
+          <i data-lucide="flame" class="w-4 h-4"></i><span id="streakLabel">0 hari</span>
+        </span>
+      </div>
+      <div class="h-2 rounded-full bg-ink/10 overflow-hidden mt-3">
+        <div id="levelProgressBar" class="h-full bg-forest" style="width:0%"></div>
+      </div>
+      <p id="levelNextLabel" class="text-[11px] text-ink/40 mt-1.5"></p>
+    </div>
+
+    <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-2.5">My Plants</p>
     <div id="plantStatusRow" class="grid grid-cols-2 gap-3 mb-6"></div>
+
+    <div id="leaderboardCard" class="hidden mb-6">
+      <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-2.5">Team Leaderboard</p>
+      <div id="leaderboardList" class="rounded-2xl border border-ink/10 divide-y divide-ink/8"></div>
+    </div>
 
     <button id="openAddForm" class="w-full flex items-center justify-center gap-2 bg-forest text-cream py-3.5 rounded-full text-sm font-semibold mb-5">
       <i data-lucide="plus" class="w-4 h-4"></i> Tambah Update
@@ -124,8 +183,8 @@
         <textarea name="notes" rows="2" placeholder="Catatan (opsional)" maxlength="200" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white resize-none"></textarea>
 
         <label class="flex items-center justify-center gap-2 border border-dashed border-ink/25 rounded-xl px-4 py-4 text-sm text-ink/60 cursor-pointer">
-          <i data-lucide="camera" class="w-4 h-4"></i> <span id="photoLabel">Ambil Foto (opsional)</span>
-          <input type="file" name="photo" accept="image/*" capture="environment" class="hidden" id="photoInput">
+          <i data-lucide="camera" class="w-4 h-4"></i> <span id="photoLabel">Ambil / Pilih Foto (opsional)</span>
+          <input type="file" name="photo" accept="image/*" class="hidden" id="photoInput">
         </label>
         <img id="photoPreview" class="hidden w-full h-40 object-cover rounded-xl" alt="Preview foto">
       </div>
@@ -222,9 +281,9 @@ if (sb) {
   sb.auth.onAuthStateChange((event, session) => {
     currentUser = session?.user ?? null;
     updateAuthUI();
-    if (currentUser) { loadJournal(); loadPlantStatus(); }
+    if (currentUser) { loadJournal(); loadPlantStatus(); loadGamification(); loadLeaderboard(); }
   });
-  sb.auth.getSession().then(({ data }) => { currentUser = data.session?.user ?? null; updateAuthUI(); if (currentUser) { loadJournal(); loadPlantStatus(); } });
+  sb.auth.getSession().then(({ data }) => { currentUser = data.session?.user ?? null; updateAuthUI(); if (currentUser) { loadJournal(); loadPlantStatus(); loadGamification(); loadLeaderboard(); } });
 }
 
 // ===== PLANT STATUS =====
@@ -242,6 +301,126 @@ async function loadPlantStatus() {
     </div>`;
   }).join('');
 }
+
+// ===== GAMIFIKASI: level, XP, streak, missions, leaderboard =====
+// Semua query di bawah ini defensif: kalau migrasi Supabase (kolom xp/streak di profiles,
+// tabel xp_events, view leaderboard) belum dijalankan, bagian ini diam-diam sembunyi
+// tanpa mengganggu fitur monitoring utama yang sudah ada.
+function xpForLevel(level) { return 50 * level * (level - 1); }
+function levelForXp(xp) {
+  let lvl = 1;
+  while (xpForLevel(lvl + 1) <= xp) lvl++;
+  return lvl;
+}
+const MISSION_DEFS = [
+  { key: 'update_base', label: 'Update your plant', xp: 10 },
+  { key: 'observation', label: 'Add an observation', xp: 5 },
+  { key: 'photo', label: 'Upload a photo', xp: 15 },
+];
+
+async function loadGamification() {
+  if (!sb || !currentUser) return;
+  try {
+    const { data: profile, error: profErr } = await sb
+      .from('profiles')
+      .select('xp, current_streak, onboarded_at')
+      .eq('id', currentUser.id)
+      .single();
+    if (profErr || !profile) throw profErr || new Error('no profile');
+
+    const xp = profile.xp || 0;
+    const level = levelForXp(xp);
+    const thisLevelXp = xpForLevel(level);
+    const nextLevelXp = xpForLevel(level + 1);
+    const pct = Math.min(100, Math.round(((xp - thisLevelXp) / (nextLevelXp - thisLevelXp)) * 100));
+
+    document.getElementById('levelLabel').textContent = `Level ${level}`;
+    document.getElementById('xpLabel').textContent = `${xp.toLocaleString('id-ID')} XP`;
+    document.getElementById('levelProgressBar').style.width = pct + '%';
+    document.getElementById('levelNextLabel').textContent = `${nextLevelXp - xp} XP lagi ke Level ${level + 1}`;
+    document.getElementById('streakLabel').textContent = `${profile.current_streak || 0} hari`;
+    document.getElementById('levelCard').classList.remove('hidden');
+
+    const streakBadge = document.getElementById('streakBadge');
+    document.getElementById('streakCount').textContent = profile.current_streak || 0;
+    streakBadge.classList.remove('hidden'); streakBadge.classList.add('flex');
+
+    const today = new Date().toISOString().slice(0, 10);
+    const { data: events } = await sb
+      .from('xp_events')
+      .select('source')
+      .eq('user_id', currentUser.id)
+      .eq('event_date', today);
+    const doneSet = new Set((events || []).map((e) => e.source));
+
+    document.getElementById('missionsList').innerHTML = MISSION_DEFS.map((m) => {
+      const done = doneSet.has(m.key);
+      return `<div class="flex items-center gap-3">
+        <i data-lucide="${done ? 'check-circle-2' : 'circle'}" class="w-5 h-5 ${done ? 'text-forest' : 'text-ink/20'} shrink-0"></i>
+        <span class="text-sm flex-1 ${done ? 'line-through text-ink/35' : ''}">${m.label}</span>
+        <span class="text-xs ${done ? 'text-ink/30' : 'text-forest font-medium'}">+${m.xp} XP</span>
+      </div>`;
+    }).join('');
+    document.getElementById('missionsCard').classList.remove('hidden');
+    lucide.createIcons();
+
+    if (!profile.onboarded_at) showOnboarding();
+  } catch (err) {
+    document.getElementById('missionsCard').classList.add('hidden');
+    document.getElementById('levelCard').classList.add('hidden');
+    document.getElementById('streakBadge').classList.add('hidden');
+  }
+}
+
+async function loadLeaderboard() {
+  if (!sb) return;
+  try {
+    const { data, error } = await sb.from('leaderboard').select('*').limit(10);
+    if (error || !data) throw error || new Error('no data');
+    document.getElementById('leaderboardList').innerHTML = data.map((row) => {
+      const isMe = currentUser && row.id === currentUser.id;
+      return `<div class="flex items-center gap-3 px-4 py-2.5 ${isMe ? 'bg-forest/5' : ''}">
+        <span class="text-xs text-ink/35 w-4">${row.rank}</span>
+        <div class="w-7 h-7 rounded-full ${isMe ? 'bg-forest text-cream' : 'bg-ink/5 text-ink/60'} flex items-center justify-center text-[10px] font-bold">${escapeHtml((row.name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase())}</div>
+        <span class="text-sm flex-1 ${isMe ? 'font-semibold' : ''}">${isMe ? 'You' : escapeHtml(row.name || 'Anggota')}</span>
+        <span class="text-xs text-ink/50">${(row.xp || 0).toLocaleString('id-ID')} XP</span>
+      </div>`;
+    }).join('');
+    document.getElementById('leaderboardCard').classList.remove('hidden');
+  } catch (err) {
+    document.getElementById('leaderboardCard').classList.add('hidden');
+  }
+}
+
+// ===== ONBOARDING =====
+let obStep = 0;
+const obStepIds = ['obStep0', 'obStep1', 'obStep2'];
+function renderOnboardStep() {
+  obStepIds.forEach((id, i) => document.getElementById(id).classList.toggle('hidden', i !== obStep));
+  document.querySelectorAll('.ob-dot').forEach((d, i) => {
+    d.classList.toggle('bg-forest', i === obStep);
+    d.classList.toggle('bg-ink/15', i !== obStep);
+  });
+  document.getElementById('obBack').classList.toggle('hidden', obStep === 0);
+  document.getElementById('obNext').textContent = obStep === 2 ? 'Start Monitoring' : 'Next';
+}
+function showOnboarding() {
+  obStep = 0; renderOnboardStep();
+  const el = document.getElementById('onboardOverlay');
+  el.classList.remove('hidden'); el.classList.add('flex');
+}
+async function closeOnboarding() {
+  const el = document.getElementById('onboardOverlay');
+  el.classList.add('hidden'); el.classList.remove('flex');
+  if (sb && currentUser) {
+    await sb.from('profiles').update({ onboarded_at: new Date().toISOString() }).eq('id', currentUser.id);
+  }
+}
+document.getElementById('obNext').addEventListener('click', () => {
+  if (obStep < 2) { obStep++; renderOnboardStep(); } else { closeOnboarding(); }
+});
+document.getElementById('obBack').addEventListener('click', () => { if (obStep > 0) { obStep--; renderOnboardStep(); } });
+document.getElementById('helpBtn').addEventListener('click', showOnboarding);
 
 // ===== JOURNAL =====
 let activePlantFilter = 'semua';
@@ -356,8 +535,8 @@ journalForm.addEventListener('submit', async (e) => {
     if (error) throw error;
 
     journalForm.reset(); selectedPhotoFile = null; photoPreview.classList.add('hidden');
-    document.getElementById('photoLabel').textContent = 'Ambil Foto (opsional)';
-    closeForm(); showToast('Update tersimpan!'); loadJournal(); loadPlantStatus();
+    document.getElementById('photoLabel').textContent = 'Ambil / Pilih Foto (opsional)';
+    closeForm(); showToast('Update tersimpan!'); loadJournal(); loadPlantStatus(); loadGamification(); loadLeaderboard();
   } catch (err) {
     errEl.textContent = err.message || 'Gagal menyimpan.'; errEl.classList.remove('hidden');
   } finally {
@@ -372,7 +551,7 @@ if (sb) {
       if (payload.eventType === 'INSERT' && payload.new.user_id !== currentUser?.id) {
         showToast(`Update baru: ${plantLabel[payload.new.plant_id] || 'tanaman'}`);
       }
-      if (currentUser) { loadJournal(); loadPlantStatus(); }
+      if (currentUser) { loadJournal(); loadPlantStatus(); loadGamification(); loadLeaderboard(); }
     })
     .subscribe();
 }

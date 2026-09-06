@@ -309,25 +309,40 @@
   <!-- ================= GROWTH JOURNAL ================= -->
   <section id="journal" class="py-24 md:py-32">
     <div class="max-w-6xl mx-auto px-6 md:px-8">
-      <div data-reveal class="flex flex-wrap items-end justify-between gap-6">
-        <div class="max-w-lg">
-          <div class="flex items-center gap-3 mb-4">
-            <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase">Plant Monitoring</p>
-            <span id="liveIndicator" class="inline-flex items-center gap-1.5 text-[11px] font-mono text-ink/40">
-              <span id="liveDot" class="w-1.5 h-1.5 rounded-full bg-ink/30"></span>
-              <span id="liveText">Connecting…</span>
-            </span>
-          </div>
-          <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight">Monitor Our Plants' Journey</h2>
-          <p class="mt-5 text-base md:text-lg text-ink/70 leading-relaxed">Pantau perkembangan tanaman, kondisi terakhir, dan aktivitas perawatan secara bersama-sama.</p>
-          <p id="latestUpdateLine" class="mt-3 text-sm font-medium text-forest min-h-[1.25rem]"></p>
-        </div>
-        <button id="openAddForm" type="button" class="inline-flex items-center gap-2 bg-forest text-cream px-6 py-3.5 rounded-full text-sm font-semibold hover:bg-ink transition-colors shrink-0">
-          <i data-lucide="plus" class="w-4 h-4"></i> Add Monitoring Update
-        </button>
+      <div data-reveal id="journalHint" class="rounded-2xl bg-forest/8 border border-forest/15 px-4 py-3 flex items-center gap-3 mb-8 max-w-2xl">
+        <i data-lucide="sparkles" class="w-4 h-4 text-forest shrink-0"></i>
+        <p class="text-xs text-ink/70 flex-1">Baru di sini? Tambahkan update pertamamu buat mulai memantau tanaman.</p>
+        <button type="button" id="dismissHint" class="text-ink/30 shrink-0" aria-label="Tutup"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
       </div>
 
-      <div data-reveal class="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3">
+      <div data-reveal class="max-w-lg">
+        <div class="flex items-center gap-3 mb-4">
+          <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase">Plant Monitoring</p>
+          <span id="liveIndicator" class="inline-flex items-center gap-1.5 text-[11px] font-mono text-ink/40">
+            <span id="liveDot" class="w-1.5 h-1.5 rounded-full bg-ink/30"></span>
+            <span id="liveText">Connecting…</span>
+          </span>
+        </div>
+        <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight">Monitor Our Plants' Journey</h2>
+        <p id="latestUpdateLine" class="mt-3 text-sm font-medium text-forest min-h-[1.25rem]"></p>
+      </div>
+
+      <button id="openAddForm" type="button" class="mt-6 w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-forest text-cream px-7 py-4 rounded-full text-base font-semibold hover:bg-ink transition-colors shadow-sm">
+        <i data-lucide="plus" class="w-5 h-5"></i> Add Monitoring Update
+      </button>
+
+      <p class="mt-10 text-xs font-mono uppercase tracking-wider text-ink/40 mb-3">Plant Status</p>
+      <div id="plantStatusMini" class="grid sm:grid-cols-2 gap-3 mb-10 max-w-2xl"></div>
+
+      <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-3">Team Leaderboard</p>
+      <div id="leaderboardList" class="rounded-2xl border border-ink/10 divide-y divide-ink/8 mb-10 max-w-2xl"></div>
+
+      <div class="flex items-center justify-between mb-4">
+        <p class="text-xs font-mono uppercase tracking-wider text-ink/40">Journal</p>
+        <button type="button" id="toggleFilters" class="text-xs text-forest flex items-center gap-1 font-medium">Filter &amp; search <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i></button>
+      </div>
+
+      <div id="filterPanel" class="hidden mb-6 space-y-3">
         <div class="flex flex-wrap gap-2" id="plantFilters">
           <button type="button" class="jf-btn active px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="semua">All Plants</button>
           <button type="button" class="jf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="kertas">Bougainvillea</button>
@@ -341,22 +356,22 @@
           <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="mature">Mature</button>
           <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="bloom">Bloom</button>
         </div>
-      </div>
-      <div data-reveal class="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3">
-        <div class="flex flex-wrap gap-2" id="conditionFilters">
-          <button type="button" class="cf-btn active px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="semua">All Conditions</button>
-          <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="healthy">🟢 Healthy</button>
-          <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="attention">🟡 Needs Attention</button>
-          <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="recovering">🔵 Recovering</button>
-          <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="critical">🔴 Critical</button>
-        </div>
-        <div class="relative flex-1 min-w-[180px] max-w-xs">
-          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/30"></i>
-          <input id="journalSearch" type="text" placeholder="Search activity / notes…" class="w-full border border-ink/15 rounded-full pl-10 pr-4 py-2 text-xs bg-cream focus:border-forest focus:outline-none">
+        <div class="flex flex-wrap items-center gap-x-8 gap-y-3">
+          <div class="flex flex-wrap gap-2" id="conditionFilters">
+            <button type="button" class="cf-btn active px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="semua">All Conditions</button>
+            <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="healthy">🟢 Healthy</button>
+            <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="attention">🟡 Needs Attention</button>
+            <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="recovering">🔵 Recovering</button>
+            <button type="button" class="cf-btn px-4 py-2 rounded-full text-xs font-medium border border-ink/15 transition-colors" data-filter="critical">🔴 Critical</button>
+          </div>
+          <div class="relative flex-1 min-w-[180px] max-w-xs">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/30"></i>
+            <input id="journalSearch" type="text" placeholder="Search activity / notes…" class="w-full border border-ink/15 rounded-full pl-10 pr-4 py-2 text-xs bg-cream focus:border-forest focus:outline-none">
+          </div>
         </div>
       </div>
 
-      <div id="journalGrid" class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <div id="journalGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
 
       <div id="journalEmpty" class="hidden mt-10 text-center py-16 px-6 border border-dashed border-ink/15 rounded-2xl">
         <i data-lucide="sprout" class="w-8 h-8 mx-auto text-forest/50 mb-4"></i>
@@ -1093,6 +1108,8 @@
       closeJournalForm();
       loadJournal();
       loadPlantStatus();
+      loadPlantStatusMini();
+      loadLeaderboard();
     });
 
     // =====================================================
@@ -1113,6 +1130,58 @@
       });
     }
 
+    // ringkasan status tanaman versi ringkas untuk dashboard journal (data sama, tampilan beda)
+    async function loadPlantStatusMini() {
+      const row = document.getElementById('plantStatusMini');
+      if (!sb || !row) return;
+      const { data, error } = await sb.from('plants').select('*');
+      if (error || !data) { row.innerHTML = ''; return; }
+      row.innerHTML = data.map((plant) => {
+        const isKertas = plant.id === 'kertas';
+        const label = plant.last_checked
+          ? `${conditionDot[plant.current_condition] || ''} ${stageLabel[plant.current_stage] || plant.current_stage}`
+          : 'Belum ada data';
+        return `<div class="border ${isKertas ? 'border-kertas/30' : 'border-krokot/30'} rounded-2xl p-4">
+          <p class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas' : 'text-krokot'} mb-1">${plantLabel[plant.id]}</p>
+          <p class="text-sm font-semibold">${label}</p>
+        </div>`;
+      }).join('');
+    }
+
+    // leaderboard: defensif -- kalau migrasi Supabase (xp/streak/view leaderboard) belum jalan, diam-diam sembunyi
+    async function loadLeaderboard() {
+      const el = document.getElementById('leaderboardList');
+      if (!sb || !el) return;
+      try {
+        const { data, error } = await sb.from('leaderboard').select('*').limit(10);
+        if (error || !data) throw error || new Error('no data');
+        el.innerHTML = data.map((row) => {
+          const isMe = currentUser && row.id === currentUser.id;
+          const initials = (row.name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+          return `<div class="flex items-center gap-3 px-4 py-2.5 ${isMe ? 'bg-forest/5' : ''}">
+            <span class="text-xs text-ink/35 w-4">${row.rank}</span>
+            <div class="w-7 h-7 rounded-full ${isMe ? 'bg-forest text-cream' : 'bg-ink/5 text-ink/60'} flex items-center justify-center text-[10px] font-bold">${initials}</div>
+            <span class="text-sm flex-1 ${isMe ? 'font-semibold' : ''}">${isMe ? 'You' : (row.name || 'Anggota')}</span>
+            <span class="text-xs text-ink/50">${(row.xp || 0).toLocaleString('id-ID')} XP</span>
+          </div>`;
+        }).join('');
+      } catch (err) {
+        el.innerHTML = '';
+      }
+    }
+
+    // filter panel bisa dilipat + hint bisa ditutup -- murni UI, gak butuh Supabase
+    const filterPanel = document.getElementById('filterPanel');
+    const toggleFiltersBtn = document.getElementById('toggleFilters');
+    if (toggleFiltersBtn && filterPanel) {
+      toggleFiltersBtn.addEventListener('click', () => filterPanel.classList.toggle('hidden'));
+    }
+    const journalHint = document.getElementById('journalHint');
+    const dismissHintBtn = document.getElementById('dismissHint');
+    if (dismissHintBtn && journalHint) {
+      dismissHintBtn.addEventListener('click', () => { journalHint.style.display = 'none'; });
+    }
+
     // =====================================================
     // 13) REALTIME SUBSCRIPTION + INISIALISASI
     // =====================================================
@@ -1124,6 +1193,8 @@
           }
           loadJournal();
           loadPlantStatus();
+          loadPlantStatusMini();
+          loadLeaderboard();
         })
         .subscribe((status) => setLiveStatus(status === 'SUBSCRIBED'));
 
@@ -1133,6 +1204,8 @@
 
     loadJournal();
     loadPlantStatus();
+    loadPlantStatusMini();
+    loadLeaderboard();
   </script>
 </body>
 </html>
