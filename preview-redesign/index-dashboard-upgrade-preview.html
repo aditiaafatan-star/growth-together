@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Together — Website Dashboard (Journal) Upgrade Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.31.0/dist/umd/lucide.js"></script>
+<style type="text/tailwindcss">
+  @theme {
+    --color-cream: #F7F4EA; --color-ink: #0D1A13; --color-forest: #1F4B37; --color-sage: #6F8F7B;
+    --color-mist: #E4E9E0; --color-lime: #A6E06A; --color-kertas: #C4487A; --color-krokot: #D9863A;
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif; --font-body: 'Inter', system-ui, sans-serif;
+  }
+  body { font-family: var(--font-body); background: var(--color-cream); color: var(--color-ink); }
+  h1,h2,h3 { font-family: var(--font-display); }
+  .jf-btn { opacity:.6; } .jf-btn.active { background: var(--color-ink); color: var(--color-cream); opacity:1; }
+  .stage-track { display:flex; gap:3px; } .stage-seg { flex:1; height:5px; border-radius:999px; background: color-mix(in srgb, currentColor 14%, transparent); } .stage-seg.filled { background: currentColor; }
+  .mode-btn { opacity:.55; } .mode-btn.active { opacity:1; background:var(--color-ink); color:var(--color-cream); }
+</style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+  <div class="max-w-lg mx-auto pt-6 px-4">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-[11px] font-mono uppercase tracking-wider text-ink/40">Preview Fase 2 · index.html #journal</span>
+      <span class="text-[10px] bg-ink text-cream px-2 py-0.5 rounded-full">Belum diterapkan</span>
+    </div>
+    <div class="flex gap-1.5 p-1 bg-ink/8 rounded-full text-sm">
+      <button id="modeOld" class="mode-btn flex-1 py-1.5 rounded-full font-semibold">Sekarang</button>
+      <button id="modeNew" class="mode-btn active flex-1 py-1.5 rounded-full font-semibold">Baru</button>
+    </div>
+    <p class="text-[10px] text-ink/35 mt-2">Website TIDAK dapat missions/XP/level/streak — cuma leaderboard, sesuai keputusan kamu.</p>
+  </div>
+
+  <!-- ============ SEKARANG (rekonstruksi ringkas struktur asli) ============ -->
+  <section id="journalOld" class="hidden max-w-lg mx-auto px-4 pt-8 pb-16">
+    <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase mb-3">Plant Monitoring</p>
+    <h2 class="font-display font-semibold text-2xl tracking-tight mb-2">Monitor Our Plants' Journey</h2>
+    <p class="text-sm text-ink/60 mb-6">Pantau perkembangan tanaman, kondisi terakhir, dan aktivitas perawatan.</p>
+    <button class="inline-flex items-center gap-2 bg-forest text-cream px-5 py-2.5 rounded-full text-sm font-semibold mb-6"><i data-lucide="plus" class="w-4 h-4"></i>Add Monitoring Update</button>
+    <div class="flex flex-wrap gap-2 mb-2">
+      <span class="jf-btn active px-3 py-1.5 rounded-full text-xs border border-ink/15">All Plants</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Bougainvillea</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Portulaca</span>
+    </div>
+    <div class="flex flex-wrap gap-2 mb-2">
+      <span class="jf-btn active px-3 py-1.5 rounded-full text-xs border border-ink/15">All Stages</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Seed</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Sprout</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Growing</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Mature</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Bloom</span>
+    </div>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="jf-btn active px-3 py-1.5 rounded-full text-xs border border-ink/15">All Conditions</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Healthy</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Needs Attention</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Recovering</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Critical</span>
+    </div>
+    <input placeholder="Search activity / notes..." class="w-full border border-ink/15 rounded-full px-4 py-2 text-xs mb-6">
+    <div class="grid gap-4">
+      <div class="border border-ink/10 rounded-2xl p-5"><p class="text-[10px] font-mono uppercase text-krokot mb-1">Portulaca</p><p class="text-xs text-ink/40 mb-2">3 Sept 2026 · by Fadhil</p><div class="h-1.5 rounded-full bg-ink/10 mb-2"><div class="h-full w-3/5 bg-krokot rounded-full"></div></div><p class="font-semibold text-sm text-krokot">Growing</p><p class="text-xs mt-1">disiram</p><p class="text-xs text-ink/40">perlu matahari</p></div>
+      <div class="border border-ink/10 rounded-2xl p-5"><p class="text-[10px] font-mono uppercase text-kertas mb-1">Bougainvillea</p><p class="text-xs text-ink/40 mb-2">2 Sept 2026 · by Feliza</p><div class="h-1.5 rounded-full bg-ink/10 mb-2"><div class="h-full w-3/5 bg-kertas rounded-full"></div></div><p class="font-semibold text-sm text-kertas">Growing</p><p class="text-xs mt-1">perlu disiram</p></div>
+    </div>
+  </section>
+
+  <!-- ============ BARU ============ -->
+  <section id="journalNew" class="max-w-lg mx-auto px-4 pt-8 pb-16">
+    <div class="rounded-2xl bg-forest/8 border border-forest/15 px-4 py-3 flex items-center gap-3 mb-6" id="hintBanner">
+      <i data-lucide="sparkles" class="w-4 h-4 text-forest shrink-0"></i>
+      <p class="text-xs text-ink/70 flex-1">Baru di sini? Tambahkan update pertamamu buat mulai memantau tanaman.</p>
+      <button id="dismissHint" class="text-ink/30 shrink-0"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+    </div>
+
+    <div class="flex items-start justify-between gap-4 mb-6">
+      <div>
+        <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase mb-2">Plant Monitoring</p>
+        <h2 class="font-display font-semibold text-2xl tracking-tight">Monitor Our Plants' Journey</h2>
+      </div>
+    </div>
+    <button class="w-full flex items-center justify-center gap-2 bg-forest text-cream py-3.5 rounded-full text-sm font-semibold mb-7 shadow-sm"><i data-lucide="plus" class="w-4 h-4"></i>Add Monitoring Update</button>
+
+    <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-2.5">Plant Status</p>
+    <div class="grid grid-cols-2 gap-3 mb-7">
+      <div class="rounded-2xl border p-3.5" style="border-color:color-mix(in srgb, var(--color-kertas) 30%, transparent)">
+        <p class="text-[10px] font-mono uppercase tracking-wider mb-0.5 text-kertas">Bougainvillea</p>
+        <div class="stage-track text-kertas mt-2 mb-2"><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg filled"></div></div>
+        <div class="flex items-center justify-between"><span class="text-xs font-semibold">Bloom</span><span class="flex items-center gap-1 text-[10px] text-forest"><span class="w-1.5 h-1.5 rounded-full bg-forest"></span>Healthy</span></div>
+      </div>
+      <div class="rounded-2xl border p-3.5" style="border-color:color-mix(in srgb, var(--color-krokot) 30%, transparent)">
+        <p class="text-[10px] font-mono uppercase tracking-wider mb-0.5 text-krokot">Portulaca</p>
+        <div class="stage-track text-krokot mt-2 mb-2"><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg"></div><div class="stage-seg"></div></div>
+        <div class="flex items-center justify-between"><span class="text-xs font-semibold">Growing</span><span class="flex items-center gap-1 text-[10px]" style="color:#D9A22B"><span class="w-1.5 h-1.5 rounded-full" style="background:#D9A22B"></span>Attention</span></div>
+      </div>
+    </div>
+
+    <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-2.5">Team Leaderboard</p>
+    <div class="rounded-2xl border border-ink/10 divide-y divide-ink/8 mb-7">
+      <div class="flex items-center gap-3 px-4 py-2.5"><span class="text-xs text-ink/35 w-4">1</span><div class="w-7 h-7 rounded-full bg-forest/10 text-forest flex items-center justify-center text-[10px] font-bold">GA</div><span class="text-sm flex-1">Ghazy Alfi M.</span><span class="text-xs text-ink/50">2,100 XP</span></div>
+      <div class="flex items-center gap-3 px-4 py-2.5"><span class="text-xs text-ink/35 w-4">2</span><div class="w-7 h-7 rounded-full bg-kertas/10 text-kertas flex items-center justify-center text-[10px] font-bold">FN</div><span class="text-sm flex-1">Feliza Nuril A.</span><span class="text-xs text-ink/50">1,950 XP</span></div>
+      <div class="flex items-center gap-3 px-4 py-2.5"><span class="text-xs text-ink/35 w-4">3</span><div class="w-7 h-7 rounded-full bg-krokot/10 text-krokot flex items-center justify-center text-[10px] font-bold">FA</div><span class="text-sm flex-1">Fatan Aditiansyah</span><span class="text-xs text-ink/50">1,780 XP</span></div>
+    </div>
+
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-xs font-mono uppercase tracking-wider text-ink/40">Journal</p>
+      <button id="toggleFilters" class="text-[11px] text-forest flex items-center gap-1">Filter &amp; search <i data-lucide="chevron-down" class="w-3 h-3"></i></button>
+    </div>
+    <div id="filterPanel" class="hidden mb-4 space-y-2">
+      <div class="flex flex-wrap gap-2"><span class="jf-btn active px-3 py-1.5 rounded-full text-xs border border-ink/15">All Plants</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Bougainvillea</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Portulaca</span></div>
+      <div class="flex flex-wrap gap-2"><span class="jf-btn active px-3 py-1.5 rounded-full text-xs border border-ink/15">All Stages</span><span class="jf-btn px-3 py-1.5 rounded-full text-xs border border-ink/15">Seed–Bloom</span><span class="jf-btn active px-3 py-1.5 rounded-full text-xs border border-ink/15">All Conditions</span></div>
+      <input placeholder="Search activity / notes..." class="w-full border border-ink/15 rounded-full px-4 py-2 text-xs">
+    </div>
+
+    <div class="grid gap-3">
+      <div class="border border-ink/10 rounded-2xl p-4 flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-mono uppercase text-krokot">Portulaca</span><span class="text-[10px] text-ink/30">·</span><span class="text-[10px] text-ink/40">3 Sept · Fadhil</span></div>
+          <p class="text-sm font-medium">disiram</p>
+          <p class="text-xs text-ink/45">perlu matahari</p>
+        </div>
+        <span class="text-[10px] font-medium shrink-0 px-2 py-1 rounded-full" style="color:#8a5c0e; background:#D9A22B22">Needs Attention</span>
+      </div>
+      <div class="border border-ink/10 rounded-2xl p-4 flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-mono uppercase text-kertas">Bougainvillea</span><span class="text-[10px] text-ink/30">·</span><span class="text-[10px] text-ink/40">2 Sept · Feliza</span></div>
+          <p class="text-sm font-medium">perlu disiram</p>
+        </div>
+        <span class="text-[10px] font-medium shrink-0 px-2 py-1 rounded-full" style="color:#8a5c0e; background:#D9A22B22">Needs Attention</span>
+      </div>
+      <div class="border border-ink/10 rounded-2xl p-4 flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-mono uppercase text-krokot">Portulaca</span><span class="text-[10px] text-ink/30">·</span><span class="text-[10px] text-ink/40">1 Sept · Jazy</span></div>
+          <p class="text-sm font-medium">menanam</p>
+        </div>
+        <span class="text-[10px] font-medium shrink-0 px-2 py-1 rounded-full" style="color:#8a5c0e; background:#D9A22B22">Needs Attention</span>
+      </div>
+    </div>
+  </section>
+
+<script>
+lucide.createIcons();
+document.getElementById('toggleFilters').addEventListener('click', ()=>{
+  document.getElementById('filterPanel').classList.toggle('hidden');
+});
+document.getElementById('dismissHint').addEventListener('click', ()=>{
+  document.getElementById('hintBanner').style.display = 'none';
+});
+document.getElementById('modeNew').addEventListener('click', ()=>{
+  document.getElementById('modeNew').classList.add('active'); document.getElementById('modeOld').classList.remove('active');
+  document.getElementById('journalNew').classList.remove('hidden'); document.getElementById('journalOld').classList.add('hidden');
+});
+document.getElementById('modeOld').addEventListener('click', ()=>{
+  document.getElementById('modeOld').classList.add('active'); document.getElementById('modeNew').classList.remove('active');
+  document.getElementById('journalOld').classList.remove('hidden'); document.getElementById('journalNew').classList.add('hidden');
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>

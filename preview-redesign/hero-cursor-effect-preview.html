@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Together — Hero Cursor Effect Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.31.0/dist/umd/lucide.js"></script>
+<style type="text/tailwindcss">
+  @theme {
+    --color-cream: #F7F4EA;
+    --color-ink: #0D1A13;
+    --color-forest: #1F4B37;
+    --color-sage: #6F8F7B;
+    --color-mist: #E4E9E0;
+    --color-lime: #A6E06A;
+    --color-kertas: #C4487A;
+    --color-krokot: #D9863A;
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+  body { font-family: var(--font-body); background: var(--color-cream); color: var(--color-ink); }
+  h1, h2 { font-family: var(--font-display); }
+  ::selection { background: var(--color-lime); color: var(--color-ink); }
+
+  /* grid dasar -- PERSIS sama dengan .bg-grid yang dipakai di index.html asli, 44px, forest/5% */
+  .bg-grid { background-image: linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px); background-size: 44px 44px; }
+  .stem { stroke-dasharray: 300; stroke-dashoffset: 0; }
+  @keyframes bounce-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+  .scroll-cue { animation: bounce-y 1.8s ease-in-out infinite; }
+
+  .mode-btn { opacity: .55; }
+  .mode-btn.active { opacity: 1; background: var(--color-ink); color: var(--color-cream); }
+</style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+  <!-- ============ TOOLBAR REVIEW (bukan bagian dari situs -- cuma buat preview ini) ============ -->
+  <div class="max-w-md mx-auto pt-5 px-4">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-[11px] font-mono uppercase tracking-wider text-ink/40">Preview efek hero · index.html</span>
+      <span class="text-[10px] bg-ink text-cream px-2 py-0.5 rounded-full">Belum diterapkan</span>
+    </div>
+    <div class="flex gap-1.5 p-1 bg-ink/8 rounded-full text-sm">
+      <button id="modeStatic" class="mode-btn flex-1 py-1.5 rounded-full font-semibold">Sekarang (statis)</button>
+      <button id="modeLive" class="mode-btn active flex-1 py-1.5 rounded-full font-semibold">Baru (interactive)</button>
+    </div>
+    <p class="text-[10px] text-ink/35 mt-2">Grid dasarnya sekarang identik di kedua mode. Bedanya cuma pas mode "Baru" aktif & cursor didekatkan ke grid.</p>
+  </div>
+
+  <!-- simplified nav, cuma buat konteks -->
+  <nav class="max-w-6xl mx-auto px-6 md:px-8 flex items-center justify-between py-5 mt-2">
+    <a href="#" class="flex items-center gap-2 font-display font-semibold text-lg tracking-tight">
+      <i data-lucide="leaf" class="w-5 h-5 text-forest"></i> Growth Together
+    </a>
+    <div class="hidden md:flex items-center gap-7 text-sm font-medium text-ink/50">
+      <span>Our Story</span><span>Plants</span><span>Our Team</span><span>Growth Journal</span>
+    </div>
+  </nav>
+
+  <!-- ================= HERO (real content, copy dari index.html asli) ================= -->
+  <header id="home" class="relative pt-16 pb-28 md:pt-20 md:pb-36 overflow-hidden">
+    <!-- base grid: SELALU tampil sama persis di kedua mode, gak pernah disembunyikan -->
+    <div class="absolute inset-0 bg-grid text-forest/[0.05]" aria-hidden="true"></div>
+    <!-- layer reveal: transparan total kecuali di sekitar cursor waktu mode interactive aktif -->
+    <canvas id="heroCanvas" class="absolute inset-0 w-full h-full"></canvas>
+
+    <div class="max-w-6xl mx-auto px-6 md:px-8 relative grid md:grid-cols-2 gap-16 items-center">
+      <div>
+        <p class="font-mono text-xs tracking-[0.2em] text-forest/80 uppercase mb-5">Kelompok 4 · X TE 3 · SMKN 2 Purwokerto</p>
+        <h1 class="font-display font-semibold text-5xl md:text-6xl leading-[1.05] tracking-tight text-ink">Growth<br>Together</h1>
+        <p class="mt-5 text-lg md:text-xl font-display italic text-forest">"One Team, One Earth, One Future."</p>
+        <p class="mt-6 text-base md:text-lg text-ink/70 max-w-md leading-relaxed">Growing plants, building teamwork, and creating a greener future together. Proyek kolaborasi menanam Bougainvillea &amp; Portulaca oleh siswa kelas X TE 3.</p>
+        <div class="mt-9 flex flex-wrap gap-4">
+          <a href="#" class="inline-flex items-center gap-2 bg-forest text-cream px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-ink transition-colors duration-300">
+            Explore Our Project <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+          <a href="#" class="inline-flex items-center gap-2 border border-ink/25 text-ink px-7 py-3.5 rounded-full text-sm font-semibold hover:border-ink hover:bg-ink hover:text-cream transition-colors duration-300">
+            Meet Our Team
+          </a>
+        </div>
+      </div>
+      <div class="relative flex justify-center">
+        <svg viewBox="0 0 320 360" class="w-64 md:w-80" role="img" aria-label="Ilustrasi garis ranting dan daun">
+          <path class="stem" d="M160,340 C150,280 190,250 165,190 C145,140 195,110 170,50" fill="none" stroke="#1F4B37" stroke-width="2.5" stroke-linecap="round"></path>
+          <path d="M165,190 C210,180 230,145 215,120 C185,130 160,160 165,190 Z" fill="#A6E06A" opacity="0.85"></path>
+          <path d="M170,120 C130,110 110,75 128,50 C160,58 178,90 170,120 Z" fill="#1F4B37" opacity="0.9"></path>
+          <path d="M162,240 C120,232 100,198 116,172 C150,180 168,208 162,240 Z" fill="#C4487A" opacity="0.8"></path>
+          <circle cx="170" cy="50" r="6" fill="#D9863A"></circle>
+          <circle cx="70" cy="90" r="2" fill="#1F4B37" opacity="0.4"></circle>
+          <circle cx="250" cy="220" r="2" fill="#1F4B37" opacity="0.4"></circle>
+          <circle cx="90" cy="300" r="2" fill="#1F4B37" opacity="0.4"></circle>
+        </svg>
+      </div>
+    </div>
+    <div class="relative flex justify-center mt-4 md:mt-8">
+      <span class="scroll-cue flex flex-col items-center gap-2 text-ink/40 text-xs font-mono tracking-wider uppercase">
+        Scroll to begin <i data-lucide="chevron-down" class="w-4 h-4"></i>
+      </span>
+    </div>
+  </header>
+
+  <div class="max-w-4xl mx-auto px-6 md:px-8 pb-16 text-center">
+    <p class="font-mono text-xs tracking-[0.2em] text-forest/50 uppercase">↓ Section "Our Story" lanjut di sini seperti biasa ↓</p>
+  </div>
+
+<script>
+lucide.createIcons();
+
+const canvas = document.getElementById('heroCanvas');
+const header = document.getElementById('home');
+const ctx = canvas.getContext('2d');
+
+const GRID = 44;              // PERSIS sama spacing-nya dengan .bg-grid CSS -> garis reveal nempel pas di garis grid asli
+const REVEAL_RADIUS = 130;    // area "spotlight" di sekitar cursor -- kecil & terkontrol
+const REVEAL_ALPHA = 0.30;    // opacity garis grid PERSIS di titik cursor (base-nya cuma 0.05, jadi ini beda halus, bukan kontras keras)
+const LERP_SPEED = 0.14;
+
+let W = 0, H = 0;
+const mouse = { x:-9999, y:-9999 };
+const target = { x:-9999, y:-9999 };
+let ripples = [];
+let rafId = null;
+let running = false;
+
+function setSize(){
+  const rect = header.getBoundingClientRect();
+  W = rect.width; H = rect.height;
+  canvas.width = W; canvas.height = H;
+}
+
+function draw(now){
+  ctx.clearRect(0,0,W,H);
+
+  for (let i = ripples.length-1; i>=0; i--){
+    const r = ripples[i];
+    const age = (now - r.born)/1000;
+    r.radius = Math.max(0, age*260);
+    r.opacity = Math.max(0, 1 - age*1.4);
+    if (r.opacity <= 0) ripples.splice(i,1);
+  }
+
+  // ---- reveal grid: garis grid yang SAMA (44px, 1px, forest) cuma dibuat lebih terlihat di sekitar cursor, dengan falloff lembut. Gak ada perubahan ukuran/ketebalan sama sekali. ----
+  if (mouse.x > -9000 && mouse.x <= W && mouse.y <= H){
+    const pad = REVEAL_RADIUS;
+    const x0 = Math.max(0, mouse.x - pad), x1 = Math.min(W, mouse.x + pad);
+    const y0 = Math.max(0, mouse.y - pad), y1 = Math.min(H, mouse.y + pad);
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(x0, y0, x1-x0, y1-y0);
+    ctx.clip();
+
+    ctx.strokeStyle = 'rgba(31,75,55,' + REVEAL_ALPHA + ')';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let x = Math.floor(x0/GRID)*GRID; x <= x1; x += GRID){ ctx.moveTo(x, y0); ctx.lineTo(x, y1); }
+    for (let y = Math.floor(y0/GRID)*GRID; y <= y1; y += GRID){ ctx.moveTo(x0, y); ctx.lineTo(x1, y); }
+    ctx.stroke();
+
+    // falloff lembut: pudarkan garis di atas jadi radial, terang di cursor -> transparan di tepi radius
+    ctx.globalCompositeOperation = 'destination-in';
+    const grd = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, REVEAL_RADIUS);
+    grd.addColorStop(0, 'rgba(0,0,0,1)');
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(x0, y0, x1-x0, y1-y0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.restore();
+  }
+
+  for (const r of ripples){
+    ctx.beginPath(); ctx.arc(r.x, r.y, Math.max(0,r.radius), 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(31,75,55,' + (r.opacity*0.22).toFixed(3) + ')';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+}
+
+function loop(now){
+  mouse.x = mouse.x < -9000 ? target.x : mouse.x + (target.x - mouse.x) * LERP_SPEED;
+  mouse.y = mouse.y < -9000 ? target.y : mouse.y + (target.y - mouse.y) * LERP_SPEED;
+  draw(now);
+  rafId = requestAnimationFrame(loop);
+}
+
+function start(){
+  if (running) return;
+  running = true;
+  setSize();
+  rafId = requestAnimationFrame(loop);
+}
+function stop(){
+  running = false;
+  if (rafId) cancelAnimationFrame(rafId);
+  ctx.clearRect(0,0,W,H); // grid dasar (.bg-grid CSS) tetap kelihatan persis seperti biasa
+  mouse.x = -9999; mouse.y = -9999; target.x = -9999; target.y = -9999;
+}
+
+header.addEventListener('mousemove', e=>{
+  if (!running) return;
+  const rect = header.getBoundingClientRect();
+  target.x = e.clientX - rect.left; target.y = e.clientY - rect.top;
+});
+header.addEventListener('mouseleave', ()=>{ target.x = -9999; target.y = -9999; });
+header.addEventListener('click', e=>{
+  if (!running) return;
+  const rect = header.getBoundingClientRect();
+  ripples.push({ x: e.clientX-rect.left, y: e.clientY-rect.top, radius:0, opacity:1, born: performance.now() });
+  if (ripples.length > 3) ripples.shift();
+});
+window.addEventListener('resize', ()=>{ if(running) setSize(); });
+
+// ===== toggle preview: statis (versi sekarang) vs interactive (versi baru) =====
+document.getElementById('modeLive').addEventListener('click', ()=>{
+  document.getElementById('modeLive').classList.add('active');
+  document.getElementById('modeStatic').classList.remove('active');
+  start();
+});
+document.getElementById('modeStatic').addEventListener('click', ()=>{
+  document.getElementById('modeStatic').classList.add('active');
+  document.getElementById('modeLive').classList.remove('active');
+  stop();
+});
+
+// hormati reduced-motion & device tanpa mouse presisi (HP/touch) -- fallback otomatis ke grid statis, sama kayak sekarang
+const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const noFinePointer = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+if (noMotion || noFinePointer){
+  document.getElementById('modeLive').setAttribute('disabled','');
+  document.getElementById('modeLive').classList.add('opacity-30');
+  document.getElementById('modeStatic').classList.add('active');
+  document.getElementById('modeLive').classList.remove('active');
+  setSize();
+} else {
+  start();
+}
+</script>
+</body>
+</html>

@@ -56,9 +56,15 @@
   .navlink::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
   .navlink:hover::after { transform: scaleX(1); transform-origin: left; }
 
+  #tabIndicator { transition: left .4s cubic-bezier(.65,0,.35,1), width .4s cubic-bezier(.65,0,.35,1), background-color .3s; }
+  @keyframes panelFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .panel-fade { animation: panelFade .35s ease-out both; }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    .panel-fade { animation: none; }
+    #tabIndicator { transition: none; }
   }
 </style>
 </head>
@@ -161,6 +167,7 @@
   <!-- ================= HERO ================= -->
   <header id="home" class="hero-section relative pt-40 pb-28 md:pt-48 md:pb-36 overflow-hidden">
     <div class="absolute inset-0 bg-grid text-forest/[0.05]" aria-hidden="true"></div>
+    <canvas id="heroCanvas" class="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true"></canvas>
     <div class="max-w-6xl mx-auto px-6 md:px-8 relative grid md:grid-cols-2 gap-16 items-center">
       <div>
         <p class="hero-eyebrow font-mono text-xs tracking-[0.2em] text-forest/80 uppercase mb-5">Kelompok 4 · X TE 3 · SMKN 2 Purwokerto</p>
@@ -228,81 +235,19 @@
   <!-- ================= PLANTS ================= -->
   <section id="plants" class="py-24 md:py-32 bg-ink text-cream relative overflow-hidden">
     <div class="absolute inset-0 bg-grid text-lime/[0.04]" aria-hidden="true"></div>
-    <div class="max-w-6xl mx-auto px-6 md:px-8 relative">
+    <div class="max-w-3xl mx-auto px-6 md:px-8 relative">
       <div data-reveal class="max-w-xl">
         <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-4">Our Plants</p>
         <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight">Two Species, One Mission</h2>
       </div>
 
-      <div data-reveal-group class="mt-14 grid md:grid-cols-2 gap-6 md:gap-8">
-        <!-- Bougainvillea -->
-        <article class="frame text-kertas border border-cream/15 rounded-3xl p-8 md:p-9 bg-ink-soft/60">
-          <div class="flex items-center justify-between mb-6">
-            <span class="font-mono text-[11px] tracking-[0.2em] text-kertas uppercase">Species 01</span>
-            <i data-lucide="flower-2" class="w-5 h-5 text-kertas"></i>
-          </div>
-          <h3 class="font-display font-semibold text-2xl md:text-[1.75rem] text-cream">Bougainvillea</h3>
-          <p class="text-sm text-cream/50 mt-1 mb-5">Bunga Kertas</p>
-
-          <div class="flex flex-wrap gap-x-2 gap-y-1 text-xs text-cream/60 mb-7 pb-7 border-b border-cream/10">
-            <span class="text-cream/40">Ditanam &amp; dirawat oleh</span>
-            <span class="text-cream/80">Hafidh Jaim T.S · Feliza Nuril A. · Firzansyah Alsy R.</span>
-          </div>
-
-          <dl class="space-y-4 text-sm">
-            <div>
-              <dt class="font-mono text-[11px] tracking-wider text-kertas/90 uppercase mb-1">Karakteristik</dt>
-              <dd class="text-cream/70 leading-relaxed">Batang berkayu dan berduri, dengan seludang bunga (bract) tipis menyerupai kertas — warnanya beragam, mulai merah, ungu, hingga putih.</dd>
-            </div>
-            <div>
-              <dt class="font-mono text-[11px] tracking-wider text-kertas/90 uppercase mb-1">Manfaat</dt>
-              <dd class="text-cream/70 leading-relaxed">Membantu menyerap polusi udara &amp; debu, akarnya menjaga kestabilan tanah, serta sangat tahan panas dan minim air — cocok untuk penghijauan.</dd>
-            </div>
-            <div>
-              <dt class="font-mono text-[11px] tracking-wider text-kertas/90 uppercase mb-1">Perawatan</dt>
-              <dd class="text-cream/70 leading-relaxed">Matahari penuh 6+ jam/hari, penyiraman secukupnya (tanah agak kering justru merangsang bunga), diperbanyak lewat stek batang.</dd>
-            </div>
-          </dl>
-
-          <div id="plantStatusKertas" class="mt-7 inline-flex items-center gap-2 text-xs font-medium text-kertas bg-kertas/10 px-3 py-1.5 rounded-full">
-            <i data-lucide="sprout" class="w-3.5 h-3.5"></i> <span class="status-text">Loading…</span>
-          </div>
-        </article>
-
-        <!-- Portulaca -->
-        <article class="frame text-krokot border border-cream/15 rounded-3xl p-8 md:p-9 bg-ink-soft/60">
-          <div class="flex items-center justify-between mb-6">
-            <span class="font-mono text-[11px] tracking-[0.2em] text-krokot uppercase">Species 02</span>
-            <i data-lucide="flower" class="w-5 h-5 text-krokot"></i>
-          </div>
-          <h3 class="font-display font-semibold text-2xl md:text-[1.75rem] text-cream">Portulaca</h3>
-          <p class="text-sm text-cream/50 mt-1 mb-5">Bunga Krokot</p>
-
-          <div class="flex flex-wrap gap-x-2 gap-y-1 text-xs text-cream/60 mb-7 pb-7 border-b border-cream/10">
-            <span class="text-cream/40">Ditanam &amp; dirawat oleh</span>
-            <span class="text-cream/80">Fatan Aditiansyah · Ghazy Alfi M. · Fadhil Muhammad A.</span>
-          </div>
-
-          <dl class="space-y-4 text-sm">
-            <div>
-              <dt class="font-mono text-[11px] tracking-wider text-krokot/90 uppercase mb-1">Karakteristik</dt>
-              <dd class="text-cream/70 leading-relaxed">Tanaman sukulen yang menjalar rendah, bunganya mekar setiap pagi dan kuncup lagi siang hari — sering dijuluki "bunga pukul sembilan".</dd>
-            </div>
-            <div>
-              <dt class="font-mono text-[11px] tracking-wider text-krokot/90 uppercase mb-1">Manfaat</dt>
-              <dd class="text-cream/70 leading-relaxed">Penutup tanah yang efektif, tanaman C4 dengan efisiensi fotosintesis tinggi di area panas, serta sangat tahan kekeringan dan lahan minim nutrisi.</dd>
-            </div>
-            <div>
-              <dt class="font-mono text-[11px] tracking-wider text-krokot/90 uppercase mb-1">Perawatan</dt>
-              <dd class="text-cream/70 leading-relaxed">Matahari penuh 6–8 jam/hari, cukup disiram 2–3x seminggu (menyimpan air di batangnya), diperbanyak lewat stek atau biji.</dd>
-            </div>
-          </dl>
-
-          <div id="plantStatusKrokot" class="mt-7 inline-flex items-center gap-2 text-xs font-medium text-krokot bg-krokot/10 px-3 py-1.5 rounded-full">
-            <i data-lucide="sprout" class="w-3.5 h-3.5"></i> <span class="status-text">Loading…</span>
-          </div>
-        </article>
+      <div data-reveal class="relative mt-10 inline-flex p-1 rounded-full bg-cream/10">
+        <div id="tabIndicator" class="absolute top-1 bottom-1 rounded-full"></div>
+        <button type="button" class="plant-tab relative z-10 px-6 py-2.5 rounded-full text-sm font-semibold transition-colors" data-plant="kertas">Bougainvillea</button>
+        <button type="button" class="plant-tab relative z-10 px-6 py-2.5 rounded-full text-sm font-semibold transition-colors" data-plant="krokot">Portulaca</button>
       </div>
+
+      <div id="plantPanel" data-reveal class="mt-8 grid sm:grid-cols-2 gap-7 sm:gap-8 items-stretch"></div>
     </div>
   </section>
 
@@ -739,6 +684,178 @@
       if (tp) tp.style.transform = 'scaleY(1)';
     }
 
+    // 5.5) HERO -- interactive cursor grid: reveal halus di sekitar cursor, TANPA distorsi/warp.
+    // Base grid-nya tetap div .bg-grid yang sudah ada (gak pernah disembunyikan); canvas ini cuma
+    // nambahin lapisan opacity lebih terang di sekitar cursor. Otomatis gak aktif di reduced-motion
+    // atau device tanpa cursor presisi (HP/touch) -- fallback-nya ya cuma grid statis seperti biasa.
+    const heroCanvas = document.getElementById('heroCanvas');
+    const heroSection = document.getElementById('home');
+    if (heroCanvas && heroSection && !prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const heroCtx = heroCanvas.getContext('2d');
+      const HERO_GRID = 44, HERO_REVEAL_RADIUS = 130, HERO_REVEAL_ALPHA = 0.30, HERO_LERP = 0.14;
+      let heroW = 0, heroH = 0;
+      const heroMouse = { x: -9999, y: -9999 };
+      const heroTarget = { x: -9999, y: -9999 };
+      let heroRipples = [];
+
+      function heroSetSize() {
+        const rect = heroSection.getBoundingClientRect();
+        heroW = rect.width; heroH = rect.height;
+        heroCanvas.width = heroW; heroCanvas.height = heroH;
+      }
+      function heroDraw(now) {
+        heroCtx.clearRect(0, 0, heroW, heroH);
+        for (let i = heroRipples.length - 1; i >= 0; i--) {
+          const r = heroRipples[i];
+          const age = (now - r.born) / 1000;
+          r.radius = Math.max(0, age * 260);
+          r.opacity = Math.max(0, 1 - age * 1.4);
+          if (r.opacity <= 0) heroRipples.splice(i, 1);
+        }
+        if (heroMouse.x > -9000 && heroMouse.x <= heroW && heroMouse.y <= heroH) {
+          const pad = HERO_REVEAL_RADIUS;
+          const x0 = Math.max(0, heroMouse.x - pad), x1 = Math.min(heroW, heroMouse.x + pad);
+          const y0 = Math.max(0, heroMouse.y - pad), y1 = Math.min(heroH, heroMouse.y + pad);
+          heroCtx.save();
+          heroCtx.beginPath(); heroCtx.rect(x0, y0, x1 - x0, y1 - y0); heroCtx.clip();
+          heroCtx.strokeStyle = 'rgba(31,75,55,' + HERO_REVEAL_ALPHA + ')';
+          heroCtx.lineWidth = 1;
+          heroCtx.beginPath();
+          for (let x = Math.floor(x0 / HERO_GRID) * HERO_GRID; x <= x1; x += HERO_GRID) { heroCtx.moveTo(x, y0); heroCtx.lineTo(x, y1); }
+          for (let y = Math.floor(y0 / HERO_GRID) * HERO_GRID; y <= y1; y += HERO_GRID) { heroCtx.moveTo(x0, y); heroCtx.lineTo(x1, y); }
+          heroCtx.stroke();
+          heroCtx.globalCompositeOperation = 'destination-in';
+          const grd = heroCtx.createRadialGradient(heroMouse.x, heroMouse.y, 0, heroMouse.x, heroMouse.y, HERO_REVEAL_RADIUS);
+          grd.addColorStop(0, 'rgba(0,0,0,1)'); grd.addColorStop(1, 'rgba(0,0,0,0)');
+          heroCtx.fillStyle = grd; heroCtx.fillRect(x0, y0, x1 - x0, y1 - y0);
+          heroCtx.globalCompositeOperation = 'source-over';
+          heroCtx.restore();
+        }
+        for (const r of heroRipples) {
+          heroCtx.beginPath(); heroCtx.arc(r.x, r.y, Math.max(0, r.radius), 0, Math.PI * 2);
+          heroCtx.strokeStyle = 'rgba(31,75,55,' + (r.opacity * 0.22).toFixed(3) + ')';
+          heroCtx.lineWidth = 1; heroCtx.stroke();
+        }
+      }
+      function heroLoop(now) {
+        heroMouse.x = heroMouse.x < -9000 ? heroTarget.x : heroMouse.x + (heroTarget.x - heroMouse.x) * HERO_LERP;
+        heroMouse.y = heroMouse.y < -9000 ? heroTarget.y : heroMouse.y + (heroTarget.y - heroMouse.y) * HERO_LERP;
+        heroDraw(now);
+        requestAnimationFrame(heroLoop);
+      }
+      heroSetSize();
+      requestAnimationFrame(heroLoop);
+      heroSection.addEventListener('mousemove', (e) => {
+        const rect = heroSection.getBoundingClientRect();
+        heroTarget.x = e.clientX - rect.left; heroTarget.y = e.clientY - rect.top;
+      });
+      heroSection.addEventListener('mouseleave', () => {
+        heroTarget.x = -9999; heroTarget.y = -9999;
+        heroMouse.x = -9999; heroMouse.y = -9999;
+      });
+      heroSection.addEventListener('click', (e) => {
+        const rect = heroSection.getBoundingClientRect();
+        heroRipples.push({ x: e.clientX - rect.left, y: e.clientY - rect.top, radius: 0, opacity: 1, born: performance.now() });
+        if (heroRipples.length > 3) heroRipples.shift();
+      });
+      window.addEventListener('resize', heroSetSize);
+    }
+
+    // 5.6) PLANTS -- tab switcher (Bougainvillea/Portulaca) dengan foto asli & kartu ringkas
+    (function initPlantTabs() {
+      const PLANTS = {
+        kertas: {
+          name: 'Bougainvillea',
+          local: 'Bunga Kertas',
+          species: 'Species 01',
+          color: '#C4487A',
+          colorClass: 'kertas',
+          photo: 'data:image/jpeg;base64,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',
+          points: [
+            { icon: 'leaf', text: 'Batang berkayu &amp; berduri, bract tipis menyerupai kertas — merah, ungu, hingga putih.' },
+            { icon: 'wind', text: 'Menyerap polusi &amp; debu, akar stabilkan tanah, tahan panas &amp; minim air.' },
+            { icon: 'droplets', text: 'Matahari penuh 6+ jam/hari, disiram secukupnya, diperbanyak lewat stek batang.' },
+          ],
+          team: 'Hafidh Jaim T.S · Feliza Nuril A. · Firzansyah Alsy R.',
+          status: 'Bloom · Healthy',
+        },
+        krokot: {
+          name: 'Portulaca',
+          local: 'Bunga Krokot',
+          species: 'Species 02',
+          color: '#D9863A',
+          colorClass: 'krokot',
+          photo: 'data:image/jpeg;base64,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',
+          points: [
+            { icon: 'leaf', text: 'Sukulen menjalar rendah, mekar tiap pagi &amp; kuncup siang — \"bunga pukul sembilan\".' },
+            { icon: 'wind', text: 'Penutup tanah efektif, fotosintesis C4 efisien di area panas, tahan kering.' },
+            { icon: 'droplets', text: 'Matahari penuh 6–8 jam/hari, disiram 2–3x seminggu, diperbanyak stek atau biji.' },
+          ],
+          team: 'Fatan Aditiansyah · Ghazy Alfi M. · Fadhil Muhammad A.',
+          status: 'Growing · Needs Attention',
+        },
+      };
+
+      const panel = document.getElementById('plantPanel');
+      const indicator = document.getElementById('tabIndicator');
+      const tabs = document.querySelectorAll('.plant-tab');
+      if (!panel || !tabs.length || !indicator) return;
+
+      function renderPanel(key) {
+        const p = PLANTS[key];
+        const statusId = key === 'kertas' ? 'plantStatusKertas' : 'plantStatusKrokot';
+        panel.innerHTML =
+          '<div class="panel-fade relative rounded-3xl overflow-hidden aspect-[4/5] ring-1 ring-cream/10">' +
+            '<img src="' + p.photo + '" alt="Foto ' + p.name + ' (' + p.local + ')" class="w-full h-full object-cover">' +
+            '<div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/0 to-ink/0"></div>' +
+            '<span class="absolute bottom-4 left-4 font-mono text-[11px] tracking-[0.2em] uppercase" style="color:' + p.color + '">' + p.species + '</span>' +
+          '</div>' +
+          '<div class="panel-fade flex flex-col">' +
+            '<h3 class="font-display font-semibold text-2xl text-cream">' + p.name + '</h3>' +
+            '<p class="text-sm text-cream/50 mt-1 mb-5">' + p.local + '</p>' +
+            '<ul class="space-y-3 text-sm text-cream/75 leading-relaxed">' +
+              p.points.map(function (pt) {
+                return '<li class="flex gap-2.5"><i data-lucide="' + pt.icon + '" class="w-4 h-4 mt-0.5 shrink-0" style="color:' + p.color + '"></i><span>' + pt.text + '</span></li>';
+              }).join('') +
+            '</ul>' +
+            '<p class="mt-6 text-xs text-cream/40">Dirawat oleh <span class="text-cream/70">' + p.team + '</span></p>' +
+            '<div id="' + statusId + '" class="mt-4 inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full w-fit" style="color:' + p.color + '; background:' + p.color + '1a">' +
+              '<i data-lucide="sprout" class="w-3.5 h-3.5"></i> <span class="status-text">' + p.status + '</span>' +
+            '</div>' +
+          '</div>';
+        lucide.createIcons();
+        if (typeof loadPlantStatus === 'function') loadPlantStatus();
+        if (!prefersReducedMotion && typeof ScrollTrigger !== 'undefined') {
+          requestAnimationFrame(() => ScrollTrigger.refresh());
+        }
+      }
+
+      function moveIndicator(btn, key) {
+        indicator.style.left = btn.offsetLeft + 'px';
+        indicator.style.width = btn.offsetWidth + 'px';
+        indicator.style.background = PLANTS[key].color;
+        tabs.forEach(function (t) { t.classList.toggle('text-cream', t !== btn); });
+        btn.style.color = '#0D1A13';
+        tabs.forEach(function (t) { if (t !== btn) t.style.color = ''; });
+      }
+
+      tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const key = btn.dataset.plant;
+          moveIndicator(btn, key);
+          renderPanel(key);
+        });
+      });
+
+      const firstTab = tabs[0];
+      renderPanel(firstTab.dataset.plant);
+      requestAnimationFrame(function () { moveIndicator(firstTab, firstTab.dataset.plant); });
+      window.addEventListener('resize', function () {
+        const active = Array.prototype.find.call(tabs, function (t) { return t.style.color === 'rgb(13, 26, 19)'; }) || firstTab;
+        moveIndicator(active, active.dataset.plant);
+      });
+    })();
+
     // 6) GROWING TOGETHER — visual seed -> sprout -> plant -> bloom
     // Pakai sticky + scroll-progress (bukan pin GSAP), lebih stabil dipadu Lenis & gak bikin layout jump.
     const growSection = document.getElementById('growing');
@@ -976,6 +1093,7 @@
         journalGrid.classList.add('hidden');
         journalEmpty.classList.remove('hidden');
         latestUpdateLine.textContent = '';
+        if (!prefersReducedMotion) requestAnimationFrame(() => ScrollTrigger.refresh());
         return;
       }
       journalGrid.classList.remove('hidden');
@@ -993,6 +1111,10 @@
 
       if (!prefersReducedMotion) {
         gsap.from('#journalGrid [data-id]', { opacity: 0, y: 16, duration: 0.4, stagger: 0.05, ease: 'power2.out' });
+        // konten jurnal ini datang dari Supabase secara async & bisa mengubah tinggi halaman --
+        // ScrollTrigger perlu di-refresh biar animasi "Watch It Grow"/timeline di bawahnya tetap
+        // mulai dari posisi scroll yang benar (bukan keburu maju, terutama di layout 1-kolom di HP).
+        requestAnimationFrame(() => ScrollTrigger.refresh());
       }
     }
 
@@ -1146,6 +1268,7 @@
           <p class="text-sm font-semibold">${label}</p>
         </div>`;
       }).join('');
+      if (!prefersReducedMotion) requestAnimationFrame(() => ScrollTrigger.refresh());
     }
 
     // leaderboard: defensif -- kalau migrasi Supabase (xp/streak/view leaderboard) belum jalan, diam-diam sembunyi
@@ -1168,6 +1291,7 @@
       } catch (err) {
         el.innerHTML = '';
       }
+      if (!prefersReducedMotion) requestAnimationFrame(() => ScrollTrigger.refresh());
     }
 
     // filter panel bisa dilipat + hint bisa ditutup -- murni UI, gak butuh Supabase

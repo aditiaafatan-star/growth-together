@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Growth Together — App Dashboard (Gamified) Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.31.0/dist/umd/lucide.js"></script>
+<style type="text/tailwindcss">
+  @theme {
+    --color-cream: #F7F4EA; --color-ink: #0D1A13; --color-forest: #1F4B37; --color-sage: #6F8F7B;
+    --color-mist: #E4E9E0; --color-lime: #A6E06A; --color-kertas: #C4487A; --color-krokot: #D9863A;
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif; --font-body: 'Inter', system-ui, sans-serif;
+  }
+  body { font-family: var(--font-body); background: var(--color-cream); color: var(--color-ink); }
+  h1,h2,h3 { font-family: var(--font-display); }
+  .stage-track { display:flex; gap:3px; }
+  .stage-seg { flex:1; height:5px; border-radius:999px; background: color-mix(in srgb, currentColor 14%, transparent); }
+  .stage-seg.filled { background: currentColor; }
+  .mode-btn { opacity:.55; } .mode-btn.active { opacity:1; background:var(--color-ink); color:var(--color-cream); }
+  .dot { width:6px; height:6px; border-radius:999px; background: var(--color-ink); opacity:.15; }
+  .dot.active { opacity:1; background: var(--color-forest); }
+</style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+  <div class="max-w-md mx-auto pt-6 px-4">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-[11px] font-mono uppercase tracking-wider text-ink/40">Preview Fase 2 · app.html</span>
+      <span class="text-[10px] bg-ink text-cream px-2 py-0.5 rounded-full">Belum diterapkan</span>
+    </div>
+    <div class="flex gap-1.5 p-1 bg-ink/8 rounded-full text-sm">
+      <button id="modeOnboard" class="mode-btn active flex-1 py-1.5 rounded-full font-semibold">Onboarding</button>
+      <button id="modeDash" class="mode-btn flex-1 py-1.5 rounded-full font-semibold">Dashboard</button>
+    </div>
+  </div>
+
+  <div class="relative w-full max-w-[400px] mx-auto mt-5 h-[760px] max-h-[85vh] bg-cream rounded-[2rem] shadow-2xl ring-1 ring-ink/10 overflow-hidden flex flex-col">
+
+    <header class="shrink-0 sticky top-0 z-30 bg-cream/95 backdrop-blur border-b border-ink/10 px-5 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2 font-display font-bold text-forest">
+        <i data-lucide="leaf" class="w-5 h-5"></i> Growth Together
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="flex items-center gap-1 text-xs font-medium text-krokot"><i data-lucide="flame" class="w-3.5 h-3.5"></i>7</span>
+        <button id="helpBtn" class="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center text-ink/50"><i data-lucide="help-circle" class="w-4 h-4"></i></button>
+        <div class="w-7 h-7 rounded-full bg-forest text-cream flex items-center justify-center text-[11px] font-display font-bold">FA</div>
+      </div>
+    </header>
+
+    <!-- ===== ONBOARDING (3 langkah, cuma muncul pertama kali) ===== -->
+    <div id="onboardScreen" class="flex-1 flex flex-col items-center justify-center px-8 text-center">
+      <div id="obStep0">
+        <i data-lucide="sprout" class="w-10 h-10 mx-auto text-forest mb-5"></i>
+        <h2 class="font-display font-bold text-2xl mb-3">Welcome to Growth Together</h2>
+        <p class="text-sm text-ink/60 leading-relaxed">Aplikasi ini bantu kelompok kamu memantau pertumbuhan Bougainvillea &amp; Portulaca bareng-bareng, dari HP masing-masing.</p>
+      </div>
+      <div id="obStep1" class="hidden">
+        <i data-lucide="camera" class="w-10 h-10 mx-auto text-forest mb-5"></i>
+        <h2 class="font-display font-bold text-2xl mb-3">Monitor your plants</h2>
+        <p class="text-sm text-ink/60 leading-relaxed">Tambahkan update kapan pun kamu cek tanaman — tahap pertumbuhan, kondisi, dan catatan singkat. Sesimpel isi form 30 detik.</p>
+      </div>
+      <div id="obStep2" class="hidden">
+        <i data-lucide="flame" class="w-10 h-10 mx-auto text-krokot mb-5"></i>
+        <h2 class="font-display font-bold text-2xl mb-3">Grow together</h2>
+        <p class="text-sm text-ink/60 leading-relaxed">Tiap update kasih kamu XP dan naikin level. Update tiap hari buat jaga streak tetap nyala — dan lihat progress kelompok di leaderboard.</p>
+      </div>
+      <div class="flex gap-2 mt-8 mb-6" id="obDots">
+        <span class="dot active" data-i="0"></span><span class="dot" data-i="1"></span><span class="dot" data-i="2"></span>
+      </div>
+      <div class="flex gap-3 w-full max-w-[260px]">
+        <button id="obBack" class="hidden flex-1 border border-ink/20 py-3 rounded-full text-sm font-semibold">Back</button>
+        <button id="obNext" class="flex-1 bg-forest text-cream py-3 rounded-full text-sm font-semibold">Next</button>
+      </div>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashScreen" class="hidden flex-1 overflow-y-auto px-5 py-5">
+      <p class="text-lg font-display font-bold mb-0.5">Halo, Fatan 👋</p>
+      <p class="text-xs text-sage mb-5">Ini yang bisa kamu lakuin hari ini</p>
+
+      <div class="rounded-2xl border border-ink/10 p-4 mb-4">
+        <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-3">Today's Missions</p>
+        <div class="space-y-2.5">
+          <div class="flex items-center gap-3">
+            <i data-lucide="check-circle-2" class="w-5 h-5 text-forest shrink-0"></i>
+            <span class="text-sm flex-1 line-through text-ink/35">Update your plant</span>
+            <span class="text-xs text-ink/30">+10 XP</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <i data-lucide="circle" class="w-5 h-5 text-ink/20 shrink-0"></i>
+            <span class="text-sm flex-1">Add an observation</span>
+            <span class="text-xs text-forest font-medium">+5 XP</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <i data-lucide="circle" class="w-5 h-5 text-ink/20 shrink-0"></i>
+            <span class="text-sm flex-1">Upload a photo</span>
+            <span class="text-xs text-forest font-medium">+15 XP</span>
+          </div>
+        </div>
+      </div>
+
+      <button id="addUpdateBtn" class="w-full flex items-center justify-center gap-2 bg-forest text-cream py-3 rounded-full text-sm font-semibold mb-4">
+        <i data-lucide="plus" class="w-4 h-4"></i> Tambah Update
+      </button>
+
+      <div class="rounded-2xl border border-ink/10 p-4 mb-4">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <p class="text-xs font-mono uppercase tracking-wider text-ink/40">Level 6</p>
+            <p class="font-display font-bold text-xl">1,780 XP</p>
+          </div>
+          <span class="flex items-center gap-1.5 text-sm font-medium text-krokot bg-krokot/10 px-3 py-1.5 rounded-full"><i data-lucide="flame" class="w-4 h-4"></i>7 hari</span>
+        </div>
+        <div class="h-2 rounded-full bg-ink/10 overflow-hidden mt-3">
+          <div class="h-full bg-forest" style="width:47%"></div>
+        </div>
+        <p class="text-[11px] text-ink/40 mt-1.5">320 XP lagi ke Level 7</p>
+      </div>
+
+      <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-2.5">My Plants</p>
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="rounded-2xl border p-3.5" style="border-color:color-mix(in srgb, var(--color-kertas) 30%, transparent)">
+          <p class="text-[10px] font-mono uppercase tracking-wider mb-0.5 text-kertas">Bougainvillea</p>
+          <div class="stage-track text-kertas mt-2 mb-2"><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg filled"></div></div>
+          <div class="flex items-center justify-between"><span class="text-xs font-semibold">Bloom</span><span class="flex items-center gap-1 text-[10px] text-forest"><span class="w-1.5 h-1.5 rounded-full bg-forest"></span>Healthy</span></div>
+        </div>
+        <div class="rounded-2xl border p-3.5" style="border-color:color-mix(in srgb, var(--color-krokot) 30%, transparent)">
+          <p class="text-[10px] font-mono uppercase tracking-wider mb-0.5 text-krokot">Portulaca</p>
+          <div class="stage-track text-krokot mt-2 mb-2"><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg filled"></div><div class="stage-seg"></div><div class="stage-seg"></div></div>
+          <div class="flex items-center justify-between"><span class="text-xs font-semibold">Growing</span><span class="flex items-center gap-1 text-[10px]" style="color:#D9A22B"><span class="w-1.5 h-1.5 rounded-full" style="background:#D9A22B"></span>Attention</span></div>
+        </div>
+      </div>
+
+      <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-2.5">Team Leaderboard</p>
+      <div class="rounded-2xl border border-ink/10 divide-y divide-ink/8 mb-4">
+        <div class="flex items-center gap-3 px-4 py-2.5"><span class="text-xs text-ink/35 w-4">1</span><div class="w-7 h-7 rounded-full bg-forest/10 text-forest flex items-center justify-center text-[10px] font-bold">GA</div><span class="text-sm flex-1">Ghazy Alfi M.</span><span class="text-xs text-ink/50">2,100 XP</span></div>
+        <div class="flex items-center gap-3 px-4 py-2.5"><span class="text-xs text-ink/35 w-4">2</span><div class="w-7 h-7 rounded-full bg-kertas/10 text-kertas flex items-center justify-center text-[10px] font-bold">FN</div><span class="text-sm flex-1">Feliza Nuril A.</span><span class="text-xs text-ink/50">1,950 XP</span></div>
+        <div class="flex items-center gap-3 px-4 py-2.5 bg-forest/5"><span class="text-xs text-ink/35 w-4">3</span><div class="w-7 h-7 rounded-full bg-forest text-cream flex items-center justify-center text-[10px] font-bold">FA</div><span class="text-sm flex-1 font-semibold">You</span><span class="text-xs text-ink/50">1,780 XP</span></div>
+        <div class="flex items-center gap-3 px-4 py-2.5"><span class="text-xs text-ink/35 w-4">4</span><div class="w-7 h-7 rounded-full bg-kertas/10 text-kertas flex items-center justify-center text-[10px] font-bold">HJ</div><span class="text-sm flex-1">Hafidh Jaim T.S</span><span class="text-xs text-ink/50">1,400 XP</span></div>
+      </div>
+
+      <div class="flex items-center justify-between mb-2.5">
+        <p class="text-xs font-mono uppercase tracking-wider text-ink/40">Journal</p>
+        <span class="text-[11px] text-forest">Lihat semua</span>
+      </div>
+      <div class="rounded-2xl border border-ink/10 p-4 space-y-3">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-wider text-krokot mb-0.5">Portulaca · 3 Sept</p>
+            <p class="text-sm">disiram <span class="text-ink/40">— perlu matahari</span></p>
+          </div>
+          <span class="text-[10px] shrink-0" style="color:#D9A22B">Needs Attention</span>
+        </div>
+        <div class="border-t border-ink/8 pt-3 flex items-start justify-between">
+          <div>
+            <p class="text-[10px] font-mono uppercase tracking-wider text-kertas mb-0.5">Bougainvillea · 2 Sept</p>
+            <p class="text-sm">perlu disiram</p>
+          </div>
+          <span class="text-[10px] shrink-0" style="color:#D9A22B">Needs Attention</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+lucide.createIcons();
+let obStep = 0;
+const steps = ['obStep0','obStep1','obStep2'];
+function renderOb(){
+  steps.forEach((id,i)=>document.getElementById(id).classList.toggle('hidden', i!==obStep));
+  document.querySelectorAll('#obDots .dot').forEach((d,i)=>d.classList.toggle('active', i===obStep));
+  document.getElementById('obBack').classList.toggle('hidden', obStep===0);
+  document.getElementById('obNext').textContent = obStep===2 ? 'Start Monitoring' : 'Next';
+}
+document.getElementById('obNext').addEventListener('click', ()=>{
+  if (obStep < 2) { obStep++; renderOb(); } else { showDash(); }
+});
+document.getElementById('obBack').addEventListener('click', ()=>{ if(obStep>0){ obStep--; renderOb(); } });
+
+function showOnboard(){
+  obStep = 0; renderOb();
+  document.getElementById('onboardScreen').classList.remove('hidden');
+  document.getElementById('dashScreen').classList.add('hidden');
+  document.getElementById('modeOnboard').classList.add('active');
+  document.getElementById('modeDash').classList.remove('active');
+}
+function showDash(){
+  document.getElementById('onboardScreen').classList.add('hidden');
+  document.getElementById('dashScreen').classList.remove('hidden');
+  document.getElementById('modeDash').classList.add('active');
+  document.getElementById('modeOnboard').classList.remove('active');
+}
+document.getElementById('modeOnboard').addEventListener('click', showOnboard);
+document.getElementById('modeDash').addEventListener('click', showDash);
+document.getElementById('helpBtn').addEventListener('click', showOnboard);
+document.getElementById('addUpdateBtn').addEventListener('click', ()=>{
+  const b = document.getElementById('addUpdateBtn');
+  b.textContent = 'Form tambah update (sama seperti sekarang)';
+  setTimeout(()=>{ b.innerHTML = '<i data-lucide="plus" class="w-4 h-4"></i> Tambah Update'; lucide.createIcons(); }, 1600);
+});
+</script>
+</body>
+</html>

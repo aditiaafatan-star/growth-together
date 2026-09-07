@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Growth Together — Redesign Preview (Mock)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@1.31.0/dist/umd/lucide.js"></script>
+<style type="text/tailwindcss">
+  @theme {
+    --color-cream: #F7F4EA;
+    --color-ink: #0D1A13;
+    --color-forest: #1F4B37;
+    --color-sage: #6F8F7B;
+    --color-mist: #E4E9E0;
+    --color-lime: #A6E06A;
+    --color-kertas: #C4487A;
+    --color-krokot: #D9863A;
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+  html, body { height: 100%; }
+  body { font-family: var(--font-body); background: #E7E5DD; color: var(--color-ink); }
+  h1, h2, h3 { font-family: var(--font-display); }
+
+  /* toolbar review di luar phone frame -- bukan bagian dari app aslinya */
+  .meta-btn { opacity: .55; }
+  .meta-btn.active { opacity: 1; background: var(--color-ink); color: var(--color-cream); }
+
+  .jf-btn { opacity: .6; }
+  .jf-btn.active { background: var(--color-ink); color: var(--color-cream); opacity: 1; }
+
+  /* indikator tahap pertumbuhan: 5 segmen diskrit (bukan bar polos) krn data-nya emang 5 tahap bernama */
+  .stage-track { display: flex; gap: 3px; }
+  .stage-seg { flex: 1; height: 5px; border-radius: 999px; background: color-mix(in srgb, currentColor 14%, transparent); }
+  .stage-seg.filled { background: currentColor; }
+
+  /* garis penghubung timeline */
+  .tl-line { position: absolute; left: 15px; top: 6px; bottom: -18px; width: 1.5px; background: color-mix(in srgb, var(--color-ink) 12%, transparent); }
+  .tl-item:last-child .tl-line { display: none; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { animation: reveal .5s cubic-bezier(.16,1,.3,1) both; }
+  }
+  @keyframes reveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-6 px-4">
+
+  <!-- ============ TOOLBAR REVIEW (bukan bagian dari app -- cuma buat preview ini) ============ -->
+  <div class="w-full max-w-[420px] mb-4">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-[11px] font-mono uppercase tracking-wider text-ink/40">Preview redesign · mock data</span>
+      <span class="text-[10px] bg-ink text-cream px-2 py-0.5 rounded-full">Belum diterapkan</span>
+    </div>
+    <div class="flex gap-1.5 p-1 bg-ink/8 rounded-full text-sm">
+      <button id="metaDash" class="meta-btn active flex-1 py-1.5 rounded-full font-semibold">Dashboard</button>
+      <button id="metaAuth" class="meta-btn flex-1 py-1.5 rounded-full font-semibold">Sign In</button>
+    </div>
+  </div>
+
+  <!-- ============ PHONE FRAME ============ -->
+  <div class="relative w-full max-w-[420px] h-[740px] max-h-[82vh] bg-cream rounded-[2rem] shadow-2xl ring-1 ring-ink/10 overflow-hidden flex flex-col">
+
+    <header class="shrink-0 sticky top-0 z-30 bg-cream/95 backdrop-blur border-b border-ink/10 px-5 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2 font-display font-bold text-forest">
+        <i data-lucide="leaf" class="w-5 h-5"></i> Growth Together
+      </div>
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-full bg-forest text-cream flex items-center justify-center text-[11px] font-display font-bold">FA</div>
+        <button id="logoutBtn" class="text-ink/40"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+      </div>
+    </header>
+
+    <!-- ===== SIGN-IN SCREEN ===== -->
+    <div id="authScreen" class="hidden flex-1 overflow-y-auto px-6 py-8">
+      <div class="text-center mb-7">
+        <i data-lucide="sprout" class="w-8 h-8 mx-auto text-forest mb-2"></i>
+        <p class="text-[11px] font-mono uppercase tracking-wider text-sage">One Team, One Earth, One Future</p>
+      </div>
+      <div class="flex gap-1.5 mb-6 p-1 bg-ink/5 rounded-full">
+        <button id="tabSignIn" class="jf-btn active flex-1 py-2 rounded-full text-sm font-semibold">Sign In</button>
+        <button id="tabRegister" class="jf-btn flex-1 py-2 rounded-full text-sm font-semibold">Register</button>
+      </div>
+      <form id="signInForm" class="space-y-3">
+        <input type="email" placeholder="Email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+        <input type="password" placeholder="Password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+        <button type="submit" class="w-full bg-forest text-cream py-3 rounded-full text-sm font-semibold">Sign In</button>
+      </form>
+      <form id="registerForm" class="space-y-3 hidden">
+        <input type="text" placeholder="Nama" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+        <input type="email" placeholder="Email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+        <input type="password" placeholder="Password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+        <button type="submit" class="w-full bg-forest text-cream py-3 rounded-full text-sm font-semibold">Create Account</button>
+      </form>
+    </div>
+
+    <!-- ===== DASHBOARD SCREEN ===== -->
+    <div id="dashScreen" class="flex-1 overflow-y-auto px-5 py-5">
+      <div class="reveal mb-5">
+        <p class="text-lg font-display font-bold">Halo, Fatan 👋</p>
+        <p class="text-xs text-sage">One Team, One Earth, One Future · Kelompok 4 X TE 3</p>
+      </div>
+
+      <div id="plantCards" class="grid grid-cols-2 gap-3 mb-6 reveal"></div>
+
+      <button id="fabInline" class="w-full flex items-center justify-center gap-2 border border-dashed border-forest/30 text-forest py-2.5 rounded-full text-xs font-semibold mb-5">
+        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Tambah Update
+      </button>
+
+      <h2 class="text-sm font-display font-bold mb-3">Timeline Pertumbuhan</h2>
+      <div class="flex gap-2 mb-3 overflow-x-auto" id="plantFilters">
+        <button class="jf-btn active px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="semua">Semua</button>
+        <button class="jf-btn px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="kertas">Bougainvillea</button>
+        <button class="jf-btn px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="krokot">Portulaca</button>
+      </div>
+      <div class="relative mb-5">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/30"></i>
+        <input id="journalSearch" type="text" placeholder="Cari catatan..." class="w-full border border-ink/15 rounded-full pl-10 pr-4 py-2.5 text-sm bg-white">
+      </div>
+
+      <div id="timeline" class="relative pb-4"></div>
+      <div id="timelineEmpty" class="hidden text-center py-16">
+        <i data-lucide="sprout" class="w-8 h-8 mx-auto text-forest/50 mb-3"></i>
+        <p class="text-sm text-ink/50">Gak ada yang cocok.</p>
+      </div>
+    </div>
+
+    <button id="fab" class="absolute bottom-5 right-5 z-30 w-14 h-14 rounded-full bg-forest text-cream shadow-lg flex items-center justify-center">
+      <i data-lucide="plus" class="w-6 h-6"></i>
+    </button>
+
+    <div id="addSheet" class="absolute inset-0 z-40 hidden items-end justify-center bg-ink/50">
+      <form id="journalForm" class="bg-cream rounded-t-3xl p-6 w-full max-h-[85%] overflow-y-auto">
+        <div class="w-10 h-1 bg-ink/20 rounded-full mx-auto mb-5"></div>
+        <h3 class="font-display font-bold text-lg mb-4">Tambah Update</h3>
+        <div class="space-y-3">
+          <select name="plant" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+            <option value="" disabled selected>Pilih tanaman</option>
+            <option value="kertas">Bougainvillea</option>
+            <option value="krokot">Portulaca</option>
+          </select>
+          <input type="date" name="date" required value="2026-09-02" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+          <select name="stage" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+            <option value="" disabled selected>Tahap pertumbuhan</option>
+            <option value="seed">Seed</option><option value="sprout">Sprout</option>
+            <option value="growing">Growing</option><option value="mature">Mature</option><option value="bloom">Bloom</option>
+          </select>
+          <select name="condition" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+            <option value="" disabled selected>Kondisi</option>
+            <option value="healthy">Healthy</option><option value="attention">Needs Attention</option>
+            <option value="recovering">Recovering</option><option value="critical">Critical</option>
+          </select>
+          <input type="text" name="activity" placeholder="Aktivitas (cth: disiram & dicek)" required maxlength="120" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+          <textarea name="notes" rows="2" placeholder="Catatan (opsional)" maxlength="200" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white resize-none"></textarea>
+          <label class="flex items-center justify-center gap-2 border border-dashed border-ink/25 rounded-xl px-4 py-4 text-sm text-ink/60 cursor-pointer">
+            <i data-lucide="camera" class="w-4 h-4"></i> <span id="photoLabel">Ambil Foto (opsional)</span>
+            <input type="file" name="photo" accept="image/*" capture="environment" class="hidden" id="photoInput">
+          </label>
+          <img id="photoPreview" class="hidden w-full h-32 object-cover rounded-xl" alt="Preview foto">
+        </div>
+        <div class="flex gap-3 mt-5">
+          <button type="button" id="closeSheet" class="flex-1 border border-ink/20 py-3 rounded-full text-sm font-semibold">Batal</button>
+          <button type="submit" class="flex-1 bg-forest text-cream py-3 rounded-full text-sm font-semibold">Simpan</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="toast" class="absolute bottom-24 left-1/2 -translate-x-1/2 z-50 hidden max-w-[85%] bg-ink text-cream rounded-2xl px-5 py-2.5 shadow-lg text-xs text-center"></div>
+  </div>
+
+  <p class="text-[10px] text-ink/35 mt-4 text-center max-w-[420px]">Prototype visual -- semua data di atas dummy, tidak tersambung ke Supabase asli. Tidak ada perubahan pada project asli.</p>
+
+<script>
+lucide.createIcons();
+
+const STAGES = ['seed','sprout','growing','mature','bloom'];
+const stageLabel = { seed:'Seed', sprout:'Sprout', growing:'Growing', mature:'Mature', bloom:'Bloom' };
+const conditionMeta = {
+  healthy: { label:'Healthy', color:'#2F7D4F' },
+  attention: { label:'Needs Attention', color:'#D9A22B' },
+  recovering: { label:'Recovering', color:'#3B82C4' },
+  critical: { label:'Critical', color:'#D14343' },
+};
+const plantColor = { kertas:'var(--color-kertas)', krokot:'var(--color-krokot)' };
+const plantLabel = { kertas:'Bougainvillea', krokot:'Portulaca' };
+
+let plants = [
+  { id:'kertas', local:'Bunga Kertas', stage:'bloom', condition:'healthy', lastChecked:'2026-08-30' },
+  { id:'krokot', local:'Bunga Krokot', stage:'growing', condition:'attention', lastChecked:'2026-08-28' },
+];
+
+let entries = [
+  { id:6, plant:'kertas', date:'2026-08-30', author:'Firzansyah Alsy R.', stage:'bloom', condition:'healthy', activity:'Mekar pertama musim ini 🌸', notes:'3 kuntum udah mekar penuh', photo:true, mine:false },
+  { id:5, plant:'krokot', date:'2026-08-28', author:'Fatan Aditiansyah', stage:'growing', condition:'attention', activity:'Cek daun, ada bercak kuning', notes:'Kemungkinan kurang sinar matahari pagi', photo:false, mine:true },
+  { id:4, plant:'kertas', date:'2026-08-25', author:'Hafidh Jaim T.S', stage:'mature', condition:'healthy', activity:'Pruning ranting kering', notes:'', photo:false, mine:false },
+  { id:3, plant:'krokot', date:'2026-08-22', author:'Ghazy Alfi M.', stage:'growing', condition:'healthy', activity:'Disiram & dicek kelembaban tanah', notes:'', photo:false, mine:false },
+  { id:2, plant:'kertas', date:'2026-08-18', author:'Feliza Nuril A.', stage:'growing', condition:'healthy', activity:'Ukur tinggi batang: 34 cm', notes:'', photo:false, mine:false },
+  { id:1, plant:'krokot', date:'2026-08-15', author:'Fatan Aditiansyah', stage:'sprout', condition:'recovering', activity:'Ganti pot, akar mulai penuh', notes:'', photo:false, mine:true },
+];
+
+function fmtDate(s){ return new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'short'}); }
+function relDate(s){
+  const days = Math.round((new Date('2026-09-02') - new Date(s)) / 86400000);
+  if (days <= 0) return 'Hari ini';
+  if (days === 1) return 'Kemarin';
+  return days + ' hari lalu';
+}
+function stageTrack(stage, color){
+  const idx = STAGES.indexOf(stage);
+  return '<div class="stage-track" style="color:' + color + '">' +
+    STAGES.map((_,i)=>'<div class="stage-seg ' + (i<=idx?'filled':'') + '"></div>').join('') +
+  '</div>';
+}
+
+function renderPlantCards(){
+  document.getElementById('plantCards').innerHTML = plants.map(p=>{
+    const c = conditionMeta[p.condition];
+    return '<div class="rounded-2xl border p-3.5" style="border-color:color-mix(in srgb, ' + plantColor[p.id] + ' 30%, transparent)">' +
+      '<p class="text-[10px] font-mono uppercase tracking-wider mb-0.5" style="color:' + plantColor[p.id] + '">' + plantLabel[p.id] + '</p>' +
+      '<p class="text-xs text-ink/45 mb-2.5">' + p.local + '</p>' +
+      stageTrack(p.stage, plantColor[p.id]) +
+      '<div class="flex items-center justify-between mt-2">' +
+        '<span class="text-xs font-semibold">' + stageLabel[p.stage] + '</span>' +
+        '<span class="flex items-center gap-1 text-[10px] font-medium" style="color:' + c.color + '">' +
+          '<span class="w-1.5 h-1.5 rounded-full" style="background:' + c.color + '"></span>' + c.label +
+        '</span>' +
+      '</div>' +
+      '<p class="text-[10px] text-ink/35 mt-2">Diperbarui ' + relDate(p.lastChecked) + '</p>' +
+    '</div>';
+  }).join('');
+}
+
+let activeFilter = 'semua';
+let query = '';
+
+function renderTimeline(){
+  const q = query.trim().toLowerCase();
+  const filtered = entries.filter(e =>
+    (activeFilter==='semua' || e.plant===activeFilter) &&
+    (!q || e.activity.toLowerCase().includes(q) || (e.notes||'').toLowerCase().includes(q))
+  );
+  const tl = document.getElementById('timeline');
+  const empty = document.getElementById('timelineEmpty');
+  if (!filtered.length){ tl.innerHTML=''; empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  tl.innerHTML = filtered.map(e=>{
+    const c = conditionMeta[e.condition];
+    return '<div class="tl-item relative pl-9 pb-5">' +
+      '<div class="tl-line"></div>' +
+      '<div class="absolute left-[10px] top-1.5 w-3 h-3 rounded-full ring-4 ring-cream" style="background:' + plantColor[e.plant] + '"></div>' +
+      '<div class="flex items-center justify-between">' +
+        '<span class="text-[10px] font-mono uppercase tracking-wider" style="color:' + plantColor[e.plant] + '">' + plantLabel[e.plant] + '</span>' +
+        (e.mine ? '<button class="js-del text-ink/25" data-id="' + e.id + '"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>' : '') +
+      '</div>' +
+      '<p class="text-[11px] font-mono text-ink/40 mt-0.5">' + fmtDate(e.date) + ' · ' + e.author + '</p>' +
+      (e.photo ? '<div class="w-full h-24 rounded-lg mt-2 flex items-center justify-center" style="background:color-mix(in srgb, ' + plantColor[e.plant] + ' 12%, var(--color-mist))"><i data-lucide="image" class="w-5 h-5" style="color:' + plantColor[e.plant] + '"></i></div>' : '') +
+      '<div class="flex items-center gap-2 mt-2">' +
+        '<span class="text-xs font-semibold">' + stageLabel[e.stage] + '</span>' +
+        '<span class="flex items-center gap-1 text-[10px]" style="color:' + c.color + '">' +
+          '<span class="w-1.5 h-1.5 rounded-full" style="background:' + c.color + '"></span>' + c.label +
+        '</span>' +
+      '</div>' +
+      '<p class="text-sm text-ink/75 mt-1.5">' + e.activity + '</p>' +
+      (e.notes ? '<p class="text-xs text-ink/45 mt-0.5">' + e.notes + '</p>' : '') +
+    '</div>';
+  }).join('');
+  lucide.createIcons();
+}
+
+document.querySelectorAll('#plantFilters .jf-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('#plantFilters .jf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activeFilter = btn.dataset.filter; renderTimeline();
+}));
+document.getElementById('journalSearch').addEventListener('input', e=>{ query=e.target.value; renderTimeline(); });
+
+document.getElementById('timeline').addEventListener('click', e=>{
+  const btn = e.target.closest('.js-del'); if(!btn) return;
+  if(!confirm('Hapus update ini? (mode preview)')) return;
+  entries = entries.filter(x=>String(x.id)!==btn.dataset.id);
+  renderTimeline(); showToast('Update dihapus (preview)');
+});
+
+// ===== FAB & bottom sheet =====
+const sheet = document.getElementById('addSheet');
+function openSheet(){ sheet.classList.remove('hidden'); sheet.classList.add('flex'); }
+document.getElementById('fab').addEventListener('click', openSheet);
+document.getElementById('fabInline').addEventListener('click', openSheet);
+document.getElementById('closeSheet').addEventListener('click', closeSheet);
+sheet.addEventListener('click', e=>{ if(e.target===sheet) closeSheet(); });
+function closeSheet(){ sheet.classList.add('hidden'); sheet.classList.remove('flex'); }
+
+const photoInput = document.getElementById('photoInput');
+const photoPreview = document.getElementById('photoPreview');
+photoInput.addEventListener('change', ()=>{
+  const file = photoInput.files[0]; if(!file) return;
+  document.getElementById('photoLabel').textContent = file.name;
+  photoPreview.src = URL.createObjectURL(file);
+  photoPreview.classList.remove('hidden');
+});
+
+document.getElementById('journalForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  entries.unshift({
+    id: Date.now(), plant: fd.get('plant'), date: fd.get('date'), author:'Fatan Aditiansyah',
+    stage: fd.get('stage'), condition: fd.get('condition'), activity: fd.get('activity'),
+    notes: fd.get('notes')||'', photo:false, mine:true,
+  });
+  const p = plants.find(x=>x.id===fd.get('plant'));
+  if (p){ p.stage=fd.get('stage'); p.condition=fd.get('condition'); p.lastChecked=fd.get('date'); }
+  e.target.reset();
+  document.getElementById('photoLabel').textContent = 'Ambil Foto (opsional)';
+  photoPreview.classList.add('hidden');
+  closeSheet(); renderPlantCards(); renderTimeline();
+  showToast('Update tersimpan! (preview -- belum masuk database asli)');
+});
+
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.remove('hidden');
+  setTimeout(()=>t.classList.add('hidden'), 2600);
+}
+
+// ===== toggle Dashboard/Sign-in -- cuma buat kebutuhan review preview ini =====
+const dashScreen = document.getElementById('dashScreen');
+const authScreen = document.getElementById('authScreen');
+document.getElementById('metaDash').addEventListener('click', ()=>setMeta(true));
+document.getElementById('metaAuth').addEventListener('click', ()=>setMeta(false));
+function setMeta(showDash){
+  document.getElementById('metaDash').classList.toggle('active', showDash);
+  document.getElementById('metaAuth').classList.toggle('active', !showDash);
+  dashScreen.classList.toggle('hidden', !showDash);
+  authScreen.classList.toggle('hidden', showDash);
+  authScreen.classList.toggle('flex', !showDash);
+}
+document.getElementById('tabSignIn').addEventListener('click', ()=>switchAuthTab(true));
+document.getElementById('tabRegister').addEventListener('click', ()=>switchAuthTab(false));
+function switchAuthTab(signIn){
+  document.getElementById('tabSignIn').classList.toggle('active', signIn);
+  document.getElementById('tabRegister').classList.toggle('active', !signIn);
+  document.getElementById('signInForm').classList.toggle('hidden', !signIn);
+  document.getElementById('registerForm').classList.toggle('hidden', signIn);
+}
+document.getElementById('signInForm').addEventListener('submit', e=>e.preventDefault());
+document.getElementById('registerForm').addEventListener('submit', e=>e.preventDefault());
+document.getElementById('logoutBtn').addEventListener('click', ()=>setMeta(false));
+
+renderPlantCards();
+renderTimeline();
+</script>
+</body>
+</html>
