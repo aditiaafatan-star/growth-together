@@ -2,7 +2,7 @@
 // Strategi: network-first (selalu coba internet dulu biar data selalu terbaru),
 // baru fallback ke cache kalau lagi offline -- jadi app-shell-nya tetap kebuka.
 
-const CACHE_NAME = 'growth-together-v1';
+const CACHE_NAME = 'growth-together-v2';
 const APP_SHELL = ['./app.html', './manifest.json', './icon.svg', './icon-maskable.svg'];
 
 self.addEventListener('install', (event) => {
