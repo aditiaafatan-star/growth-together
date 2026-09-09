@@ -60,11 +60,86 @@
   @keyframes panelFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   .panel-fade { animation: panelFade .35s ease-out both; }
 
+  /* ===== HowItWorks-style Journal Cards ===== */
+  .journal-stagger-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .journal-pin-card {
+    position: relative;
+    width: 100%;
+    transition: transform 0.3s ease, z-index 0s;
+    margin-bottom: 24px;
+  }
+  .journal-pin-card:hover {
+    z-index: 30 !important;
+    transform: scale(1.05) !important;
+  }
+  @media (min-width: 768px) {
+    .journal-pin-card {
+      width: 320px;
+      position: absolute;
+      margin-bottom: 0;
+    }
+    .journal-pin-card.jpc-left { left: 10%; }
+    .journal-pin-card.jpc-right { right: 10%; left: auto; }
+    .journal-pin-card.jpc-rotate-pos { transform: rotate(6deg); }
+    .journal-pin-card.jpc-rotate-neg { transform: rotate(-6deg); }
+    .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(6deg) scale(1.05) !important; }
+    .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-6deg) scale(1.05) !important; }
+  }
+  .journal-pin-card-inner {
+    background: var(--color-cream);
+    padding: 8px;
+    border-radius: 25px;
+    box-shadow: 0px 8px 24px 0px rgba(0,0,0,0.1);
+    border: 1px solid rgba(13,26,19,0.08);
+  }
+  .journal-pin-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    margin: 0 auto 12px auto;
+  }
+  .journal-content-card {
+    border-radius: 15px;
+    padding: 16px;
+    border: 1px solid;
+    position: relative;
+    overflow: hidden;
+  }
+  .journal-content-card.jcc-kertas {
+    background: rgba(196,72,122,0.08);
+    border-color: rgba(196,72,122,0.18);
+  }
+  .journal-content-card.jcc-krokot {
+    background: rgba(217,134,58,0.08);
+    border-color: rgba(217,134,58,0.18);
+  }
+  .journal-card-number {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+    font-size: 1.75rem;
+    line-height: 1;
+    margin-bottom: 10px;
+    display: block;
+  }
+  @keyframes dashFlow {
+    to { stroke-dashoffset: -140; }
+  }
+  .journal-dash-path {
+    stroke-dasharray: 8 6;
+    animation: dashFlow 3s linear infinite;
+  }
+  /* ===== End HowItWorks-style ===== */
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     .panel-fade { animation: none; }
     #tabIndicator { transition: none; }
+    .journal-dash-path { animation: none; }
   }
 </style>
 </head>
@@ -316,7 +391,7 @@
         </div>
       </div>
 
-      <div id="journalGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <div id="journalGrid" class="journal-stagger-container"><svg id="journalSvgPath" class="absolute top-0 left-0 w-full h-full pointer-events-none hidden md:block z-0" preserveAspectRatio="none"></svg></div>
 
       <div id="journalEmpty" class="hidden mt-10 text-center py-16 px-6 border border-dashed border-ink/15 rounded-2xl">
         <i data-lucide="sprout" class="w-8 h-8 mx-auto text-forest/50 mb-4"></i>
@@ -1053,29 +1128,44 @@
       return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
     }
 
-    function journalCardHtml(entry) {
+    function journalCardHtml(entry, index) {
       const isKertas = entry.plant_id === 'kertas';
-      const frameColor = isKertas ? 'text-kertas' : 'text-krokot';
+      const colorClass = isKertas ? 'jcc-kertas' : 'jcc-krokot';
+      const pinColor = isKertas ? 'text-kertas' : 'text-krokot';
+      const numColor = isKertas ? 'color: #C4487A' : 'color: #D9863A';
       const badgeClass = isKertas ? 'text-kertas bg-kertas/10' : 'text-krokot bg-krokot/10';
       const ownerName = entry.profiles?.name || 'Anggota';
       const canManage = currentUser && entry.user_id === currentUser.id;
+      const isEven = index % 2 === 0;
+      const posClass = isEven ? 'jpc-left jpc-rotate-pos' : 'jpc-right jpc-rotate-neg';
+      const topPx = index * 280;
+      const num = String(index + 1).padStart(2, '0');
+
+      const pinSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="journal-pin-icon ${pinColor}"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg>`;
+
       return `
-        <article class="frame ${frameColor} border border-ink/10 rounded-2xl p-6" data-id="${entry.id}">
-          <div class="flex items-center justify-between">
-            <span class="text-[10px] font-mono uppercase tracking-wider ${badgeClass} px-2.5 py-1 rounded-full">${plantLabel[entry.plant_id] || entry.plant_id}</span>
-            ${canManage ? `<button type="button" class="js-delete text-ink/30 hover:text-ink/70" data-id="${entry.id}" aria-label="Hapus update ini"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+        <div class="journal-pin-card ${posClass}" style="top:${topPx}px;" data-id="${entry.id}">
+          <div class="journal-pin-card-inner">
+            ${pinSvg}
+            <div class="journal-content-card ${colorClass}">
+              <span class="journal-card-number" style="${numColor}">${num}</span>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-mono uppercase tracking-wider ${badgeClass} px-2.5 py-1 rounded-full">${plantLabel[entry.plant_id] || entry.plant_id}</span>
+                ${canManage ? `<button type="button" class="js-delete text-ink/30 hover:text-ink/70" data-id="${entry.id}" aria-label="Hapus update ini"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+              </div>
+              <p class="font-mono text-xs text-ink/40 mb-2">${formatDate(entry.date)} \u00B7 by ${escapeHtml(ownerName)}</p>
+              <div class="h-1.5 bg-ink/10 rounded-full overflow-hidden mb-2">
+                <div class="h-full rounded-full" style="width:${stagePercent[entry.stage] || 0}%;background:${isKertas ? '#C4487A' : '#D9863A'}"></div>
+              </div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-semibold" style="${numColor}">${stageLabel[entry.stage] || entry.stage}</span>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-ink/5 text-ink/60">${conditionDot[entry.condition] || ''} ${conditionLabel[entry.condition] || entry.condition}</span>
+              </div>
+              <p class="text-sm text-ink/80 font-semibold leading-snug mb-1">${escapeHtml(entry.activity)}</p>
+              ${entry.notes ? `<p class="text-xs text-ink/50 leading-relaxed">${escapeHtml(entry.notes)}</p>` : ''}
+            </div>
           </div>
-          <p class="font-mono text-xs text-ink/40 mt-4">${formatDate(entry.date)} \u00B7 by ${escapeHtml(ownerName)}</p>
-          <div class="mt-3 h-1.5 bg-ink/10 rounded-full overflow-hidden">
-            <div class="h-full bg-current" style="width:${stagePercent[entry.stage] || 0}%"></div>
-          </div>
-          <div class="flex items-center justify-between mt-2">
-            <span class="text-xs font-semibold">${stageLabel[entry.stage] || entry.stage}</span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full bg-ink/5 text-ink/60">${conditionDot[entry.condition] || ''} ${conditionLabel[entry.condition] || entry.condition}</span>
-          </div>
-          <p class="mt-3 text-sm text-ink/70 leading-relaxed">${escapeHtml(entry.activity)}</p>
-          ${entry.notes ? `<p class="mt-1.5 text-xs text-ink/50 leading-relaxed">${escapeHtml(entry.notes)}</p>` : ''}
-        </article>`;
+        </div>`;
     }
 
     function applyJournalFilters() {
@@ -1089,6 +1179,7 @@
     }
 
     function renderJournalList() {
+      const svgEl = document.getElementById('journalSvgPath');
       if (allEntries.length === 0) {
         journalGrid.classList.add('hidden');
         journalEmpty.classList.remove('hidden');
@@ -1100,9 +1191,63 @@
       journalEmpty.classList.add('hidden');
 
       const filtered = applyJournalFilters();
-      journalGrid.innerHTML = filtered.length
-        ? filtered.map(journalCardHtml).join('')
-        : '<p class="text-sm text-ink/40 col-span-full text-center py-10">Gak ada update yang cocok sama filter/pencarian ini.</p>';
+
+      if (!filtered.length) {
+        // preserve SVG element, clear cards only
+        journalGrid.querySelectorAll('.journal-pin-card').forEach(c => c.remove());
+        journalGrid.style.height = 'auto';
+        svgEl.innerHTML = '';
+        svgEl.setAttribute('viewBox', '0 0 0 0');
+        const noResult = document.createElement('p');
+        noResult.className = 'text-sm text-ink/40 text-center py-10';
+        noResult.textContent = 'Gak ada update yang cocok sama filter/pencarian ini.';
+        journalGrid.appendChild(noResult);
+        lucide.createIcons();
+        if (!prefersReducedMotion) requestAnimationFrame(() => ScrollTrigger.refresh());
+        return;
+      }
+
+      // Remove old cards (keep SVG)
+      journalGrid.querySelectorAll('.journal-pin-card, .journal-stagger-mobile, p').forEach(c => c.remove());
+
+      // Build cards HTML
+      const cardsHtml = filtered.map((e, i) => journalCardHtml(e, i)).join('');
+
+      // Insert cards after SVG
+      svgEl.insertAdjacentHTML('afterend', cardsHtml);
+
+      // Calculate container height for desktop stagger (280px per card)
+      const totalHeight = filtered.length * 280 + 80;
+      journalGrid.style.height = '';
+      // Only set fixed height on desktop for absolute positioning
+      if (window.innerWidth >= 768) {
+        journalGrid.style.height = totalHeight + 'px';
+      }
+
+      // Generate SVG dashed path connecting cards (desktop only)
+      if (filtered.length > 1) {
+        const h = totalHeight;
+        svgEl.setAttribute('viewBox', '0 0 1000 ' + h);
+        let pathD = '';
+        for (let i = 0; i < filtered.length - 1; i++) {
+          const fromY = i * 280 + 160;
+          const toY = (i + 1) * 280 + 80;
+          const isFromLeft = i % 2 === 0;
+          const fromX = isFromLeft ? 280 : 720;
+          const toX = isFromLeft ? 720 : 280;
+          const cp1x = isFromLeft ? 500 : 500;
+          const cp2x = isFromLeft ? 600 : 400;
+          if (i === 0) {
+            pathD += 'M ' + fromX + ' ' + fromY;
+          }
+          pathD += ' C ' + cp1x + ' ' + fromY + ', ' + cp2x + ' ' + toY + ', ' + toX + ' ' + toY;
+        }
+        svgEl.innerHTML = `<path d="${pathD}" stroke="#1F4B37" stroke-opacity="0.15" stroke-width="2" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke" class="journal-dash-path"/>`;
+      } else {
+        svgEl.innerHTML = '';
+        svgEl.setAttribute('viewBox', '0 0 0 0');
+      }
+
       lucide.createIcons();
 
       const latest = allEntries[0];
@@ -1110,13 +1255,21 @@
       latestUpdateLine.textContent = `Latest: ${plantLabel[latest.plant_id]} is currently ${stageLabel[latest.stage]}. (by ${latestName})`;
 
       if (!prefersReducedMotion) {
-        gsap.from('#journalGrid [data-id]', { opacity: 0, y: 16, duration: 0.4, stagger: 0.05, ease: 'power2.out' });
-        // konten jurnal ini datang dari Supabase secara async & bisa mengubah tinggi halaman --
-        // ScrollTrigger perlu di-refresh biar animasi "Watch It Grow"/timeline di bawahnya tetap
-        // mulai dari posisi scroll yang benar (bukan keburu maju, terutama di layout 1-kolom di HP).
+        gsap.from('#journalGrid [data-id]', { opacity: 0, y: 16, duration: 0.4, stagger: 0.08, ease: 'power2.out' });
         requestAnimationFrame(() => ScrollTrigger.refresh());
       }
     }
+
+    // Re-calculate stagger height on resize
+    window.addEventListener('resize', () => {
+      const cards = journalGrid.querySelectorAll('.journal-pin-card');
+      if (!cards.length) return;
+      if (window.innerWidth >= 768) {
+        journalGrid.style.height = (cards.length * 280 + 80) + 'px';
+      } else {
+        journalGrid.style.height = 'auto';
+      }
+    });
 
     async function loadJournal() {
       journalErrorState.classList.add('hidden');
