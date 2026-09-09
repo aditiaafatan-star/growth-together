@@ -71,17 +71,26 @@
     position: relative;
     width: 100%;
     transition: transform 0.3s ease, z-index 0s;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
   }
   .journal-pin-card:hover {
     z-index: 30 !important;
-    transform: scale(1.05) !important;
+    transform: scale(1.02) !important;
   }
+  /* Mobile mini-zigzag */
+  .journal-pin-card.jpc-rotate-pos { transform: rotate(3deg); margin-left: 12px; margin-right: -12px; }
+  .journal-pin-card.jpc-rotate-neg { transform: rotate(-3deg); margin-right: 12px; margin-left: -12px; }
+  .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(3deg) scale(1.02) !important; }
+  .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-3deg) scale(1.02) !important; }
+
   @media (min-width: 768px) {
     .journal-pin-card {
       width: 320px;
       position: absolute;
       margin-bottom: 0;
+      margin-left: 0;
+      margin-right: 0;
+      top: var(--md-top);
     }
     .journal-pin-card.jpc-left { left: 10%; }
     .journal-pin-card.jpc-right { right: 10%; left: auto; }
