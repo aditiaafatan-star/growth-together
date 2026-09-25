@@ -247,3 +247,41 @@ from public.profiles;
 -- terpisah nanti -- didiskusikan dulu sebelum diterapkan, supaya tidak
 -- menambah kompleksitas yang belum tentu dibutuhkan untuk kelompok kecil ini.
 -- =====================================================================
+
+-- =====================================================================
+-- =====================================================================
+-- FASE 4 MIGRATION — Ukuran Pertumbuhan Kuantitatif (Laporan Matematika)
+-- =====================================================================
+-- Jalankan blok di bawah ini lewat Supabase SQL Editor.
+-- Menambahkan kolom tinggi (cm), jumlah daun, dan lebar daun ke growth_updates & plants,
+-- serta memperbarui trigger sync_plant_status agar menyimpan ukuran terkini tanaman.
+-- =====================================================================
+
+-- 10) Tambah kolom ukuran di growth_updates
+alter table public.growth_updates
+  add column if not exists height_cm numeric(5,2),
+  add column if not exists leaf_count integer,
+  add column if not exists leaf_width_cm numeric(5,2);
+
+-- 11) Tambah kolom ukuran terkini di plants
+alter table public.plants
+  add column if not exists current_height_cm numeric(5,2),
+  add column if not exists current_leaf_count integer,
+  add column if not exists current_leaf_width_cm numeric(5,2);
+
+-- 12) Update trigger sync_plant_status agar memperbarui metrik ukuran terbaru ke tabel plants
+create or replace function public.sync_plant_status()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  update public.plants
+  set current_stage = new.stage,
+      current_condition = new.condition,
+      last_checked = new.created_at,
+      current_height_cm = coalesce(new.height_cm, current_height_cm),
+      current_leaf_count = coalesce(new.leaf_count, current_leaf_count),
+      current_leaf_width_cm = coalesce(new.leaf_width_cm, current_leaf_width_cm)
+  where id = new.plant_id;
+  return new;
+end;
+$$;
+

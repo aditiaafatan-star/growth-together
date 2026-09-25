@@ -29,6 +29,8 @@
   h1, h2, h3 { font-family: var(--font-display); }
   .jf-btn, .sf-btn { opacity: 0.6; }
   .jf-btn.active, .sf-btn.active { background: var(--color-ink); color: var(--color-cream); opacity: 1; }
+  .math-tab { opacity: 0.6; }
+  .math-tab.active { background: var(--color-forest); color: var(--color-cream); opacity: 1; }
 </style>
 </head>
 <body class="min-h-screen pb-24">
@@ -132,6 +134,97 @@
       <div id="leaderboardList" class="rounded-2xl border border-ink/10 divide-y divide-ink/8"></div>
     </div>
 
+    <!-- LAPORAN MATEMATIKA & GRAFIK PERTUMBUHAN -->
+    <div id="mathReportCard" class="rounded-3xl border border-forest/20 bg-white/70 backdrop-blur-sm p-4.5 mb-6 shadow-xs">
+      <div class="flex items-center justify-between gap-2 mb-3.5">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-forest text-cream flex items-center justify-center shrink-0">
+            <i data-lucide="calculator" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-sm text-forest leading-tight">Laporan Matematika</h3>
+            <p class="text-[10px] text-ink/50">Kurva Pertumbuhan & Analisis Laju</p>
+          </div>
+        </div>
+        <div class="flex gap-1 bg-ink/5 p-1 rounded-full text-xs font-medium" id="mathPlantTabs">
+          <button id="mathTabKertas" type="button" class="math-tab active px-3 py-1 rounded-full text-[11px] font-semibold transition-all">Bougainvillea</button>
+          <button id="mathTabKrokot" type="button" class="math-tab px-3 py-1 rounded-full text-[11px] font-semibold transition-all">Portulaca</button>
+        </div>
+      </div>
+
+      <!-- Ringkasan Metrik Matematika -->
+      <div class="grid grid-cols-2 gap-2 mb-3.5" id="mathMetricsSummary">
+        <div class="bg-forest/5 rounded-2xl p-3 border border-forest/10">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-forest/70 block mb-0.5">Tinggi Terkini (h)</span>
+          <span id="mathCurrentHeight" class="text-lg font-bold font-display text-forest block">-</span>
+          <span id="mathInitialHeight" class="text-[10px] text-ink/45 block">Awal: -</span>
+        </div>
+        <div class="bg-forest/5 rounded-2xl p-3 border border-forest/10">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-forest/70 block mb-0.5">Total Pertumbuhan (Δh)</span>
+          <span id="mathDeltaHeight" class="text-lg font-bold font-display text-forest block">-</span>
+          <span id="mathDurationDays" class="text-[10px] text-ink/45 block">Rentang: -</span>
+        </div>
+        <div class="bg-cream rounded-2xl p-3 border border-ink/10">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-ink/45 block mb-0.5">Laju Rata-rata (v̄)</span>
+          <span id="mathAvgRate" class="text-sm font-bold font-display text-ink block">-</span>
+          <span class="text-[10px] text-ink/40 block">v̄ = Δh / Δt (cm/hari)</span>
+        </div>
+        <div class="bg-cream rounded-2xl p-3 border border-ink/10">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-ink/45 block mb-0.5">Morfologi Terkini</span>
+          <span id="mathLeavesSummary" class="text-sm font-bold font-display text-ink block">-</span>
+          <span id="mathWidthSummary" class="text-[10px] text-ink/40 block">Lebar daun: -</span>
+        </div>
+      </div>
+
+      <!-- Wadah Grafik Pertumbuhan (SVG Responsif) -->
+      <div class="bg-white rounded-2xl p-3.5 border border-ink/10 mb-3.5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-ink/80 flex items-center gap-1.5">
+            <i data-lucide="trending-up" class="w-3.5 h-3.5 text-forest"></i> Grafik Tinggi Tanaman (cm)
+          </span>
+          <span id="mathDataPointsCount" class="text-[10px] font-mono text-ink/40">0 titik</span>
+        </div>
+        <div id="mathChartContainer" class="w-full overflow-hidden">
+          <!-- SVG dirender secara dinamis via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Tabel Data Rekap Matematika & Aksi Ekspor -->
+      <details class="group bg-white rounded-2xl border border-ink/10 overflow-hidden">
+        <summary class="flex items-center justify-between px-3.5 py-3 text-xs font-semibold cursor-pointer select-none text-ink/75 hover:bg-ink/5">
+          <span class="flex items-center gap-1.5"><i data-lucide="table" class="w-3.5 h-3.5 text-forest"></i> Rekap Tabel Data Pengamatan</span>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform group-open:rotate-180 text-ink/40"></i>
+        </summary>
+        <div class="p-3.5 border-t border-ink/5">
+          <div class="overflow-x-auto max-h-56 mb-3">
+            <table class="w-full text-left text-[11px]" id="mathDataTable">
+              <thead class="bg-ink/5 font-mono text-ink/50 text-[10px]">
+                <tr>
+                  <th class="p-1.5">Tgl</th>
+                  <th class="p-1.5">h (cm)</th>
+                  <th class="p-1.5">Δh</th>
+                  <th class="p-1.5">Laju (cm/hr)</th>
+                  <th class="p-1.5">Daun</th>
+                  <th class="p-1.5">Lebar</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-ink/5" id="mathTableBody">
+                <tr><td colspan="6" class="p-3 text-center text-ink/40">Belum ada data ukuran.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="flex gap-2">
+            <button id="mathCopyTableBtn" type="button" class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-xs font-semibold bg-forest text-cream hover:bg-ink transition-colors">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin Tabel (Word/Docs)
+            </button>
+            <button id="mathExportCsvBtn" type="button" class="flex items-center justify-center gap-1.5 py-2 px-3.5 rounded-full text-xs font-semibold border border-ink/20 text-ink hover:bg-ink/5 transition-colors">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> CSV
+            </button>
+          </div>
+        </div>
+      </details>
+    </div>
+
     <button id="openAddForm" class="w-full flex items-center justify-center gap-2 bg-forest text-cream py-3.5 rounded-full text-sm font-semibold mb-5">
       <i data-lucide="plus" class="w-4 h-4"></i> Tambah Update
     </button>
@@ -179,7 +272,31 @@
           <option value="healthy">Healthy</option><option value="attention">Needs Attention</option>
           <option value="recovering">Recovering</option><option value="critical">Critical</option>
         </select>
-        <input type="text" name="activity" placeholder="Aktivitas (cth: disiram & dicek)" required maxlength="120" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
+
+        <!-- PENGUKURAN PERTUMBUHAN (LAPORAN MATEMATIKA) -->
+        <div class="p-3.5 bg-forest/5 rounded-2xl border border-forest/15 space-y-2.5">
+          <div class="flex items-center justify-between text-xs font-semibold text-forest">
+            <span class="flex items-center gap-1.5"><i data-lucide="ruler" class="w-3.5 h-3.5"></i> Ukuran Pertumbuhan</span>
+            <span class="text-[10px] font-mono font-normal text-forest/70">Data Matematika</span>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[10px] font-mono text-ink/50 mb-1">Tinggi (cm)</label>
+              <input type="number" name="height_cm" step="0.1" min="0" placeholder="12.5" class="w-full border border-ink/15 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-forest">
+            </div>
+            <div>
+              <label class="block text-[10px] font-mono text-ink/50 mb-1">Jml Daun</label>
+              <input type="number" name="leaf_count" step="1" min="0" placeholder="8" class="w-full border border-ink/15 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-forest">
+            </div>
+            <div>
+              <label class="block text-[10px] font-mono text-ink/50 mb-1">Lebar (cm)</label>
+              <input type="number" name="leaf_width_cm" step="0.1" min="0" placeholder="3.2" class="w-full border border-ink/15 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-forest">
+            </div>
+          </div>
+          <p class="text-[10px] text-ink/40">Isi saat melakukan pengukuran (opsional, untuk grafik & tabel laporan).</p>
+        </div>
+
+        <input type="text" name="activity" placeholder="Aktivitas (cth: disiram & diukur)" required maxlength="120" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
         <textarea name="notes" rows="2" placeholder="Catatan (opsional)" maxlength="200" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white resize-none"></textarea>
 
         <label class="flex items-center justify-center gap-2 border border-dashed border-ink/25 rounded-xl px-4 py-4 text-sm text-ink/60 cursor-pointer">
@@ -295,9 +412,13 @@ async function loadPlantStatus() {
   row.innerHTML = data.map((plant) => {
     const isKertas = plant.id === 'kertas';
     const label = plant.last_checked ? `${conditionDot[plant.current_condition] || ''} ${stageLabel[plant.current_stage] || ''}` : 'Belum ada data';
+    const sizeItems = [];
+    if (plant.current_height_cm != null) sizeItems.push(`📏 ${plant.current_height_cm} cm`);
+    if (plant.current_leaf_count != null) sizeItems.push(`🍃 ${plant.current_leaf_count} daun`);
     return `<div class="border ${isKertas ? 'border-kertas/30' : 'border-krokot/30'} rounded-2xl p-4">
       <p class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas' : 'text-krokot'} mb-1">${plantLabel[plant.id]}</p>
       <p class="text-sm font-semibold">${label}</p>
+      ${sizeItems.length ? `<p class="text-xs text-ink/70 mt-1.5 font-mono font-medium">${sizeItems.join(' · ')}</p>` : ''}
     </div>`;
   }).join('');
 }
@@ -434,6 +555,14 @@ function cardHtml(e) {
   const isKertas = e.plant_id === 'kertas';
   const owner = e.profiles?.name || 'Anggota';
   const canManage = currentUser && e.user_id === currentUser.id;
+  const hasMeasurements = (e.height_cm != null) || (e.leaf_count != null) || (e.leaf_width_cm != null);
+  const measurementHtml = hasMeasurements ? `
+    <div class="flex flex-wrap gap-1.5 mt-2.5 pt-2 border-t border-ink/8">
+      ${e.height_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono font-semibold bg-forest/10 text-forest px-2 py-0.5 rounded-md">📏 ${e.height_cm} cm</span>` : ''}
+      ${e.leaf_count != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/5 text-ink/75 px-2 py-0.5 rounded-md">🍃 ${e.leaf_count} daun</span>` : ''}
+      ${e.leaf_width_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/5 text-ink/75 px-2 py-0.5 rounded-md">🌿 lebar ${e.leaf_width_cm} cm</span>` : ''}
+    </div>` : '';
+
   return `<article class="border ${isKertas ? 'border-kertas/25' : 'border-krokot/25'} rounded-2xl p-4" data-id="${e.id}">
     <div class="flex items-center justify-between">
       <span class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas' : 'text-krokot'}">${plantLabel[e.plant_id]}</span>
@@ -446,6 +575,7 @@ function cardHtml(e) {
       <span class="text-xs font-semibold">${stageLabel[e.stage] || e.stage}</span>
       <span class="text-[10px] bg-ink/5 px-2 py-0.5 rounded-full">${conditionDot[e.condition] || ''} ${conditionLabel[e.condition] || e.condition}</span>
     </div>
+    ${measurementHtml}
     <p class="text-sm text-ink/70 mt-2">${escapeHtml(e.activity)}</p>
     ${e.notes ? `<p class="text-xs text-ink/50 mt-1">${escapeHtml(e.notes)}</p>` : ''}
   </article>`;
@@ -467,6 +597,7 @@ async function loadJournal() {
   if (error) { journalGrid.classList.add('hidden'); journalEmpty.classList.add('hidden'); journalErrorState.classList.remove('hidden'); return; }
   allEntries = data || [];
   renderList();
+  renderMathReport();
 }
 document.getElementById('journalRetryBtn').addEventListener('click', loadJournal);
 document.getElementById('journalSearch').addEventListener('input', (e) => { searchQuery = e.target.value; renderList(); });
@@ -478,7 +609,7 @@ journalGrid.addEventListener('click', async (e) => {
   const btn = e.target.closest('.js-delete'); if (!btn || !sb) return;
   if (!confirm('Hapus update ini?')) return;
   const { error } = await sb.from('growth_updates').delete().eq('id', btn.dataset.id);
-  if (!error) loadJournal();
+  if (!error) { loadJournal(); loadPlantStatus(); }
 });
 
 // ===== ADD FORM + FOTO KAMERA =====
@@ -525,11 +656,18 @@ journalForm.addEventListener('submit', async (e) => {
       if (selectedPhotoFile.size > 5 * 1024 * 1024) throw new Error('Ukuran foto maksimal 5MB.');
       photoUrl = await uploadPhoto(selectedPhotoFile, currentUser.id);
     }
+    const heightRaw = (fd.get('height_cm') || '').trim();
+    const leafRaw = (fd.get('leaf_count') || '').trim();
+    const widthRaw = (fd.get('leaf_width_cm') || '').trim();
+
     const payload = {
       plant_id: fd.get('plant'), user_id: currentUser.id, date: fd.get('date'),
       stage: fd.get('stage'), condition: fd.get('condition'),
       activity: (fd.get('activity') || '').trim(), notes: (fd.get('notes') || '').trim() || null,
       photo_url: photoUrl,
+      height_cm: heightRaw !== '' && !isNaN(parseFloat(heightRaw)) ? parseFloat(heightRaw) : null,
+      leaf_count: leafRaw !== '' && !isNaN(parseInt(leafRaw, 10)) ? parseInt(leafRaw, 10) : null,
+      leaf_width_cm: widthRaw !== '' && !isNaN(parseFloat(widthRaw)) ? parseFloat(widthRaw) : null,
     };
     const { error } = await sb.from('growth_updates').insert(payload);
     if (error) throw error;
@@ -543,6 +681,284 @@ journalForm.addEventListener('submit', async (e) => {
     submitBtn.disabled = false; submitBtn.textContent = 'Simpan';
   }
 });
+
+// ===== LAPORAN MATEMATIKA & GRAFIK PERTUMBUHAN =====
+let activeMathPlant = 'kertas';
+
+function renderMathReport() {
+  const container = document.getElementById('mathReportCard');
+  if (!container) return;
+
+  const plantEntries = allEntries
+    .filter((e) => e.plant_id === activeMathPlant)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const measuredEntries = plantEntries.filter((e) => e.height_cm != null && !isNaN(parseFloat(e.height_cm)));
+
+  const pointsCountEl = document.getElementById('mathDataPointsCount');
+  const currentHeightEl = document.getElementById('mathCurrentHeight');
+  const initialHeightEl = document.getElementById('mathInitialHeight');
+  const deltaHeightEl = document.getElementById('mathDeltaHeight');
+  const durationDaysEl = document.getElementById('mathDurationDays');
+  const avgRateEl = document.getElementById('mathAvgRate');
+  const leavesSummaryEl = document.getElementById('mathLeavesSummary');
+  const widthSummaryEl = document.getElementById('mathWidthSummary');
+  const chartContainer = document.getElementById('mathChartContainer');
+  const tableBody = document.getElementById('mathTableBody');
+
+  if (pointsCountEl) pointsCountEl.textContent = `${measuredEntries.length} titik`;
+
+  if (measuredEntries.length === 0) {
+    if (currentHeightEl) currentHeightEl.textContent = '-';
+    if (initialHeightEl) initialHeightEl.textContent = 'Awal: -';
+    if (deltaHeightEl) deltaHeightEl.textContent = '-';
+    if (durationDaysEl) durationDaysEl.textContent = 'Rentang: -';
+    if (avgRateEl) avgRateEl.textContent = '-';
+    if (leavesSummaryEl) leavesSummaryEl.textContent = '-';
+    if (widthSummaryEl) widthSummaryEl.textContent = 'Lebar daun: -';
+    if (chartContainer) {
+      chartContainer.innerHTML = `
+        <div class="py-8 text-center text-xs text-ink/40">
+          <i data-lucide="ruler" class="w-7 h-7 mx-auto mb-2 text-forest/30"></i>
+          <p class="font-medium text-ink/60 mb-0.5">Belum ada data tinggi tanaman</p>
+          <p class="text-[11px] text-ink/40">Isi kolom tinggi (cm) pada form Tambah Update untuk melihat kurva pertumbuhan.</p>
+        </div>`;
+      lucide.createIcons();
+    }
+    if (tableBody) {
+      tableBody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-ink/40">Belum ada data ukuran tersimpan.</td></tr>`;
+    }
+    return;
+  }
+
+  const first = measuredEntries[0];
+  const latest = measuredEntries[measuredEntries.length - 1];
+  const h0 = parseFloat(first.height_cm);
+  const hNow = parseFloat(latest.height_cm);
+  const deltaH = (hNow - h0).toFixed(1);
+
+  const d0 = new Date(first.date);
+  const dNow = new Date(latest.date);
+  const diffDays = Math.max(1, Math.round((dNow - d0) / (1000 * 60 * 60 * 24)));
+  const avgRate = (parseFloat(deltaH) / diffDays).toFixed(2);
+
+  if (currentHeightEl) currentHeightEl.textContent = `${hNow} cm`;
+  if (initialHeightEl) initialHeightEl.textContent = `Awal (${formatDate(first.date)}): ${h0} cm`;
+  if (deltaHeightEl) {
+    const sign = parseFloat(deltaH) > 0 ? '+' : '';
+    deltaHeightEl.textContent = `${sign}${deltaH} cm`;
+  }
+  if (durationDaysEl) durationDaysEl.textContent = `Selang ${diffDays} hari (${formatDate(first.date)} - ${formatDate(latest.date)})`;
+  if (avgRateEl) {
+    const sign = parseFloat(avgRate) > 0 ? '+' : '';
+    avgRateEl.textContent = `${sign}${avgRate} cm/hari`;
+  }
+  if (leavesSummaryEl) {
+    leavesSummaryEl.textContent = latest.leaf_count != null ? `${latest.leaf_count} helai daun` : 'Belum dicatat';
+  }
+  if (widthSummaryEl) {
+    widthSummaryEl.textContent = latest.leaf_width_cm != null ? `Lebar daun: ${latest.leaf_width_cm} cm` : 'Lebar daun: -';
+  }
+
+  // Render SVG Chart
+  if (chartContainer) {
+    chartContainer.innerHTML = buildMathSvgChart(measuredEntries, activeMathPlant);
+  }
+
+  // Render Table
+  if (tableBody) {
+    let rowsHtml = '';
+    for (let i = 0; i < measuredEntries.length; i++) {
+      const entry = measuredEntries[i];
+      const h = parseFloat(entry.height_cm);
+      let deltaStr = '-';
+      let rateStr = '-';
+      if (i > 0) {
+        const prev = measuredEntries[i - 1];
+        const prevH = parseFloat(prev.height_cm);
+        const curDelta = h - prevH;
+        const pDays = Math.max(1, Math.round((new Date(entry.date) - new Date(prev.date)) / (1000 * 60 * 60 * 24)));
+        const curRate = curDelta / pDays;
+        deltaStr = (curDelta >= 0 ? '+' : '') + curDelta.toFixed(1);
+        rateStr = (curRate >= 0 ? '+' : '') + curRate.toFixed(2);
+      }
+      rowsHtml += `
+        <tr class="hover:bg-ink/5">
+          <td class="p-1.5 font-mono text-[10px]">${formatDate(entry.date)}</td>
+          <td class="p-1.5 font-bold font-mono text-forest">${h} cm</td>
+          <td class="p-1.5 font-mono text-ink/70">${deltaStr}</td>
+          <td class="p-1.5 font-mono text-ink/70">${rateStr}</td>
+          <td class="p-1.5 font-mono text-ink/70">${entry.leaf_count != null ? entry.leaf_count : '-'}</td>
+          <td class="p-1.5 font-mono text-ink/70">${entry.leaf_width_cm != null ? entry.leaf_width_cm + ' cm' : '-'}</td>
+        </tr>`;
+    }
+    tableBody.innerHTML = rowsHtml;
+  }
+  lucide.createIcons();
+}
+
+function buildMathSvgChart(entries, plantId) {
+  const isKertas = plantId === 'kertas';
+  const lineColor = isKertas ? '#C4487A' : '#D9863A';
+  const fillColor = isKertas ? 'rgba(196,72,122,0.12)' : 'rgba(217,134,58,0.12)';
+  const dotColor = isKertas ? '#C4487A' : '#D9863A';
+
+  const W = 360;
+  const H = 160;
+  const padL = 36;
+  const padR = 24;
+  const padT = 20;
+  const padB = 30;
+
+  const heights = entries.map((e) => parseFloat(e.height_cm));
+  const minH = Math.max(0, Math.floor(Math.min(...heights) - 1));
+  const maxH = Math.ceil(Math.max(...heights) + 2);
+  const hRange = maxH - minH || 1;
+
+  const innerW = W - padL - padR;
+  const innerH = H - padT - padB;
+
+  const coords = entries.map((e, i) => {
+    const x = padL + (entries.length === 1 ? innerW / 2 : (i / (entries.length - 1)) * innerW);
+    const h = parseFloat(e.height_cm);
+    const y = padT + innerH - ((h - minH) / hRange) * innerH;
+    return { x, y, h, date: e.date, leaf: e.leaf_count };
+  });
+
+  const pathD = coords.reduce((acc, pt, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${pt.x.toFixed(1)},${pt.y.toFixed(1)}`, '');
+  const areaD = `${pathD} L ${coords[coords.length - 1].x.toFixed(1)},${(padT + innerH).toFixed(1)} L ${coords[0].x.toFixed(1)},${(padT + innerH).toFixed(1)} Z`;
+
+  // Grid lines
+  const gridSteps = 3;
+  let gridSvg = '';
+  for (let s = 0; s <= gridSteps; s++) {
+    const val = minH + (s / gridSteps) * hRange;
+    const yPos = padT + innerH - (s / gridSteps) * innerH;
+    gridSvg += `
+      <line x1="${padL}" y1="${yPos.toFixed(1)}" x2="${W - padR}" y2="${yPos.toFixed(1)}" stroke="#0D1A13" stroke-opacity="0.08" stroke-dasharray="2 3"/>
+      <text x="${padL - 4}" y="${(yPos + 3).toFixed(1)}" font-size="8" text-anchor="end" fill="#0D1A13" fill-opacity="0.45" font-family="monospace">${val.toFixed(0)}</text>
+    `;
+  }
+
+  // Dots and Labels
+  let dotsSvg = '';
+  coords.forEach((pt) => {
+    const dObj = new Date(pt.date);
+    const dateLabel = isNaN(dObj.getTime()) ? pt.date : `${dObj.getDate()}/${dObj.getMonth() + 1}`;
+    dotsSvg += `
+      <g class="cursor-pointer">
+        <circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="4.5" fill="${dotColor}" stroke="#ffffff" stroke-width="2"/>
+        <text x="${pt.x.toFixed(1)}" y="${(pt.y - 7).toFixed(1)}" font-size="9" font-weight="700" text-anchor="middle" fill="#0D1A13" font-family="monospace">${pt.h}</text>
+        <text x="${pt.x.toFixed(1)}" y="${(H - 10).toFixed(1)}" font-size="8" text-anchor="middle" fill="#0D1A13" fill-opacity="0.5" font-family="monospace">${dateLabel}</text>
+      </g>
+    `;
+  });
+
+  return `
+    <svg viewBox="0 0 ${W} ${H}" class="w-full h-auto overflow-visible select-none" xmlns="http://www.w3.org/2000/svg">
+      ${gridSvg}
+      <path d="${areaD}" fill="${fillColor}" />
+      <path d="${pathD}" fill="none" stroke="${lineColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      ${dotsSvg}
+    </svg>
+  `;
+}
+
+function copyMathTableToClipboard() {
+  const plantEntries = allEntries
+    .filter((e) => e.plant_id === activeMathPlant && e.height_cm != null && !isNaN(parseFloat(e.height_cm)))
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (plantEntries.length === 0) {
+    showToast('Belum ada data ukuran untuk disalin.');
+    return;
+  }
+
+  const pName = plantLabel[activeMathPlant] || activeMathPlant;
+  let text = `Laporan Pertumbuhan Matematika — ${pName}\n\n`;
+  text += `No\tTanggal\tTinggi (cm)\tΔh (cm)\tLaju (cm/hari)\tJumlah Daun\tLebar Daun (cm)\n`;
+
+  for (let i = 0; i < plantEntries.length; i++) {
+    const e = plantEntries[i];
+    const h = parseFloat(e.height_cm);
+    let deltaStr = '-';
+    let rateStr = '-';
+    if (i > 0) {
+      const prev = plantEntries[i - 1];
+      const prevH = parseFloat(prev.height_cm);
+      const curDelta = h - prevH;
+      const pDays = Math.max(1, Math.round((new Date(e.date) - new Date(prev.date)) / (1000 * 60 * 60 * 24)));
+      const curRate = curDelta / pDays;
+      deltaStr = (curDelta >= 0 ? '+' : '') + curDelta.toFixed(1);
+      rateStr = (curRate >= 0 ? '+' : '') + curRate.toFixed(2);
+    }
+    text += `${i + 1}\t${e.date}\t${h}\t${deltaStr}\t${rateStr}\t${e.leaf_count || '-'}\t${e.leaf_width_cm || '-'}\n`;
+  }
+
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Tabel berhasil disalin ke clipboard!');
+  }).catch(() => {
+    showToast('Gagal menyalin, izinkan akses clipboard.');
+  });
+}
+
+function exportMathCsv() {
+  const plantEntries = allEntries
+    .filter((e) => e.plant_id === activeMathPlant && e.height_cm != null && !isNaN(parseFloat(e.height_cm)))
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (plantEntries.length === 0) {
+    showToast('Belum ada data ukuran untuk diekspor.');
+    return;
+  }
+
+  const pName = plantLabel[activeMathPlant] || activeMathPlant;
+  let csv = 'No,Tanaman,Tanggal,Tinggi_cm,Delta_h_cm,Laju_cm_per_hari,Jumlah_Daun,Lebar_Daun_cm,Tahap,Kondisi,Catatan\n';
+
+  for (let i = 0; i < plantEntries.length; i++) {
+    const e = plantEntries[i];
+    const h = parseFloat(e.height_cm);
+    let deltaStr = '';
+    let rateStr = '';
+    if (i > 0) {
+      const prev = plantEntries[i - 1];
+      const prevH = parseFloat(prev.height_cm);
+      const curDelta = h - prevH;
+      const pDays = Math.max(1, Math.round((new Date(e.date) - new Date(prev.date)) / (1000 * 60 * 60 * 24)));
+      const curRate = curDelta / pDays;
+      deltaStr = curDelta.toFixed(1);
+      rateStr = curRate.toFixed(2);
+    }
+    const cleanNotes = (e.notes || '').replace(/"/g, '""');
+    csv += `${i + 1},"${pName}",${e.date},${h},${deltaStr},${rateStr},${e.leaf_count || ''},${e.leaf_width_cm || ''},"${e.stage}","${e.condition}","${cleanNotes}"\n`;
+  }
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `laporan-matematika-${activeMathPlant}-${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('File CSV berhasil diunduh!');
+}
+
+document.getElementById('mathTabKertas')?.addEventListener('click', () => {
+  activeMathPlant = 'kertas';
+  document.getElementById('mathTabKertas').classList.add('active');
+  document.getElementById('mathTabKrokot').classList.remove('active');
+  renderMathReport();
+});
+document.getElementById('mathTabKrokot')?.addEventListener('click', () => {
+  activeMathPlant = 'krokot';
+  document.getElementById('mathTabKrokot').classList.add('active');
+  document.getElementById('mathTabKertas').classList.remove('active');
+  renderMathReport();
+});
+document.getElementById('mathCopyTableBtn')?.addEventListener('click', copyMathTableToClipboard);
+document.getElementById('mathExportCsvBtn')?.addEventListener('click', exportMathCsv);
 
 // ===== REALTIME =====
 if (sb) {
