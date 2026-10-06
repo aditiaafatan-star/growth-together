@@ -34,7 +34,6 @@
   body { font-family: var(--font-body); background: var(--color-cream); color: var(--color-ink); }
   h1, h2, h3, h4 { font-family: var(--font-display); }
   ::selection { background: var(--color-lime); color: var(--color-ink); }
-  .grow-stage { transition: opacity 0.15s linear; }
   @keyframes bounce-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
   .scroll-cue { animation: bounce-y 1.8s ease-in-out infinite; }
   .jf-btn, .sf-btn { color: var(--color-ink); opacity: 0.65; }
@@ -183,28 +182,35 @@
 
   <!-- ================= NAVBAR (Apple-Style Liquid Glass Floating Island) ================= -->
   <nav id="siteNav" class="fixed top-0 inset-x-0 z-50 pt-3 md:pt-4 px-3 sm:px-6 pointer-events-none transition-all duration-300">
-    <div id="navInner" class="pointer-events-auto max-w-5xl mx-auto rounded-full liquid-glass-nav transition-all duration-300 ease-out flex items-center justify-between px-4 sm:px-6 md:px-7 py-2.5 md:py-3">
-      <a href="#home" class="flex items-center gap-2.5 font-display font-semibold text-base md:text-lg tracking-tight shrink-0 group">
-        <span class="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+    <div id="navInner" class="pointer-events-auto max-w-6xl mx-auto rounded-full liquid-glass-nav transition-all duration-300 ease-out flex items-center justify-between px-4 sm:px-6 md:px-7 py-2 md:py-2.5">
+      <a href="#home" class="flex items-center gap-2.5 font-display font-semibold text-base md:text-lg tracking-tight shrink-0 group mr-2">
+        <span class="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shrink-0">
           <i data-lucide="leaf" class="w-4 h-4 text-forest"></i>
         </span>
-        <span class="group-hover:text-forest transition-colors">Growth Together</span>
+        <span class="group-hover:text-forest transition-colors whitespace-nowrap">Growth Together</span>
       </a>
-      <div id="navLinks" class="hidden lg:flex items-center gap-1 text-xs font-medium text-ink/80">
+      <div id="navLinks" class="hidden lg:flex items-center gap-1 text-xs font-medium text-ink/80 whitespace-nowrap">
         <a href="#home" class="navlink nav-pill-link">Home</a>
         <a href="#story" class="navlink nav-pill-link">Our Story</a>
         <a href="#plants" class="navlink nav-pill-link">Plants</a>
-        <a href="#growing" class="navlink nav-pill-link">Growth</a>
         <a href="#team" class="navlink nav-pill-link">Our Team</a>
         <a href="#timeline" class="navlink nav-pill-link">Timeline</a>
         <a href="#journey" class="navlink nav-pill-link">Dokumentasi</a>
         <a href="#journal" class="navlink nav-pill-link">Growth Journal</a>
       </div>
-      <div id="authArea" class="hidden lg:flex items-center gap-3 text-xs ml-2 shrink-0">
+      <div id="authArea" class="hidden lg:flex items-center gap-2 text-xs ml-2 shrink-0 whitespace-nowrap">
         <button id="openAuthBtn" type="button" class="font-semibold text-cream bg-forest hover:bg-ink px-4 py-2 rounded-full transition-all duration-200 shadow-sm hover:scale-105">Sign In</button>
-        <div id="userArea" class="hidden items-center gap-2">
-          <span id="welcomeText" class="text-ink/70 font-medium"></span>
-          <button id="signOutBtn" type="button" class="text-ink/40 hover:text-ink text-xs font-medium border border-ink/15 rounded-full px-3 py-1.5 hover:bg-ink/5 transition-colors">Logout</button>
+        <div id="userArea" class="hidden items-center gap-2 shrink-0">
+          <div class="flex items-center gap-1.5 bg-ink/5 border border-ink/10 rounded-full pl-2 pr-3 py-1">
+            <span class="w-5 h-5 rounded-full bg-forest text-cream flex items-center justify-center shrink-0">
+              <i data-lucide="user" class="w-3 h-3"></i>
+            </span>
+            <span id="welcomeText" class="text-ink/80 text-xs font-medium max-w-[110px] truncate"></span>
+          </div>
+          <button id="signOutBtn" type="button" class="text-ink/60 hover:text-red-600 text-xs font-medium border border-ink/15 hover:border-red-300 rounded-full px-3 py-1.5 hover:bg-red-50 transition-colors flex items-center gap-1.5 shrink-0" title="Keluar">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+            <span>Logout</span>
+          </button>
         </div>
       </div>
       <button id="navToggle" class="lg:hidden w-9 h-9 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center transition-colors text-ink" aria-label="Buka menu" aria-expanded="false">
@@ -225,10 +231,6 @@
         </a>
         <a href="#plants" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
           <span>Plants</span>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
-        </a>
-        <a href="#growing" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
-          <span>Growth</span>
           <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
         </a>
         <a href="#team" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
@@ -708,33 +710,6 @@
     </div>
   </section>
 
-  <!-- ================= GROWING TOGETHER ================= -->
-  <section id="growing" class="relative bg-ink text-cream" style="height: 350vh;">
-    <div class="sticky top-0 h-screen flex flex-col items-center justify-center overflow-hidden px-6">
-      <div class="absolute top-20 md:top-24 left-0 right-0 text-center px-6" data-reveal>
-        <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-2">Growing Together</p>
-        <h2 class="font-display font-semibold text-2xl md:text-3xl tracking-tight">Watch It Grow</h2>
-      </div>
-
-      <div class="relative w-56 h-56 md:w-72 md:h-72">
-        <div class="grow-stage absolute inset-0 flex items-center justify-center" data-stage="0">
-          <svg viewBox="0 0 200 200" class="w-24"><ellipse cx="100" cy="160" rx="60" ry="10" fill="#F7F4EA" opacity="0.08"/><ellipse cx="100" cy="140" rx="16" ry="22" fill="#A6E06A"/></svg>
-        </div>
-        <div class="grow-stage absolute inset-0 flex items-center justify-center opacity-0" data-stage="1">
-          <svg viewBox="0 0 200 200" class="w-28"><ellipse cx="100" cy="160" rx="60" ry="10" fill="#F7F4EA" opacity="0.08"/><path d="M100,160 C98,140 104,125 100,105" fill="none" stroke="#A6E06A" stroke-width="4" stroke-linecap="round"/><path d="M100,120 C118,116 122,104 116,96 C104,100 97,110 100,120 Z" fill="#A6E06A"/></svg>
-        </div>
-        <div class="grow-stage absolute inset-0 flex items-center justify-center opacity-0" data-stage="2">
-          <svg viewBox="0 0 200 200" class="w-36"><ellipse cx="100" cy="170" rx="65" ry="10" fill="#F7F4EA" opacity="0.08"/><path d="M100,170 C94,140 108,120 100,90 C94,65 108,55 100,35" fill="none" stroke="#A6E06A" stroke-width="4" stroke-linecap="round"/><path d="M100,120 C135,113 142,90 130,76 C110,84 96,102 100,120 Z" fill="#A6E06A"/><path d="M96,90 C60,82 52,58 66,44 C88,53 100,74 96,90 Z" fill="#7FBF8E"/></svg>
-        </div>
-        <div class="grow-stage absolute inset-0 flex items-center justify-center opacity-0" data-stage="3">
-          <svg viewBox="0 0 200 200" class="w-44"><ellipse cx="100" cy="175" rx="68" ry="10" fill="#F7F4EA" opacity="0.08"/><path d="M100,175 C94,145 108,125 100,95 C94,70 108,60 100,38" fill="none" stroke="#A6E06A" stroke-width="4" stroke-linecap="round"/><path d="M100,125 C135,118 142,95 130,81 C110,89 96,107 100,125 Z" fill="#7FBF8E"/><path d="M96,95 C60,87 52,63 66,49 C88,58 100,79 96,95 Z" fill="#7FBF8E"/><circle cx="100" cy="34" r="9" fill="#D9863A"/><path d="M100,34 C112,22 128,24 132,36 C120,44 106,42 100,34 Z" fill="#C4487A"/><path d="M100,34 C88,22 72,24 68,36 C80,44 94,42 100,34 Z" fill="#C4487A"/><path d="M100,34 C108,20 106,6 96,2 C88,12 92,26 100,34 Z" fill="#C4487A" opacity="0.9"/></svg>
-        </div>
-      </div>
-
-      <p id="growCaption" class="font-display text-lg md:text-2xl text-center max-w-md px-6 mt-2 min-h-[3.5rem]">Everything starts from something small.</p>
-    </div>
-  </section>
-
   <!-- ================= TIMELINE ================= -->
   <section id="timeline" class="py-24 md:py-32 bg-ink text-cream relative overflow-hidden">
     <div class="absolute inset-0 bg-grid text-lime/[0.04]" aria-hidden="true"></div>
@@ -1058,11 +1033,11 @@
       if (!navInner) return;
       if (window.scrollY > 40) {
         navInner.classList.add('scrolled');
-        navInner.classList.remove('max-w-5xl');
-        navInner.classList.add('max-w-4xl', 'py-2', 'md:py-2.5');
-      } else {
-        navInner.classList.remove('scrolled', 'max-w-4xl', 'py-2', 'md:py-2.5');
+        navInner.classList.remove('max-w-6xl');
         navInner.classList.add('max-w-5xl');
+      } else {
+        navInner.classList.remove('scrolled', 'max-w-5xl');
+        navInner.classList.add('max-w-6xl');
       }
     };
     window.addEventListener('scroll', updateNav, { passive: true });
@@ -1279,39 +1254,6 @@
       });
     })();
 
-    // 6) GROWING TOGETHER — visual seed -> sprout -> plant -> bloom
-    // Pakai sticky + scroll-progress (bukan pin GSAP), lebih stabil dipadu Lenis & gak bikin layout jump.
-    const growSection = document.getElementById('growing');
-    const growStages = gsap.utils.toArray('.grow-stage');
-    const growCaption = document.getElementById('growCaption');
-    const growCaptions = [
-      'Everything starts from something small.',
-      'With care, small things begin to grow.',
-      'Growth takes patience and responsibility.',
-      'Together, our small efforts become something meaningful.',
-    ];
-
-    if (!prefersReducedMotion && growSection) {
-      ScrollTrigger.create({
-        trigger: growSection,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1,
-        onUpdate: (self) => {
-          const idx = Math.min(3, Math.floor(self.progress * 4));
-          growStages.forEach((el, i) => { el.style.opacity = i === idx ? 1 : 0; });
-          growCaption.textContent = growCaptions[idx];
-        },
-      });
-    } else if (growSection) {
-      // reduced motion: lepas tinggi raksasa & sticky-nya, langsung tampilkan tahap akhir (Bloom)
-      growSection.style.height = 'auto';
-      const stickyWrap = growSection.querySelector('.sticky');
-      if (stickyWrap) { stickyWrap.classList.remove('sticky', 'top-0', 'h-screen'); stickyWrap.classList.add('py-20', 'relative'); }
-      growStages.forEach((el, i) => { el.style.opacity = i === 3 ? 1 : 0; el.style.display = i === 3 ? 'flex' : 'none'; });
-      growCaption.textContent = growCaptions[3];
-    }
-
     // =====================================================
     // 7) SUPABASE CONFIG
     // Ganti dua baris di bawah ini dengan URL & anon/publishable key
@@ -1368,7 +1310,11 @@
       const name = currentUser?.user_metadata?.name || currentUser?.email?.split('@')[0] || '';
       document.querySelectorAll('#openAuthBtn, #openAuthBtnMobile').forEach((el) => el.classList.toggle('hidden', loggedIn));
       document.querySelectorAll('#userArea, #userAreaMobile').forEach((el) => { el.classList.toggle('hidden', !loggedIn); el.classList.toggle('flex', loggedIn); });
-      [document.getElementById('welcomeText'), document.getElementById('welcomeTextMobile')].forEach((el) => { if (el) el.textContent = `Welcome, ${name}`; });
+      const wDesk = document.getElementById('welcomeText');
+      if (wDesk) wDesk.textContent = name;
+      const wMob = document.getElementById('welcomeTextMobile');
+      if (wMob) wMob.textContent = `Halo, ${name}`;
+      lucide.createIcons();
     }
 
     signInForm.addEventListener('submit', async (e) => {
