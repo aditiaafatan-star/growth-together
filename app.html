@@ -20,8 +20,8 @@
     --color-ink: #0D1A13;
     --color-forest: #1F4B37;
     --color-sage: #6F8F7B;
-    --color-kertas: #C4487A;
-    --color-krokot: #D9863A;
+    --color-kertas: #A33260;
+    --color-krokot: #9C5A1C;
     --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
     --font-body: 'Inter', system-ui, sans-serif;
   }
@@ -44,7 +44,7 @@
       <button id="openAuthBtn" class="text-sm font-semibold text-forest">Sign In</button>
       <div id="userArea" class="hidden items-center gap-3">
         <span id="streakBadge" class="hidden items-center gap-1 text-xs font-medium text-krokot"><i data-lucide="flame" class="w-3.5 h-3.5"></i><span id="streakCount">0</span></span>
-        <button id="helpBtn" type="button" class="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center text-ink/50" aria-label="Bantuan"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
+        <button id="helpBtn" type="button" class="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center text-ink/65" aria-label="Bantuan"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
         <span id="welcomeText" class="text-xs text-ink/60"></span>
         <button id="signOutBtn" class="text-xs border border-ink/20 rounded-full px-3 py-1">Logout</button>
       </div>
@@ -106,14 +106,14 @@
   <!-- main app (tampil kalau udah login) -->
   <main id="mainApp" class="hidden px-5 py-6 max-w-lg mx-auto">
     <div id="missionsCard" class="hidden rounded-2xl border border-ink/10 p-4 mb-4">
-      <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-3">Today's Missions</p>
+      <p class="text-xs font-mono uppercase tracking-wider text-ink/60 mb-3">Today's Missions</p>
       <div id="missionsList" class="space-y-2.5"></div>
     </div>
 
     <div id="levelCard" class="hidden rounded-2xl border border-ink/10 p-4 mb-4">
       <div class="flex items-center justify-between mb-2">
         <div>
-          <p id="levelLabel" class="text-xs font-mono uppercase tracking-wider text-ink/40">Level 1</p>
+          <p id="levelLabel" class="text-xs font-mono uppercase tracking-wider text-ink/60">Level 1</p>
           <p id="xpLabel" class="font-display font-bold text-xl">0 XP</p>
         </div>
         <span class="flex items-center gap-1.5 text-sm font-medium text-krokot bg-krokot/10 px-3 py-1.5 rounded-full">
@@ -123,14 +123,14 @@
       <div class="h-2 rounded-full bg-ink/10 overflow-hidden mt-3">
         <div id="levelProgressBar" class="h-full bg-forest" style="width:0%"></div>
       </div>
-      <p id="levelNextLabel" class="text-[11px] text-ink/40 mt-1.5"></p>
+      <p id="levelNextLabel" class="text-[11px] text-ink/60 mt-1.5"></p>
     </div>
 
-    <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-2.5">My Plants</p>
+    <p class="text-xs font-mono uppercase tracking-wider text-ink/60 mb-2.5">My Plants</p>
     <div id="plantStatusRow" class="grid grid-cols-2 gap-3 mb-6"></div>
 
     <div id="leaderboardCard" class="hidden mb-6">
-      <p class="text-xs font-mono uppercase tracking-wider text-ink/40 mb-2.5">Team Leaderboard</p>
+      <p class="text-xs font-mono uppercase tracking-wider text-ink/60 mb-2.5">Team Leaderboard</p>
       <div id="leaderboardList" class="rounded-2xl border border-ink/10 divide-y divide-ink/8"></div>
     </div>
 
@@ -143,7 +143,7 @@
           </div>
           <div>
             <h3 class="font-display font-bold text-sm text-forest leading-tight">Laporan Matematika</h3>
-            <p class="text-[10px] text-ink/50">Kurva Pertumbuhan & Analisis Laju</p>
+            <p class="text-[10px] text-ink/65">Kurva Pertumbuhan & Analisis Laju</p>
           </div>
         </div>
         <div class="flex gap-1 bg-ink/5 p-1 rounded-full text-xs font-medium" id="mathPlantTabs">
@@ -155,24 +155,24 @@
       <!-- Ringkasan Metrik Matematika -->
       <div class="grid grid-cols-2 gap-2 mb-3.5" id="mathMetricsSummary">
         <div class="bg-forest/5 rounded-2xl p-3 border border-forest/10">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-forest/70 block mb-0.5">Tinggi Terkini (h)</span>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-forest block mb-0.5">Tinggi Terkini (h)</span>
           <span id="mathCurrentHeight" class="text-lg font-bold font-display text-forest block">-</span>
-          <span id="mathInitialHeight" class="text-[10px] text-ink/45 block">Awal: -</span>
+          <span id="mathInitialHeight" class="text-[10px] text-ink/60 block">Awal: -</span>
         </div>
         <div class="bg-forest/5 rounded-2xl p-3 border border-forest/10">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-forest/70 block mb-0.5">Total Pertumbuhan (Δh)</span>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-forest block mb-0.5">Total Pertumbuhan (Δh)</span>
           <span id="mathDeltaHeight" class="text-lg font-bold font-display text-forest block">-</span>
-          <span id="mathDurationDays" class="text-[10px] text-ink/45 block">Rentang: -</span>
+          <span id="mathDurationDays" class="text-[10px] text-ink/60 block">Rentang: -</span>
         </div>
         <div class="bg-cream rounded-2xl p-3 border border-ink/10">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-ink/45 block mb-0.5">Laju Rata-rata (v̄)</span>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-ink/60 block mb-0.5">Laju Rata-rata (v̄)</span>
           <span id="mathAvgRate" class="text-sm font-bold font-display text-ink block">-</span>
-          <span class="text-[10px] text-ink/40 block">v̄ = Δh / Δt (cm/hari)</span>
+          <span class="text-[10px] text-ink/60 block">v̄ = Δh / Δt (cm/hari)</span>
         </div>
         <div class="bg-cream rounded-2xl p-3 border border-ink/10">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-ink/45 block mb-0.5">Morfologi Terkini</span>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-ink/60 block mb-0.5">Morfologi Terkini</span>
           <span id="mathLeavesSummary" class="text-sm font-bold font-display text-ink block">-</span>
-          <span id="mathWidthSummary" class="text-[10px] text-ink/40 block">Lebar daun: -</span>
+          <span id="mathWidthSummary" class="text-[10px] text-ink/60 block">Lebar daun: -</span>
         </div>
       </div>
 
@@ -182,7 +182,7 @@
           <span class="text-xs font-semibold text-ink/80 flex items-center gap-1.5">
             <i data-lucide="trending-up" class="w-3.5 h-3.5 text-forest"></i> Grafik Tinggi Tanaman (cm)
           </span>
-          <span id="mathDataPointsCount" class="text-[10px] font-mono text-ink/40">0 titik</span>
+          <span id="mathDataPointsCount" class="text-[10px] font-mono text-ink/60">0 titik</span>
         </div>
         <div id="mathChartContainer" class="w-full overflow-hidden">
           <!-- SVG dirender secara dinamis via JavaScript -->
@@ -193,12 +193,12 @@
       <details class="group bg-white rounded-2xl border border-ink/10 overflow-hidden">
         <summary class="flex items-center justify-between px-3.5 py-3 text-xs font-semibold cursor-pointer select-none text-ink/75 hover:bg-ink/5">
           <span class="flex items-center gap-1.5"><i data-lucide="table" class="w-3.5 h-3.5 text-forest"></i> Rekap Tabel Data Pengamatan</span>
-          <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform group-open:rotate-180 text-ink/40"></i>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform group-open:rotate-180 text-ink/60"></i>
         </summary>
         <div class="p-3.5 border-t border-ink/5">
           <div class="overflow-x-auto max-h-56 mb-3">
             <table class="w-full text-left text-[11px]" id="mathDataTable">
-              <thead class="bg-ink/5 font-mono text-ink/50 text-[10px]">
+              <thead class="bg-ink/5 font-mono text-ink/65 text-[10px]">
                 <tr>
                   <th class="p-1.5">Tgl</th>
                   <th class="p-1.5">h (cm)</th>
@@ -209,7 +209,7 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-ink/5" id="mathTableBody">
-                <tr><td colspan="6" class="p-3 text-center text-ink/40">Belum ada data ukuran.</td></tr>
+                <tr><td colspan="6" class="p-3 text-center text-ink/60">Belum ada data ukuran.</td></tr>
               </tbody>
             </table>
           </div>
@@ -235,14 +235,14 @@
       <button class="jf-btn px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="krokot">Portulaca</button>
     </div>
     <div class="relative mb-5">
-      <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/30"></i>
+      <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/60"></i>
       <input id="journalSearch" type="text" placeholder="Cari catatan..." class="w-full border border-ink/15 rounded-full pl-10 pr-4 py-2.5 text-sm bg-white">
     </div>
 
     <div id="journalGrid" class="space-y-4"></div>
     <div id="journalEmpty" class="hidden text-center py-16">
-      <i data-lucide="sprout" class="w-8 h-8 mx-auto text-forest/50 mb-3"></i>
-      <p class="text-sm text-ink/50">Belum ada update. Tambahkan yang pertama.</p>
+      <i data-lucide="sprout" class="w-8 h-8 mx-auto text-forest/70 mb-3"></i>
+      <p class="text-sm text-ink/65">Belum ada update. Tambahkan yang pertama.</p>
     </div>
     <div id="journalErrorState" class="hidden text-center py-16">
       <p class="text-sm text-kertas mb-3">Gagal memuat data.</p>
@@ -277,23 +277,23 @@
         <div class="p-3.5 bg-forest/5 rounded-2xl border border-forest/15 space-y-2.5">
           <div class="flex items-center justify-between text-xs font-semibold text-forest">
             <span class="flex items-center gap-1.5"><i data-lucide="ruler" class="w-3.5 h-3.5"></i> Ukuran Pertumbuhan</span>
-            <span class="text-[10px] font-mono font-normal text-forest/70">Data Matematika</span>
+            <span class="text-[10px] font-mono font-normal text-forest">Data Matematika</span>
           </div>
           <div class="grid grid-cols-3 gap-2">
             <div>
-              <label class="block text-[10px] font-mono text-ink/50 mb-1">Tinggi (cm)</label>
+              <label class="block text-[10px] font-mono text-ink/65 mb-1">Tinggi (cm)</label>
               <input type="number" name="height_cm" step="0.1" min="0" placeholder="12.5" class="w-full border border-ink/15 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-forest">
             </div>
             <div>
-              <label class="block text-[10px] font-mono text-ink/50 mb-1">Jml Daun</label>
+              <label class="block text-[10px] font-mono text-ink/65 mb-1">Jml Daun</label>
               <input type="number" name="leaf_count" step="1" min="0" placeholder="8" class="w-full border border-ink/15 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-forest">
             </div>
             <div>
-              <label class="block text-[10px] font-mono text-ink/50 mb-1">Lebar (cm)</label>
+              <label class="block text-[10px] font-mono text-ink/65 mb-1">Lebar (cm)</label>
               <input type="number" name="leaf_width_cm" step="0.1" min="0" placeholder="3.2" class="w-full border border-ink/15 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-forest">
             </div>
           </div>
-          <p class="text-[10px] text-ink/40">Isi saat melakukan pengukuran (opsional, untuk grafik & tabel laporan).</p>
+          <p class="text-[10px] text-ink/60">Isi saat melakukan pengukuran (opsional, untuk grafik & tabel laporan).</p>
         </div>
 
         <input type="text" name="activity" placeholder="Aktivitas (cth: disiram & diukur)" required maxlength="120" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
@@ -329,7 +329,11 @@ const plantLabel = { kertas: 'Bougainvillea', krokot: 'Portulaca' };
 const stageLabel = { seed: 'Seed', sprout: 'Sprout', growing: 'Growing', mature: 'Mature', bloom: 'Bloom' };
 const stagePercent = { seed: 20, sprout: 40, growing: 60, mature: 80, bloom: 100 };
 const conditionLabel = { healthy: 'Healthy', attention: 'Needs Attention', recovering: 'Recovering', critical: 'Critical' };
-const conditionDot = { healthy: '🟢', attention: '🟡', recovering: '🔵', critical: '🔴' };
+const conditionColor = { healthy: '#2F7A4A', attention: '#8F6410', recovering: '#2B5FA8', critical: '#B3261E' };
+function conditionDotHtml(cond) {
+  const c = conditionColor[cond] || '#6F8F7B';
+  return `<span class="inline-block w-1.5 h-1.5 rounded-full shrink-0 align-middle" style="background:${c}"></span>`;
+}
 
 function escapeHtml(str) { const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
 function formatDate(s) { const d = new Date(s); return isNaN(d.getTime()) ? s : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
@@ -411,10 +415,10 @@ async function loadPlantStatus() {
   const row = document.getElementById('plantStatusRow');
   row.innerHTML = data.map((plant) => {
     const isKertas = plant.id === 'kertas';
-    const label = plant.last_checked ? `${conditionDot[plant.current_condition] || ''} ${stageLabel[plant.current_stage] || ''}` : 'Belum ada data';
+    const label = plant.last_checked ? `${conditionDotHtml(plant.current_condition)} ${stageLabel[plant.current_stage] || ''}` : 'Belum ada data';
     const sizeItems = [];
-    if (plant.current_height_cm != null) sizeItems.push(`📏 ${plant.current_height_cm} cm`);
-    if (plant.current_leaf_count != null) sizeItems.push(`🍃 ${plant.current_leaf_count} daun`);
+    if (plant.current_height_cm != null) sizeItems.push(`tinggi ${plant.current_height_cm} cm`);
+    if (plant.current_leaf_count != null) sizeItems.push(`${plant.current_leaf_count} daun`);
     return `<div class="border ${isKertas ? 'border-kertas/30' : 'border-krokot/30'} rounded-2xl p-4">
       <p class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas' : 'text-krokot'} mb-1">${plantLabel[plant.id]}</p>
       <p class="text-sm font-semibold">${label}</p>
@@ -477,9 +481,9 @@ async function loadGamification() {
     document.getElementById('missionsList').innerHTML = MISSION_DEFS.map((m) => {
       const done = doneSet.has(m.key);
       return `<div class="flex items-center gap-3">
-        <i data-lucide="${done ? 'check-circle-2' : 'circle'}" class="w-5 h-5 ${done ? 'text-forest' : 'text-ink/20'} shrink-0"></i>
-        <span class="text-sm flex-1 ${done ? 'line-through text-ink/35' : ''}">${m.label}</span>
-        <span class="text-xs ${done ? 'text-ink/30' : 'text-forest font-medium'}">+${m.xp} XP</span>
+        <i data-lucide="${done ? 'check-circle-2' : 'circle'}" class="w-5 h-5 ${done ? 'text-forest' : 'text-ink/60'} shrink-0"></i>
+        <span class="text-sm flex-1 ${done ? 'line-through text-ink/60' : ''}">${m.label}</span>
+        <span class="text-xs ${done ? 'text-ink/60' : 'text-forest font-medium'}">+${m.xp} XP</span>
       </div>`;
     }).join('');
     document.getElementById('missionsCard').classList.remove('hidden');
@@ -501,10 +505,10 @@ async function loadLeaderboard() {
     document.getElementById('leaderboardList').innerHTML = data.map((row) => {
       const isMe = currentUser && row.id === currentUser.id;
       return `<div class="flex items-center gap-3 px-4 py-2.5 ${isMe ? 'bg-forest/5' : ''}">
-        <span class="text-xs text-ink/35 w-4">${row.rank}</span>
+        <span class="text-xs text-ink/60 w-4">${row.rank}</span>
         <div class="w-7 h-7 rounded-full ${isMe ? 'bg-forest text-cream' : 'bg-ink/5 text-ink/60'} flex items-center justify-center text-[10px] font-bold">${escapeHtml((row.name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase())}</div>
         <span class="text-sm flex-1 ${isMe ? 'font-semibold' : ''}">${isMe ? 'You' : escapeHtml(row.name || 'Anggota')}</span>
-        <span class="text-xs text-ink/50">${(row.xp || 0).toLocaleString('id-ID')} XP</span>
+        <span class="text-xs text-ink/65">${(row.xp || 0).toLocaleString('id-ID')} XP</span>
       </div>`;
     }).join('');
     document.getElementById('leaderboardCard').classList.remove('hidden');
@@ -558,26 +562,26 @@ function cardHtml(e) {
   const hasMeasurements = (e.height_cm != null) || (e.leaf_count != null) || (e.leaf_width_cm != null);
   const measurementHtml = hasMeasurements ? `
     <div class="flex flex-wrap gap-1.5 mt-2.5 pt-2 border-t border-ink/8">
-      ${e.height_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono font-semibold bg-forest/10 text-forest px-2 py-0.5 rounded-md">📏 ${e.height_cm} cm</span>` : ''}
-      ${e.leaf_count != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/5 text-ink/75 px-2 py-0.5 rounded-md">🍃 ${e.leaf_count} daun</span>` : ''}
-      ${e.leaf_width_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/5 text-ink/75 px-2 py-0.5 rounded-md">🌿 lebar ${e.leaf_width_cm} cm</span>` : ''}
+      ${e.height_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono font-semibold bg-forest/10 text-forest px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>${e.height_cm} cm</span>` : ''}
+      ${e.leaf_count != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/5 text-ink/75 px-2 py-0.5 rounded-md"><i data-lucide="leaf" class="w-3 h-3"></i>${e.leaf_count} daun</span>` : ''}
+      ${e.leaf_width_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/5 text-ink/75 px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>lebar ${e.leaf_width_cm} cm</span>` : ''}
     </div>` : '';
 
   return `<article class="border ${isKertas ? 'border-kertas/25' : 'border-krokot/25'} rounded-2xl p-4" data-id="${e.id}">
     <div class="flex items-center justify-between">
       <span class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas' : 'text-krokot'}">${plantLabel[e.plant_id]}</span>
-      ${canManage ? `<button class="js-delete text-ink/30" data-id="${e.id}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+      ${canManage ? `<button class="js-delete text-ink/60" data-id="${e.id}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
     </div>
     ${e.photo_url ? `<img src="${e.photo_url}" class="w-full h-32 object-cover rounded-lg mt-2" loading="lazy" alt="Foto update">` : ''}
-    <p class="font-mono text-[11px] text-ink/40 mt-2">${formatDate(e.date)} · ${escapeHtml(owner)}</p>
+    <p class="font-mono text-[11px] text-ink/60 mt-2">${formatDate(e.date)} · ${escapeHtml(owner)}</p>
     <div class="h-1.5 bg-ink/10 rounded-full overflow-hidden mt-2"><div class="h-full ${isKertas ? 'bg-kertas' : 'bg-krokot'}" style="width:${stagePercent[e.stage] || 0}%"></div></div>
     <div class="flex items-center justify-between mt-1.5">
       <span class="text-xs font-semibold">${stageLabel[e.stage] || e.stage}</span>
-      <span class="text-[10px] bg-ink/5 px-2 py-0.5 rounded-full">${conditionDot[e.condition] || ''} ${conditionLabel[e.condition] || e.condition}</span>
+      <span class="inline-flex items-center gap-1.5 text-[10px] bg-ink/5 px-2 py-0.5 rounded-full">${conditionDotHtml(e.condition)}${conditionLabel[e.condition] || e.condition}</span>
     </div>
     ${measurementHtml}
     <p class="text-sm text-ink/70 mt-2">${escapeHtml(e.activity)}</p>
-    ${e.notes ? `<p class="text-xs text-ink/50 mt-1">${escapeHtml(e.notes)}</p>` : ''}
+    ${e.notes ? `<p class="text-xs text-ink/65 mt-1">${escapeHtml(e.notes)}</p>` : ''}
   </article>`;
 }
 
@@ -586,7 +590,7 @@ function renderList() {
   journalGrid.classList.remove('hidden'); journalEmpty.classList.add('hidden');
   const q = searchQuery.trim().toLowerCase();
   const filtered = allEntries.filter((e) => (activePlantFilter === 'semua' || e.plant_id === activePlantFilter) && (!q || (e.activity || '').toLowerCase().includes(q) || (e.notes || '').toLowerCase().includes(q)));
-  journalGrid.innerHTML = filtered.length ? filtered.map(cardHtml).join('') : '<p class="text-sm text-ink/40 text-center py-10">Gak ada yang cocok.</p>';
+  journalGrid.innerHTML = filtered.length ? filtered.map(cardHtml).join('') : '<p class="text-sm text-ink/60 text-center py-10">Gak ada yang cocok.</p>';
   lucide.createIcons();
 }
 
@@ -718,15 +722,15 @@ function renderMathReport() {
     if (widthSummaryEl) widthSummaryEl.textContent = 'Lebar daun: -';
     if (chartContainer) {
       chartContainer.innerHTML = `
-        <div class="py-8 text-center text-xs text-ink/40">
-          <i data-lucide="ruler" class="w-7 h-7 mx-auto mb-2 text-forest/30"></i>
+        <div class="py-8 text-center text-xs text-ink/60">
+          <i data-lucide="ruler" class="w-7 h-7 mx-auto mb-2 text-forest/60"></i>
           <p class="font-medium text-ink/60 mb-0.5">Belum ada data tinggi tanaman</p>
-          <p class="text-[11px] text-ink/40">Isi kolom tinggi (cm) pada form Tambah Update untuk melihat kurva pertumbuhan.</p>
+          <p class="text-[11px] text-ink/60">Isi kolom tinggi (cm) pada form Tambah Update untuk melihat kurva pertumbuhan.</p>
         </div>`;
       lucide.createIcons();
     }
     if (tableBody) {
-      tableBody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-ink/40">Belum ada data ukuran tersimpan.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-ink/60">Belum ada data ukuran tersimpan.</td></tr>`;
     }
     return;
   }
@@ -799,9 +803,9 @@ function renderMathReport() {
 
 function buildMathSvgChart(entries, plantId) {
   const isKertas = plantId === 'kertas';
-  const lineColor = isKertas ? '#C4487A' : '#D9863A';
-  const fillColor = isKertas ? 'rgba(196,72,122,0.12)' : 'rgba(217,134,58,0.12)';
-  const dotColor = isKertas ? '#C4487A' : '#D9863A';
+  const lineColor = isKertas ? '#A33260' : '#9C5A1C';
+  const fillColor = isKertas ? 'rgba(163,50,96,0.12)' : 'rgba(156,90,28,0.12)';
+  const dotColor = isKertas ? '#A33260' : '#9C5A1C';
 
   const W = 360;
   const H = 160;
