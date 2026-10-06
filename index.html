@@ -145,6 +145,31 @@
   }
   /* ===== End HowItWorks-style ===== */
 
+  /* ===== Apple-Style Liquid Glass Navbar ===== */
+  .liquid-glass-nav {
+    background: rgba(247, 244, 234, 0.78);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 0 10px 32px -4px rgba(13, 26, 19, 0.08), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+  }
+  .liquid-glass-nav.scrolled {
+    background: rgba(247, 244, 234, 0.9);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 16px 42px -4px rgba(13, 26, 19, 0.12), inset 0 1px 2px 0 rgba(255, 255, 255, 1);
+  }
+  .nav-pill-link {
+    position: relative;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .nav-pill-link:hover {
+    background: rgba(31, 75, 55, 0.08);
+    color: var(--color-forest);
+  }
+  /* ===== End Liquid Glass Navbar ===== */
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -156,49 +181,77 @@
 </head>
 <body class="bg-cream text-ink antialiased overflow-x-hidden">
 
-  <!-- ================= NAVBAR ================= -->
-  <nav id="siteNav" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
-    <div class="max-w-6xl mx-auto px-6 md:px-8 flex items-center justify-between py-5">
-      <a href="#home" class="flex items-center gap-2 font-display font-semibold text-lg tracking-tight">
-        <i data-lucide="leaf" class="w-5 h-5 text-forest"></i>
-        Growth Together
+  <!-- ================= NAVBAR (Apple-Style Liquid Glass Floating Island) ================= -->
+  <nav id="siteNav" class="fixed top-0 inset-x-0 z-50 pt-3 md:pt-4 px-3 sm:px-6 pointer-events-none transition-all duration-300">
+    <div id="navInner" class="pointer-events-auto max-w-5xl mx-auto rounded-full liquid-glass-nav transition-all duration-300 ease-out flex items-center justify-between px-4 sm:px-6 md:px-7 py-2.5 md:py-3">
+      <a href="#home" class="flex items-center gap-2.5 font-display font-semibold text-base md:text-lg tracking-tight shrink-0 group">
+        <span class="w-8 h-8 rounded-full bg-forest/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+          <i data-lucide="leaf" class="w-4 h-4 text-forest"></i>
+        </span>
+        <span class="group-hover:text-forest transition-colors">Growth Together</span>
       </a>
-      <div id="navLinks" class="hidden lg:flex items-center gap-7 text-sm font-medium text-ink/80">
-        <a href="#home" class="navlink">Home</a>
-        <a href="#story" class="navlink">Our Story</a>
-        <a href="#plants" class="navlink">Plants</a>
-        <a href="#growing" class="navlink">Growth</a>
-        <a href="#team" class="navlink">Our Team</a>
-        <a href="#timeline" class="navlink">Timeline</a>
-        <a href="#journey" class="navlink">Dokumentasi</a>
-        <a href="#journal" class="navlink">Growth Journal</a>
+      <div id="navLinks" class="hidden lg:flex items-center gap-1 text-xs font-medium text-ink/80">
+        <a href="#home" class="navlink nav-pill-link">Home</a>
+        <a href="#story" class="navlink nav-pill-link">Our Story</a>
+        <a href="#plants" class="navlink nav-pill-link">Plants</a>
+        <a href="#growing" class="navlink nav-pill-link">Growth</a>
+        <a href="#team" class="navlink nav-pill-link">Our Team</a>
+        <a href="#timeline" class="navlink nav-pill-link">Timeline</a>
+        <a href="#journey" class="navlink nav-pill-link">Dokumentasi</a>
+        <a href="#journal" class="navlink nav-pill-link">Growth Journal</a>
       </div>
-      <div id="authArea" class="hidden lg:flex items-center gap-4 text-sm ml-4">
-        <button id="openAuthBtn" type="button" class="font-semibold text-forest hover:text-ink transition-colors">Sign In</button>
-        <div id="userArea" class="hidden items-center gap-3">
-          <span id="welcomeText" class="text-ink/70"></span>
-          <button id="signOutBtn" type="button" class="text-ink/40 hover:text-ink text-xs font-medium border border-ink/15 rounded-full px-3 py-1.5">Logout</button>
+      <div id="authArea" class="hidden lg:flex items-center gap-3 text-xs ml-2 shrink-0">
+        <button id="openAuthBtn" type="button" class="font-semibold text-cream bg-forest hover:bg-ink px-4 py-2 rounded-full transition-all duration-200 shadow-sm hover:scale-105">Sign In</button>
+        <div id="userArea" class="hidden items-center gap-2">
+          <span id="welcomeText" class="text-ink/70 font-medium"></span>
+          <button id="signOutBtn" type="button" class="text-ink/40 hover:text-ink text-xs font-medium border border-ink/15 rounded-full px-3 py-1.5 hover:bg-ink/5 transition-colors">Logout</button>
         </div>
       </div>
-      <button id="navToggle" class="lg:hidden p-2 -mr-2" aria-label="Buka menu" aria-expanded="false">
-        <i data-lucide="menu" class="w-6 h-6"></i>
+      <button id="navToggle" class="lg:hidden w-9 h-9 rounded-full bg-ink/5 hover:bg-ink/10 flex items-center justify-center transition-colors text-ink" aria-label="Buka menu" aria-expanded="false">
+        <i data-lucide="menu" class="w-4 h-4"></i>
       </button>
     </div>
-    <div id="mobileMenu" class="lg:hidden max-h-0 overflow-hidden transition-all duration-300 bg-cream/95 backdrop-blur border-t border-ink/10">
-      <div class="flex flex-col px-6 py-2 text-sm font-medium">
-        <a href="#home" class="py-3 border-b border-ink/10">Home</a>
-        <a href="#story" class="py-3 border-b border-ink/10">Our Story</a>
-        <a href="#plants" class="py-3 border-b border-ink/10">Plants</a>
-        <a href="#growing" class="py-3 border-b border-ink/10">Growth</a>
-        <a href="#team" class="py-3 border-b border-ink/10">Our Team</a>
-        <a href="#timeline" class="py-3 border-b border-ink/10">Timeline</a>
-        <a href="#journey" class="py-3 border-b border-ink/10">Dokumentasi</a>
-        <a href="#journal" class="py-3 border-b border-ink/10">Growth Journal</a>
-        <div class="py-3 flex items-center justify-between">
-          <button id="openAuthBtnMobile" type="button" class="font-semibold text-forest">Sign In</button>
-          <div id="userAreaMobile" class="hidden items-center gap-3">
-            <span id="welcomeTextMobile" class="text-ink/70 text-xs"></span>
-            <button id="signOutBtnMobile" type="button" class="text-ink/40 text-xs font-medium border border-ink/15 rounded-full px-3 py-1.5">Logout</button>
+
+    <!-- Floating Glass Mobile Menu Card -->
+    <div id="mobileMenu" class="pointer-events-auto lg:hidden max-h-0 opacity-0 pointer-events-none scale-95 overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] max-w-sm sm:max-w-md mx-auto mt-2.5 rounded-3xl liquid-glass-nav shadow-2xl">
+      <div class="p-4 sm:p-5 flex flex-col gap-1 text-sm font-medium">
+        <a href="#home" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
+          <span>Home</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
+        </a>
+        <a href="#story" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
+          <span>Our Story</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
+        </a>
+        <a href="#plants" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
+          <span>Plants</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
+        </a>
+        <a href="#growing" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
+          <span>Growth</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
+        </a>
+        <a href="#team" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
+          <span>Our Team</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
+        </a>
+        <a href="#timeline" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
+          <span>Timeline</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
+        </a>
+        <a href="#journey" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
+          <span>Dokumentasi</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
+        </a>
+        <a href="#journal" class="py-2.5 px-3.5 rounded-2xl hover:bg-forest/10 hover:text-forest transition-colors flex items-center justify-between">
+          <span>Growth Journal</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-ink/30"></i>
+        </a>
+        <div class="pt-3 mt-1 border-t border-ink/10 flex items-center justify-between">
+          <button id="openAuthBtnMobile" type="button" class="w-full text-center py-2.5 rounded-full font-semibold text-cream bg-forest hover:bg-ink transition-colors">Sign In</button>
+          <div id="userAreaMobile" class="hidden items-center justify-between w-full">
+            <span id="welcomeTextMobile" class="text-ink/70 text-xs font-medium"></span>
+            <button id="signOutBtnMobile" type="button" class="text-ink/60 hover:text-ink text-xs font-medium border border-ink/15 rounded-full px-3 py-1.5">Logout</button>
           </div>
         </div>
       </div>
@@ -975,37 +1028,44 @@
       gsap.ticker.lagSmoothing(0);
     }
 
-    // 3) Toggle menu mobile
+    // 3) Toggle menu mobile (Apple-style floating glass card)
     const navToggle = document.getElementById('navToggle');
     const mobileMenu = document.getElementById('mobileMenu');
     let menuOpen = false;
-    navToggle.addEventListener('click', () => {
-      menuOpen = !menuOpen;
-      mobileMenu.style.maxHeight = menuOpen ? mobileMenu.scrollHeight + 'px' : '0px';
-      navToggle.setAttribute('aria-expanded', menuOpen);
-      navToggle.innerHTML = menuOpen ? '<i data-lucide="x" class="w-6 h-6"></i>' : '<i data-lucide="menu" class="w-6 h-6"></i>';
-      lucide.createIcons();
-    });
-    mobileMenu.querySelectorAll('a').forEach((link) => {
-      link.addEventListener('click', () => {
-        menuOpen = false;
-        mobileMenu.style.maxHeight = '0px';
+    const setMobileMenu = (open) => {
+      menuOpen = open;
+      if (menuOpen) {
+        mobileMenu.classList.remove('max-h-0', 'opacity-0', 'pointer-events-none', 'scale-95');
+        mobileMenu.classList.add('max-h-[550px]', 'opacity-100', 'pointer-events-auto', 'scale-100');
+        navToggle.setAttribute('aria-expanded', 'true');
+        navToggle.innerHTML = '<i data-lucide="x" class="w-4 h-4"></i>';
+      } else {
+        mobileMenu.classList.add('max-h-0', 'opacity-0', 'pointer-events-none', 'scale-95');
+        mobileMenu.classList.remove('max-h-[550px]', 'opacity-100', 'pointer-events-auto', 'scale-100');
         navToggle.setAttribute('aria-expanded', 'false');
-        navToggle.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
-        lucide.createIcons();
-      });
+        navToggle.innerHTML = '<i data-lucide="menu" class="w-4 h-4"></i>';
+      }
+      lucide.createIcons();
+    };
+    navToggle.addEventListener('click', () => setMobileMenu(!menuOpen));
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setMobileMenu(false));
     });
 
-    // 4) Navbar berubah tampilan begitu halaman mulai discroll
-    const siteNav = document.getElementById('siteNav');
+    // 4) Navbar berubah tampilan adaptif begitu halaman discroll
+    const navInner = document.getElementById('navInner');
     const updateNav = () => {
+      if (!navInner) return;
       if (window.scrollY > 40) {
-        siteNav.classList.add('bg-cream/90', 'backdrop-blur-md', 'shadow-sm');
+        navInner.classList.add('scrolled');
+        navInner.classList.remove('max-w-5xl');
+        navInner.classList.add('max-w-4xl', 'py-2', 'md:py-2.5');
       } else {
-        siteNav.classList.remove('bg-cream/90', 'backdrop-blur-md', 'shadow-sm');
+        navInner.classList.remove('scrolled', 'max-w-4xl', 'py-2', 'md:py-2.5');
+        navInner.classList.add('max-w-5xl');
       }
     };
-    window.addEventListener('scroll', updateNav);
+    window.addEventListener('scroll', updateNav, { passive: true });
     updateNav();
 
     // 5) Animasi & scroll-effect yang agak berat — dilewati kalau reduced motion aktif
