@@ -56,6 +56,7 @@
   .frame::before { top: -1px; left: -1px; border-top: 2px solid currentColor; border-left: 2px solid currentColor; }
   .frame::after { bottom: -1px; right: -1px; border-bottom: 2px solid currentColor; border-right: 2px solid currentColor; }
 
+  .stem { stroke-dasharray: 300; stroke-dashoffset: 300; }
   .navlink { position: relative; }
   .navlink::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
   .navlink:hover::after { transform: scaleX(1); transform-origin: left; }
@@ -332,14 +333,17 @@
           </a>
         </div>
       </div>
-      <div class="hero-art relative">
-        <figure class="relative overflow-hidden rounded-2xl ring-1 ring-ink/10 shadow-xl shadow-ink/10">
-          <img src="images/portulaca-macro.jpg" alt="Bunga krokot (Portulaca) difoto makro, menunjukkan kelopak dan daun sukulen" width="736" height="981" class="w-full aspect-[3/4] object-cover" loading="eager" decoding="async" fetchpriority="high">
-          <figcaption class="absolute inset-x-0 bottom-0 px-5 pt-14 pb-4 bg-gradient-to-t from-ink/85 via-ink/45 to-transparent text-cream">
-            <span class="block font-display font-semibold text-lg leading-tight">Portulaca</span>
-            <span class="block text-xs text-cream/70 mt-0.5">Bunga krokot &mdash; mekar tiap pagi, kuncup di siang hari</span>
-          </figcaption>
-        </figure>
+      <div class="hero-art relative flex justify-center">
+        <svg viewBox="0 0 320 360" class="w-64 md:w-80" role="img" aria-label="Ilustrasi garis ranting dan daun">
+          <path class="stem" d="M160,340 C150,280 190,250 165,190 C145,140 195,110 170,50" fill="none" stroke="#1F4B37" stroke-width="2.5" stroke-linecap="round"></path>
+          <path d="M165,190 C210,180 230,145 215,120 C185,130 160,160 165,190 Z" fill="#A6E06A" opacity="0.85"></path>
+          <path d="M170,120 C130,110 110,75 128,50 C160,58 178,90 170,120 Z" fill="#1F4B37" opacity="0.9"></path>
+          <path d="M162,240 C120,232 100,198 116,172 C150,180 168,208 162,240 Z" fill="#C4487A" opacity="0.8"></path>
+          <circle cx="170" cy="50" r="6" fill="#D9863A"></circle>
+          <circle cx="70" cy="90" r="2" fill="#1F4B37" opacity="0.4"></circle>
+          <circle cx="250" cy="220" r="2" fill="#1F4B37" opacity="0.4"></circle>
+          <circle cx="90" cy="300" r="2" fill="#1F4B37" opacity="0.4"></circle>
+        </svg>
       </div>
     </div>
     <div class="relative flex justify-center mt-4 md:mt-8">
@@ -1034,9 +1038,10 @@
         .from('.hero-slogan', { opacity: 0, y: 16, duration: 0.6 }, '-=0.35')
         .from('.hero-sub', { opacity: 0, y: 14, duration: 0.6 }, '-=0.35')
         .from('.hero-ctas', { opacity: 0, y: 14, duration: 0.6 }, '-=0.35')
-        .from('.hero-art', { opacity: 0, scale: 0.96, duration: 0.9 }, '-=0.6');
+        .from('.hero-art', { opacity: 0, scale: 0.94, duration: 0.9 }, '-=0.6')
+        .from('.stem', { strokeDashoffset: 300, duration: 1.4, ease: 'power2.out' }, '-=0.9');
 
-      // Parallax halus buat foto hero
+      // Parallax halus buat ilustrasi hero
       gsap.to('.hero-art', {
         y: 50, ease: 'none',
         scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: true },
