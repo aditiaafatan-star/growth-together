@@ -175,9 +175,6 @@
   /* ===== End Liquid Glass Navbar ===== */
 
   /* ===== Dokumentasi Video (port HeroCarousel) ===== */
-  .vc-grain {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
   .vc-card { position: relative; flex-shrink: 0; overflow: hidden; background: rgba(255,255,255,0.05); }
   .vc-card img { height: 100%; width: 100%; object-fit: cover; object-position: 50% 26%; display: block; }
   .vc-card .vc-scrim { position: absolute; inset: 0; background: #000; opacity: 0.12; pointer-events: none; }
@@ -840,12 +837,11 @@
         <video id="vcBgVideo" class="absolute inset-0 h-full w-full object-cover" muted playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>
       </div>
 
-      <!-- Wash legibilitas + grain, di atas swap biar tidak flicker -->
+      <!-- Wash legibilitas -->
       <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/55 pointer-events-none"></div>
       <!-- Scrim khusus di bawah blok judul: footage siang hari terlalu terang untuk
            teks mono kecil tanpa lapisan ini. -->
       <div class="absolute inset-x-0 top-0 h-[52%] bg-gradient-to-b from-transparent via-black/30 to-black/85 pointer-events-none"></div>
-      <div aria-hidden="true" class="vc-grain pointer-events-none absolute inset-0 opacity-[0.22] mix-blend-overlay"></div>
 
       <!-- Blok judul, duduk tepat di atas tepi atas strip -->
       <div id="vcHead" class="absolute inset-x-0 top-0 flex flex-col justify-end">
@@ -1093,14 +1089,23 @@
           heroCtx.lineWidth = 1; heroCtx.stroke();
         }
       }
+      let heroVisible = true, heroRunning = false;
       function heroLoop(now) {
+        if (!heroVisible) { heroRunning = false; return; }
         heroMouse.x = heroMouse.x < -9000 ? heroTarget.x : heroMouse.x + (heroTarget.x - heroMouse.x) * HERO_LERP;
         heroMouse.y = heroMouse.y < -9000 ? heroTarget.y : heroMouse.y + (heroTarget.y - heroMouse.y) * HERO_LERP;
         heroDraw(now);
         requestAnimationFrame(heroLoop);
       }
+      function heroStart() { if (heroRunning) return; heroRunning = true; requestAnimationFrame(heroLoop); }
       heroSetSize();
-      requestAnimationFrame(heroLoop);
+      heroStart();
+      // Tanpa ini kanvas hero tetap menggambar satu viewport penuh tiap frame
+      // walaupun user sudah scroll jauh ke bawah.
+      new IntersectionObserver((entries) => {
+        heroVisible = entries[0].isIntersecting;
+        if (heroVisible) heroStart();
+      }, { threshold: 0 }).observe(heroSection);
       heroSection.addEventListener('mousemove', (e) => {
         const rect = heroSection.getBoundingClientRect();
         heroTarget.x = e.clientX - rect.left; heroTarget.y = e.clientY - rect.top;
@@ -1868,8 +1873,9 @@
         const item = VIDEO_DOCS[i];
         bgVideo.poster = item.poster;
         if (bgVideo.getAttribute('src') !== item.src) {
-          bgVideo.setAttribute('src', item.src);
-          bgVideo.load();
+          // Menetapkan .src sudah memicu load algorithm; load() eksplisit tidak
+          // diperlukan (diuji: keduanya sama-sama memutar tanpa AbortError).
+          bgVideo.src = item.src;
         }
         if (!prefersReducedMotion) {
           // overwrite:true: tanpa ini klik beruntun membuat dua tween berebut
