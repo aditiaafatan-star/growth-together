@@ -174,6 +174,18 @@
   }
   /* ===== End Liquid Glass Navbar ===== */
 
+  /* ===== Dokumentasi Video (port HeroCarousel) ===== */
+  .vc-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .vc-card { position: relative; flex-shrink: 0; overflow: hidden; background: rgba(255,255,255,0.05); }
+  .vc-card img { height: 100%; width: 100%; object-fit: cover; object-position: 50% 26%; display: block; }
+  .vc-card .vc-scrim { position: absolute; inset: 0; background: #000; opacity: 0.12; pointer-events: none; }
+  .vc-card[aria-current="true"] .vc-scrim { opacity: 0; }
+  .vc-line { display: block; overflow: hidden; }
+  .vc-line > span { display: block; }
+  .vc-meta-item { font-family: var(--font-body); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(247,244,234,0.8); }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -815,6 +827,54 @@
           </div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ================= DOKUMENTASI VIDEO (port of 21st.dev HeroCarousel) ================= -->
+  <section id="video-journey" class="relative bg-ink text-cream border-t border-cream/10">
+    <div id="vcStage" class="relative h-[82vh] min-h-[540px] w-full overflow-hidden bg-black text-cream select-none outline-none focus-visible:ring-1 focus-visible:ring-cream/40 focus-visible:ring-inset"
+         tabindex="0" role="group" aria-roledescription="carousel" aria-label="Dokumentasi video proyek">
+
+      <!-- Latar: video yang sedang fokus -->
+      <div id="vcBg" class="absolute inset-0">
+        <video id="vcBgVideo" class="absolute inset-0 h-full w-full object-cover" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      </div>
+
+      <!-- Wash legibilitas + grain, di atas swap biar tidak flicker -->
+      <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/55 pointer-events-none"></div>
+      <!-- Scrim khusus di bawah blok judul: footage siang hari terlalu terang untuk
+           teks mono kecil tanpa lapisan ini. -->
+      <div class="absolute inset-x-0 top-0 h-[52%] bg-gradient-to-b from-transparent via-black/30 to-black/85 pointer-events-none"></div>
+      <div aria-hidden="true" class="vc-grain pointer-events-none absolute inset-0 opacity-[0.22] mix-blend-overlay"></div>
+
+      <!-- Blok judul, duduk tepat di atas tepi atas strip -->
+      <div id="vcHead" class="absolute inset-x-0 top-0 flex flex-col justify-end">
+        <div class="flex w-full flex-wrap items-end gap-x-8 gap-y-3">
+          <h2 id="vcTitle" class="font-display font-semibold leading-[0.88] tracking-[-0.03em] text-cream"></h2>
+          <p id="vcCredit" class="font-mono uppercase tracking-[0.14em] text-cream/80"></p>
+          <div id="vcMeta" class="ml-auto flex items-end"></div>
+        </div>
+      </div>
+
+      <!-- Strip: satu tepi atas bersama, kartu fokus dua kali lebih tinggi -->
+      <div id="vcStripBox" class="absolute inset-x-0">
+        <div id="vcTrack" class="flex items-start cursor-grab"></div>
+      </div>
+
+      <!-- Rel posisi -->
+      <div id="vcRailWrap" class="absolute">
+        <div class="flex justify-between font-mono tabular-nums text-cream/80">
+          <span id="vcNumNow">01</span><span id="vcNumAll">06</span>
+        </div>
+        <div class="relative mt-2 h-px w-full bg-cream/25">
+          <div id="vcRail" class="absolute inset-y-0 bg-cream"></div>
+        </div>
+      </div>
+
+      <!-- Kontrol suara -->
+      <button id="vcMute" type="button" class="absolute right-0 bottom-0 inline-flex items-center gap-2 rounded-full border border-cream/25 bg-black/40 backdrop-blur px-3.5 py-2 text-cream/80 hover:text-cream hover:border-cream/50 transition-colors font-mono uppercase tracking-[0.14em]" aria-pressed="false">
+        <i data-lucide="volume-x" class="w-4 h-4"></i><span id="vcMuteLabel">Muted</span>
+      </button>
     </div>
   </section>
 
@@ -1676,6 +1736,237 @@
     if (dismissHintBtn && journalHint) {
       dismissHintBtn.addEventListener('click', () => { journalHint.style.display = 'none'; });
     }
+
+    // =====================================================
+    // 12.5) DOKUMENTASI VIDEO — port vanilla dari HeroCarousel (21st.dev)
+    // Geometri diukur dari stage, bukan hard-code, jadi rasionya sama di
+    // 600px maupun 4K. framer-motion diganti GSAP, drag geser diganti pointer.
+    // =====================================================
+    (function initVideoCarousel() {
+      const stage = document.getElementById('vcStage');
+      if (!stage) return;
+
+      // Ganti title/credit sesuai isi rekaman aslinya.
+      const VIDEO_DOCS = [
+        { src: 'videos/dokumentasi-01.mp4', poster: 'videos/dokumentasi-01.jpg',
+          title: 'Enam Anggota,\nDua Tim', credit: 'Depan gedung SMKN 2 Purwokerto', meta: ['7 Okt 2026', '0:32'] },
+        { src: 'videos/dokumentasi-02.mp4', poster: 'videos/dokumentasi-02.jpg',
+          title: 'Detail Batang\ndan Daun', credit: 'Pengamatan morfologi', meta: ['7 Okt 2026', '0:21'] },
+        { src: 'videos/dokumentasi-03.mp4', poster: 'videos/dokumentasi-03.jpg',
+          title: 'Menyiram\ndan Merawat', credit: 'Rutinitas harian tim', meta: ['7 Okt 2026', '0:12'] },
+        { src: 'videos/dokumentasi-04.mp4', poster: 'videos/dokumentasi-04.jpg',
+          title: 'Dua Spesies\ndi Satu Bedeng', credit: 'Bougainvillea & Portulaca', meta: ['7 Okt 2026', '0:16'] },
+        { src: 'videos/dokumentasi-05.mp4', poster: 'videos/dokumentasi-05.jpg',
+          title: 'Direkam\nLangsung di Lokasi', credit: 'Dokumentasi dari HP anggota', meta: ['7 Okt 2026', '0:06'] },
+        { src: 'videos/dokumentasi-06.mp4', poster: 'videos/dokumentasi-06.jpg',
+          title: 'Diskusi\ndi Sela Perawatan', credit: 'Koordinasi antar anggota', meta: ['7 Okt 2026', '0:12'] },
+      ];
+
+      const CARD_H = 0.264, CARD_AR = 0.75, GAP = 0.038, STRIP_TOP = 0.5;
+      const TITLE = 0.067, LABEL = 0.0103, PAD = 0.017, RAIL = 0.2;
+      const WHEEL_THRESHOLD = 60, WHEEL_COOLDOWN = 420;
+
+      const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
+      const last = VIDEO_DOCS.length - 1;
+      let index = 0, box = { w: 0, h: 0 }, dragging = false, trackX = 0, dragFrom = 0, dragPointerX = 0, dragVelocity = 0, lastMoveT = 0, lastMoveX = 0;
+
+      const track = document.getElementById('vcTrack');
+      const stripBox = document.getElementById('vcStripBox');
+      const head = document.getElementById('vcHead');
+      const titleEl = document.getElementById('vcTitle');
+      const creditEl = document.getElementById('vcCredit');
+      const metaEl = document.getElementById('vcMeta');
+      const bgVideo = document.getElementById('vcBgVideo');
+      const railWrap = document.getElementById('vcRailWrap');
+      const rail = document.getElementById('vcRail');
+      const numNow = document.getElementById('vcNumNow');
+      const numAll = document.getElementById('vcNumAll');
+      const muteBtn = document.getElementById('vcMute');
+      const muteLabel = document.getElementById('vcMuteLabel');
+
+      numAll.textContent = String(VIDEO_DOCS.length).padStart(2, '0');
+
+      // Bangun kartu strip sekali saja.
+      track.innerHTML = VIDEO_DOCS.map((item, i) => (
+        `<button type="button" class="vc-card" data-i="${i}" aria-current="${i === 0}" aria-label="${item.title.replace(/\n/g, ' ')}">
+          <img src="${item.poster}" alt="" draggable="false" loading="lazy" decoding="async">
+          <span class="vc-scrim" aria-hidden="true"></span>
+        </button>`
+      )).join('');
+      const cards = Array.from(track.querySelectorAll('.vc-card'));
+
+      let cardW = 0, gap = 0, step = 0, fullH = 0;
+
+      function layout() {
+        box = { w: stage.clientWidth, h: stage.clientHeight };
+        fullH = clamp(box.h * CARD_H, 96, 360);
+        const halfH = fullH / 2;
+        cardW = fullH * CARD_AR;
+        gap = Math.max(4, Math.round(cardW * GAP));
+        step = cardW + gap;
+        const pad = Math.max(16, Math.round(box.w * PAD));
+        const label = Math.max(11, Math.round(box.h * LABEL));
+
+        stripBox.style.top = (STRIP_TOP * 100) + '%';
+        stripBox.style.height = fullH + 'px';
+        head.style.height = (STRIP_TOP * 100) + '%';
+        head.style.paddingLeft = pad + 'px';
+        head.style.paddingRight = pad + 'px';
+        head.style.paddingBottom = Math.round(box.h * 0.028) + 'px';
+
+        titleEl.style.fontSize = Math.max(24, Math.round(box.h * TITLE)) + 'px';
+        creditEl.style.fontSize = label + 'px';
+        cards.forEach((c) => { c.style.width = cardW + 'px'; c.style.height = (Number(c.dataset.i) === index ? fullH : halfH) + 'px'; });
+        track.style.gap = gap + 'px';
+
+        railWrap.style.left = pad + 'px';
+        railWrap.style.bottom = Math.max(14, Math.round(box.h * 0.022)) + 'px';
+        railWrap.style.width = box.w * RAIL + 'px';
+        rail.style.width = (100 / VIDEO_DOCS.length) + '%';
+        muteBtn.style.right = pad + 'px';
+        muteBtn.style.bottom = Math.max(14, Math.round(box.h * 0.022)) + 'px';
+        muteBtn.style.fontSize = label + 'px';
+
+        gsap.set(track, { x: xFor(index) });
+        trackX = xFor(index);
+      }
+
+      const xFor = (i) => box.w / 2 - (i * step + cardW / 2);
+
+      function renderHead(i) {
+        const item = VIDEO_DOCS[i];
+        titleEl.innerHTML = item.title.split('\n').map((line) => (
+          `<span class="vc-line"><span>${line}</span></span>`
+        )).join('');
+        creditEl.textContent = item.credit;
+        metaEl.style.gap = Math.max(16, box.w * 0.055) + 'px';
+        metaEl.innerHTML = item.meta.map((f) => `<span class="vc-meta-item" style="font-size:${Math.max(11, Math.round(box.h * LABEL))}px">${f}</span>`).join('');
+
+        if (prefersReducedMotion) {
+          gsap.set(titleEl.querySelectorAll('.vc-line > span'), { y: 0, opacity: 1 });
+          gsap.set([creditEl, metaEl.children], { opacity: 1, y: 0 });
+          return;
+        }
+        const lines = titleEl.querySelectorAll('.vc-line > span');
+        gsap.fromTo(lines, { y: '110%' }, { y: 0, duration: 0.62, stagger: 0.07, ease: 'power4.out' });
+        gsap.fromTo(creditEl, { opacity: 0 }, { opacity: 0.8, duration: 0.5, delay: 0.1 });
+        gsap.fromTo(metaEl.children, { opacity: 0, y: 6 }, { opacity: 0.8, y: 0, duration: 0.45, stagger: 0.06, delay: 0.12 });
+      }
+
+      function swapBackground(i) {
+        const item = VIDEO_DOCS[i];
+        bgVideo.poster = item.poster;
+        if (bgVideo.getAttribute('src') !== item.src) {
+          bgVideo.setAttribute('src', item.src);
+          bgVideo.load();
+        }
+        if (!prefersReducedMotion) {
+          gsap.fromTo('#vcBg', { opacity: 0 }, { opacity: 1, duration: 0.7, ease: 'power2.out' });
+        }
+        if (visible) bgVideo.play().catch(() => {});
+      }
+
+      let visible = false;
+
+      function go(next) {
+        const clamped = clamp(next, 0, last);
+        if (clamped === index) return;
+        index = clamped;
+        apply();
+      }
+
+      function apply() {
+        cards.forEach((c, i) => {
+          c.setAttribute('aria-current', String(i === index));
+          if (prefersReducedMotion) { c.style.height = (i === index ? fullH : fullH / 2) + 'px'; return; }
+          gsap.to(c, { height: i === index ? fullH : fullH / 2, duration: 0.55, ease: 'back.out(1.4)', overwrite: true });
+        });
+        numNow.textContent = String(index + 1).padStart(2, '0');
+        if (prefersReducedMotion) {
+          gsap.set(track, { x: xFor(index) }); trackX = xFor(index);
+          gsap.set(rail, { left: (index / VIDEO_DOCS.length) * 100 + '%' });
+        } else {
+          gsap.to(track, { x: xFor(index), duration: 0.6, ease: 'power3.out', overwrite: true });
+          gsap.to(rail, { left: (index / VIDEO_DOCS.length) * 100 + '%', duration: 0.55, ease: 'power3.out', overwrite: true });
+        }
+        trackX = xFor(index);
+        renderHead(index);
+        swapBackground(index);
+      }
+
+      cards.forEach((c) => c.addEventListener('click', () => { if (!dragMoved) go(Number(c.dataset.i)); }));
+
+      // Drag manual: pointer capture, lalu lepas ke kartu terdekat + sedikit dorongan velocity.
+      let dragMoved = false;
+      track.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        dragging = true; dragMoved = false;
+        dragFrom = trackX; dragPointerX = e.clientX; lastMoveX = e.clientX; lastMoveT = e.timeStamp; dragVelocity = 0;
+        gsap.killTweensOf(track);
+        track.style.cursor = 'grabbing';
+        track.setPointerCapture(e.pointerId);
+      });
+      track.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - dragFrom;
+        if (Math.abs(dx) > 6) dragMoved = true;
+        trackX = clamp(dragFrom + dx, xFor(last), xFor(0));
+        gsap.set(track, { x: trackX });
+        const dt = e.timeStamp - lastMoveT;
+        if (dt > 0) dragVelocity = (e.clientX - lastMoveX) / dt * 1000;
+        lastMoveX = e.clientX; lastMoveT = e.timeStamp;
+      });
+      const endDrag = (e) => {
+        if (!dragging) return;
+        dragging = false; track.style.cursor = 'grab';
+        if (!dragMoved) return;
+        const thrown = trackX + dragVelocity * 0.12;
+        go(Math.round((box.w / 2 - thrown - cardW / 2) / step));
+        apply();
+      };
+      track.addEventListener('pointerup', endDrag);
+      track.addEventListener('pointercancel', endDrag);
+
+      // Wheel + scroll chaining: di ujung strip kembalikan gesture ke halaman.
+      let acc = 0, until = 0;
+      stage.addEventListener('wheel', (e) => {
+        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+        const stuck = (delta > 0 && index === last) || (delta < 0 && index === 0);
+        if (stuck) { acc = 0; return; }
+        e.preventDefault();
+        if (e.timeStamp < until) return;
+        acc += delta;
+        if (Math.abs(acc) < WHEEL_THRESHOLD) return;
+        go(index + Math.sign(acc));
+        acc = 0; until = e.timeStamp + WHEEL_COOLDOWN;
+      }, { passive: false });
+
+      stage.addEventListener('keydown', (e) => {
+        const keys = { ArrowLeft: index - 1, ArrowRight: index + 1, Home: 0, End: last };
+        if (!(e.key in keys)) return;
+        e.preventDefault(); go(keys[e.key]);
+      });
+
+      muteBtn.addEventListener('click', () => {
+        bgVideo.muted = !bgVideo.muted;
+        muteBtn.setAttribute('aria-pressed', String(!bgVideo.muted));
+        muteLabel.textContent = bgVideo.muted ? 'Muted' : 'Sound on';
+        muteBtn.querySelector('svg').outerHTML = `<i data-lucide="${bgVideo.muted ? 'volume-x' : 'volume-2'}" class="w-4 h-4"></i>`;
+        lucide.createIcons();
+      });
+
+      // Hanya putar video saat section terlihat, biar tidak borong bandwidth.
+      new IntersectionObserver((entries) => {
+        visible = entries[0].isIntersecting;
+        if (visible) bgVideo.play().catch(() => {}); else bgVideo.pause();
+      }, { threshold: 0.35 }).observe(stage);
+
+      new ResizeObserver(layout).observe(stage);
+      layout();
+      renderHead(0);
+      swapBackground(0);
+      gsap.set(rail, { left: '0%' });
+    })();
 
     // =====================================================
     // 13) REALTIME SUBSCRIPTION + INISIALISASI
