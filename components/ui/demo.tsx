@@ -34,7 +34,7 @@ export const teamMembers: Testimonial[] = [
     designation: "Portulaca Team",
     quote: "Merawat dan mendokumentasikan pertumbuhan bunga krokot agar mekar cerah setiap pagi.",
     src: "/images/team/fadhil.jpg",
-    objectPosition: "center top",
+    objectPosition: "center 20%",
   },
   {
     name: "Ghazy Alfi M.",
