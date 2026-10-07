@@ -193,7 +193,7 @@ export const CircularTestimonials = ({
               data-index={index}
               style={{
                 ...getImageStyle(index),
-                objectPosition: testimonial.objectPosition ?? "center top",
+                objectPosition: testimonial.objectPosition ?? "center",
               }}
             />
           ))}

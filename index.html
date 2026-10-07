@@ -2022,7 +2022,6 @@
           designation: 'Bougainvillea Team',
           type: 'kertas',
           src: 'images/team/avatar-placeholder.jpg',
-          position: 'center',
           quote: 'Merawat Bougainvillea agar mekar lebat dan batang berkayu tumbuh kokoh tahan cuaca panas.',
         },
         {
@@ -2030,7 +2029,6 @@
           designation: 'Bougainvillea Team',
           type: 'kertas',
           src: 'images/team/avatar-placeholder.jpg',
-          position: 'center',
           quote: 'Memastikan media tanam gembur serta pemangkasan berkala agar tunas bunga baru terus bermekaran.',
         },
         {
@@ -2038,7 +2036,6 @@
           designation: 'Portulaca Team',
           type: 'krokot',
           src: 'images/team/fatan.jpg',
-          position: 'center 15%',
           quote: 'Memantau adaptasi Portulaca, mencatat perkembangan harian, dan membangun sistem monitoring Growth Together.',
         },
         {
@@ -2046,7 +2043,6 @@
           designation: 'Bougainvillea Team',
           type: 'kertas',
           src: 'images/team/feliza.jpg',
-          position: 'center 20%',
           quote: 'Mengamati siklus pembungaan bunga kertas dan menjaga pencahayaan matahari penuh tetap konsisten.',
         },
         {
@@ -2062,7 +2058,6 @@
           designation: 'Portulaca Team',
           type: 'krokot',
           src: 'images/team/ghazy.jpg',
-          position: 'center 10%',
           quote: 'Menjaga drainase pot portulaca dan memastikan teknik stek batang berakar dengan sempurna.',
         },
       ];
@@ -2077,7 +2072,9 @@
         img.src = member.src;
         img.alt = member.name;
         img.className = 'absolute inset-0 w-full h-full object-cover rounded-3xl shadow-2xl cursor-pointer select-none';
-        img.style.objectPosition = member.position || 'center top';
+        if (member.position) {
+          img.style.objectPosition = member.position;
+        }
         img.style.transition = 'all 0.8s cubic-bezier(.4,2,.3,1)';
         img.addEventListener('click', () => {
           if (i !== activeIndex) {
