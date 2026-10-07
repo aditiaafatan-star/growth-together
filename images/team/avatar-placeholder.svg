@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <rect width="400" height="400" fill="#f8fafc"/>
+  <!-- Head & Hair Silhouette -->
+  <path d="M200 65 C175 65 155 85 155 115 C155 125 157 135 152 145 C148 152 143 158 145 170 C148 185 157 195 165 205 C175 218 185 225 200 225 C215 225 225 218 235 205 C243 195 252 185 255 170 C257 158 252 152 248 145 C243 135 245 125 245 115 C245 85 225 65 200 65 Z" fill="#88929b"/>
+  <!-- Hair swoop / parting touch -->
+  <path d="M190 65 C195 55 205 50 215 52 C210 58 212 62 205 65 Z" fill="#88929b"/>
+  <!-- Neck -->
+  <path d="M182 205 L182 250 L218 250 L218 205 Z" fill="#88929b"/>
+  <!-- White Collar -->
+  <polygon points="175,225 200,270 185,270" fill="#ffffff"/>
+  <polygon points="225,225 200,270 215,270" fill="#ffffff"/>
+  <!-- Necktie -->
+  <polygon points="196,260 204,260 206,272 200,276 194,272" fill="#f6ad85"/>
+  <polygon points="194,272 206,272 212,350 200,365 188,350" fill="#f6ad85"/>
+  <!-- Shoulders / Suit Body -->
+  <path d="M110 390 C110 320 135 265 175 250 L188 275 L200 278 L212 275 L225 250 C265 265 290 320 290 390 Z" fill="#88929b"/>
+</svg>

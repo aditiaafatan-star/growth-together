@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 interface ListItem {
   id: number;
@@ -63,11 +62,10 @@ function RollingTextItem({ item }: RollingTextItemProps) {
         )}
       >
         <div className="relative h-full w-full">
-          <Image
+          <img
             src={item.src}
             alt={item.alt}
-            fill
-            className="object-cover grayscale transition-all duration-500 ease-out group-hover:grayscale-0"
+            className="h-full w-full object-cover grayscale transition-all duration-500 ease-out group-hover:grayscale-0"
           />
           <div className="absolute inset-0 bg-[#1F4B37]/15 mix-blend-overlay" />
         </div>
