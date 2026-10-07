@@ -181,7 +181,7 @@
   .vc-card[aria-current="true"] .vc-scrim { opacity: 0; }
   .vc-line { display: block; overflow: hidden; }
   .vc-line > span { display: block; }
-  .vc-meta-item { font-family: var(--font-body); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(247,244,234,0.8); }
+  .vc-meta-item { font-family: var(--font-body); white-space: nowrap; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(247,244,234,0.9); }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -837,18 +837,23 @@
         <video id="vcBgVideo" class="absolute inset-0 h-full w-full object-cover" muted playsinline preload="metadata" aria-hidden="true" tabindex="-1"></video>
       </div>
 
-      <!-- Wash legibilitas -->
-      <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/55 pointer-events-none"></div>
-      <!-- Scrim khusus di bawah blok judul: footage siang hari terlalu terang untuk
-           teks mono kecil tanpa lapisan ini. -->
-      <div class="absolute inset-x-0 top-0 h-[52%] bg-gradient-to-b from-transparent via-black/30 to-black/85 pointer-events-none"></div>
+      <!-- Wash simetris ringan: dulu 45/55 plus scrim 85% di separuh atas, bikin
+           jurang terang-gelap tepat di garis strip. -->
+      <div class="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/40 pointer-events-none"></div>
+      <div class="absolute inset-x-0 top-0 h-[50%] bg-gradient-to-b from-transparent to-black/35 pointer-events-none"></div>
 
       <!-- Blok judul, duduk tepat di atas tepi atas strip -->
       <div id="vcHead" class="absolute inset-x-0 top-0 flex flex-col justify-end">
-        <div class="flex w-full flex-wrap items-end gap-x-8 gap-y-3">
-          <h2 id="vcTitle" class="font-display font-semibold leading-[0.88] tracking-[-0.03em] text-cream"></h2>
-          <p id="vcCredit" class="font-mono uppercase tracking-[0.14em] text-cream/80"></p>
-          <div id="vcMeta" class="ml-auto flex items-end"></div>
+        <div class="w-full">
+          <h2 id="vcTitle" class="font-display font-semibold leading-[0.88] tracking-[-0.03em] text-cream [text-shadow:0_2px_18px_rgba(0,0,0,0.75),0_1px_3px_rgba(0,0,0,0.6)]"></h2>
+          <!-- Credit dulu duduk di sebelah judul (byline ala desain asal), tapi
+               judul panjang bikin posisinya melayang di tengah. Turunkan ke baris sendiri.
+               Plate gelap lokal: melindungi teks kecil tanpa mengubur video, jadi
+               tidak ada lagi jurang terang/gelap di garis strip. -->
+          <div class="mt-4 flex w-full flex-wrap items-center gap-x-5 gap-y-2">
+            <p id="vcCredit" class="font-mono uppercase tracking-[0.14em] text-cream/90 bg-black/70 rounded-md px-2.5 py-1"></p>
+            <div id="vcMeta" class="ml-auto flex items-center gap-x-2 bg-black/70 rounded-md px-2.5 py-1"></div>
+          </div>
         </div>
       </div>
 
@@ -1855,7 +1860,6 @@
           `<span class="vc-line"><span>${line}</span></span>`
         )).join('');
         creditEl.textContent = item.credit;
-        metaEl.style.gap = Math.max(16, box.w * 0.055) + 'px';
         metaEl.innerHTML = item.meta.map((f) => `<span class="vc-meta-item" style="font-size:${Math.max(11, Math.round(box.h * LABEL))}px">${f}</span>`).join('');
 
         if (prefersReducedMotion) {
