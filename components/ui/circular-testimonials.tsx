@@ -14,6 +14,7 @@ export interface Testimonial {
   name: string;
   designation: string;
   src: string;
+  objectPosition?: string;
 }
 
 export interface Colors {
@@ -190,7 +191,10 @@ export const CircularTestimonials = ({
               alt={testimonial.name}
               className="testimonial-image"
               data-index={index}
-              style={getImageStyle(index)}
+              style={{
+                ...getImageStyle(index),
+                objectPosition: testimonial.objectPosition ?? "center top",
+              }}
             />
           ))}
         </div>

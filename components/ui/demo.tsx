@@ -6,36 +6,42 @@ export const teamMembers: Testimonial[] = [
     designation: "Bougainvillea Team",
     quote: "Merawat Bougainvillea agar tumbuh kokoh, menyerap polusi, dan menghasilkan bunga kertas yang mekar lebat.",
     src: "/images/team/avatar-placeholder.jpg",
+    objectPosition: "center",
   },
   {
     name: "Firzansyah Alsy R.",
     designation: "Bougainvillea Team",
     quote: "Menjaga keseimbangan nutrisi tanah dan pemangkasan berkala untuk stimulasi tunas bract yang optimal.",
     src: "/images/team/avatar-placeholder.jpg",
+    objectPosition: "center",
   },
   {
     name: "Fatan Aditiansyah",
     designation: "Portulaca Team",
     quote: "Memantau adaptasi Portulaca, mencatat perkembangan harian, dan membangun sistem monitoring Growth Together.",
     src: "/images/team/fatan.jpg",
+    objectPosition: "center 15%",
   },
   {
     name: "Feliza Nuril A.",
     designation: "Bougainvillea Team",
     quote: "Mengamati siklus mekar bunga bougainvillea dan memastikan kebutuhan sinar matahari penuh terpenuhi.",
     src: "/images/team/feliza.jpg",
+    objectPosition: "center 20%",
   },
   {
     name: "Fadhil Muhammad A.",
     designation: "Portulaca Team",
     quote: "Merawat dan mendokumentasikan pertumbuhan bunga krokot agar mekar cerah setiap pagi.",
     src: "/images/team/fadhil.jpg",
+    objectPosition: "center top",
   },
   {
     name: "Ghazy Alfi M.",
     designation: "Portulaca Team",
     quote: "Menjaga drainase pot portulaca dan memastikan teknik stek batang berakar dengan sempurna.",
     src: "/images/team/ghazy.jpg",
+    objectPosition: "center 10%",
   },
 ];
 
