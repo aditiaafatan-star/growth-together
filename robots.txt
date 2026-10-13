@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aditiaafatan-star.github.io/growth-together/sitemap.xml
