@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://datqwjlpicdaoklgssxv.supabase.co wss://datqwjlpicdaoklgssxv.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'">
 <title>Growth Together — Kelompok 4 X TE 3, SMKN 2 Purwokerto</title>
 <meta name="description" content="Growth Together — proyek kolaborasi menanam Bougainvillea & Portulaca oleh Kelompok 4, X TE 3, SMK Negeri 2 Purwokerto.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1730,11 +1731,11 @@
         if (error || !data) throw error || new Error('no data');
         el.innerHTML = data.map((row) => {
           const isMe = currentUser && row.id === currentUser.id;
-          const initials = (row.name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+          const initials = escapeHtml((row.name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase());
           return `<div class="flex items-center gap-3 px-4 py-2.5 ${isMe ? 'bg-forest/5' : ''}">
             <span class="text-xs text-ink/60 w-4">${row.rank}</span>
             <div class="w-7 h-7 rounded-full ${isMe ? 'bg-forest text-cream' : 'bg-ink/5 text-ink/60'} flex items-center justify-center text-[10px] font-bold">${initials}</div>
-            <span class="text-sm flex-1 ${isMe ? 'font-semibold' : ''}">${isMe ? 'You' : (row.name || 'Anggota')}</span>
+            <span class="text-sm flex-1 ${isMe ? 'font-semibold' : ''}">${isMe ? 'You' : escapeHtml(row.name || 'Anggota')}</span>
             <span class="text-xs text-ink/65">${(row.xp || 0).toLocaleString('id-ID')} XP</span>
           </div>`;
         }).join('');

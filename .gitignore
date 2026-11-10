@@ -3,3 +3,10 @@ node_modules/
 build/
 app/build/
 .DS_Store
+
+# Jangan pernah commit signing key / artefak rilis
+*.keystore
+*.jks
+*.apk
+*.aab
+*.idsig
