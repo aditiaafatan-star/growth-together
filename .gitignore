@@ -1,5 +1,6 @@
 node_modules/
 .gradle/
+.vercel/
 build/
 app/build/
 .DS_Store
@@ -10,3 +11,5 @@ app/build/
 *.apk
 *.aab
 *.idsig
+.vercel
+.env*
