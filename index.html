@@ -649,10 +649,34 @@
   }
   /* ===== End Liquid Glass ===== */
 
-  /* ===== Editorial Video Deck ===== */
+  /* ===== QuickTime Dark Mode macOS Video Window ===== */
   .cinema-frame {
-    background: rgba(11, 20, 14, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: #141615;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 20px 46px rgba(0, 0, 0, 0.42);
+  }
+  .cinema-macos-bar {
+    background: linear-gradient(180deg, #272a28 0%, #1c1f1d 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  .macos-traffic-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 9999px;
+    background: var(--dot);
+    border: 0.5px solid rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  }
+  #vcStage:fullscreen {
+    border: 0;
+    border-radius: 0;
+    background: #0a0c0b;
+  }
+  #vcStage:fullscreen .cinema-macos-bar {
+    display: none;
   }
 
   /* ===== Our Story Modular Bento ===== */
@@ -1341,18 +1365,32 @@
       <!-- Asymmetric Spread: Unadorned Cinema Frame Left + Architectural Tracklist Index Right -->
       <div data-reveal class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
-        <!-- Left (8 cols): Clean Hairline Frame + Integrated Scrubber & Transport Below -->
+        <!-- Left (8 cols): QuickTime Dark Mode macOS Window Frame + Scrubber & Transport Below -->
         <div class="lg:col-span-8">
-          <div id="vcStage" class="relative cinema-frame rounded-xl overflow-hidden h-[250px] sm:h-[380px] lg:h-[450px] select-none outline-none focus-visible:ring-2 focus-visible:ring-lime"
+          <div id="vcStage" class="relative cinema-frame flex flex-col rounded-[14px] overflow-hidden h-[286px] sm:h-[416px] lg:h-[486px] select-none outline-none focus-visible:ring-2 focus-visible:ring-lime"
                tabindex="0" role="region" aria-label="Pemutar video dokumentasi">
-            <!-- Quiet ambient fill solely to prevent letterbox bars looking flat on portrait clips -->
-            <img id="vcAmbientImg" src="videos/dokumentasi-01.jpg" alt="" width="1280" height="720" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover scale-115 blur-2xl opacity-35 brightness-75 transition-opacity duration-500 pointer-events-none">
-            <video id="vcBgVideo" width="1280" height="720" class="relative z-10 w-full h-full object-contain cursor-pointer" muted playsinline preload="metadata" poster="videos/dokumentasi-01.jpg"></video>
+            <!-- QuickTime Dark Mode Titlebar -->
+            <div class="cinema-macos-bar h-9 shrink-0 px-3.5 grid grid-cols-[52px_1fr_52px] items-center gap-3">
+              <div class="inline-flex items-center gap-2 pointer-events-none" aria-hidden="true">
+                <span class="macos-traffic-dot" style="--dot: #FF5F57"></span>
+                <span class="macos-traffic-dot" style="--dot: #FEBC2E"></span>
+                <span class="macos-traffic-dot" style="--dot: #28C840"></span>
+              </div>
+              <span id="vcWindowTitle" class="font-mono text-[11px] font-medium tracking-tight text-white/70 truncate text-center">dokumentasi-01.mp4</span>
+              <span aria-hidden="true"></span>
+            </div>
 
-            <!-- Single restrained Play control shown only when paused -->
-            <button id="vcCenterPlayBtn" type="button" class="hidden absolute z-20 inset-0 m-auto w-14 h-14 rounded-full bg-ink/65 backdrop-blur-sm border border-white/50 text-cream items-center justify-center hover:bg-white hover:text-ink transition-colors cursor-pointer" aria-label="Putar video">
-              <i data-lucide="play" class="w-6 h-6 fill-current translate-x-0.5" aria-hidden="true"></i>
-            </button>
+            <!-- Video Viewport Edge-to-Edge Inside 1px Metallic Frame -->
+            <div class="relative flex-1 min-h-0 overflow-hidden bg-[#0e100f]">
+              <!-- Quiet ambient fill solely to prevent letterbox bars looking flat on portrait clips -->
+              <img id="vcAmbientImg" src="videos/dokumentasi-01.jpg" alt="" width="1280" height="720" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover scale-115 blur-2xl opacity-35 brightness-75 transition-opacity duration-500 pointer-events-none">
+              <video id="vcBgVideo" width="1280" height="720" class="relative z-10 w-full h-full object-contain cursor-pointer" muted playsinline preload="metadata" poster="videos/dokumentasi-01.jpg"></video>
+
+              <!-- Single restrained Play control shown only when paused -->
+              <button id="vcCenterPlayBtn" type="button" class="hidden absolute z-20 inset-0 m-auto w-14 h-14 rounded-full bg-ink/65 backdrop-blur-sm border border-white/50 text-cream items-center justify-center hover:bg-white hover:text-ink transition-colors cursor-pointer" aria-label="Putar video">
+                <i data-lucide="play" class="w-6 h-6 fill-current translate-x-0.5" aria-hidden="true"></i>
+              </button>
+            </div>
           </div>
 
           <!-- Hairline Scrubber Track Directly Under Video -->
@@ -2930,6 +2968,7 @@ void main(){
           title: 'Diskusi di Sela Perawatan', credit: 'Koordinasi antar anggota', meta: ['7 Okt 2026', '0:12'], durSec: 12 },
       ];
 
+      const windowTitle = document.getElementById('vcWindowTitle');
       const ambientImg = document.getElementById('vcAmbientImg');
       const counterNum = document.getElementById('vcCounterNum');
       const activeTitle = document.getElementById('vcActiveTitle');
@@ -3030,6 +3069,7 @@ void main(){
         const item = VIDEO_DOCS[index];
         const num = String(index + 1).padStart(2, '0');
 
+        if (windowTitle) windowTitle.textContent = item.src.split('/').pop() || '';
         if (counterNum) counterNum.textContent = num;
         if (activeTitle) activeTitle.textContent = item.title;
         if (activeSub) activeSub.textContent = `${item.credit}, ${item.meta[0]}`;
