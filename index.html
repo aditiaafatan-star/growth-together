@@ -674,7 +674,7 @@
     background: rgba(14, 34, 22, 0.44);
   }
 
-  /* ===== Prevent accidental text highlight & suppress ambient haze inside held crystal spotlight ===== */
+  /* ===== Prevent accidental text highlight while holding crystal glass lens ===== */
   html.glass-clear-hold body,
   html.glass-clear-hold .liquid-glass-sheet,
   html.glass-clear-hold .liquid-glass-nav {
@@ -684,9 +684,6 @@
   html.glass-clear-hold :is(input, textarea, select, [contenteditable="true"]) {
     -webkit-user-select: text;
     user-select: text;
-  }
-  html.glass-clear-hold .glass-glare {
-    opacity: 0 !important;
   }
 
   /* ===== Terrava Hero Composition over User Painting ===== */
@@ -901,15 +898,11 @@
   <!-- ================= HERO (Free Painting Above, Connected Full-Width Glass Sheet Below) ================= -->
   <header id="home" class="hero-section relative pt-28 sm:pt-32 pb-10 sm:pb-12 flex items-center justify-center overflow-hidden text-white min-h-[52svh] sm:min-h-[56svh]">
 
-    <!-- Centered Editorial Callout + Inline Plant Pill over Unobstructed Painting -->
+    <!-- Centered Editorial Callout over Unobstructed Painting -->
     <div class="hero-center-copy relative z-10 max-w-4xl mx-auto px-4 sm:px-8 w-full text-center">
       <h1 class="hero-title hero-title-shadow font-display font-semibold text-white tracking-tight leading-[1.06] text-[2.15rem] sm:text-5xl md:text-[3.75rem]">
         Growing Plants,<br>
-        as One
-        <span class="hero-inline-pill inline-flex align-middle w-[58px] sm:w-[84px] h-[30px] sm:h-[42px] rounded-lg overflow-hidden border border-white/50 shadow-sm mx-1.5 -translate-y-1 bg-forest will-change-transform">
-          <img src="images/perkembangan-4-bloom.jpg" alt="Bougainvillea mekar" class="w-full h-full object-cover">
-        </span>
-        Mission
+        as One Mission
       </h1>
       <p class="hero-sub hero-title-shadow mt-4 text-xs sm:text-sm md:text-base text-white/95 max-w-lg mx-auto leading-relaxed">Proyek kolaborasi menanam Bougainvillea &amp; Portulaca oleh Kelompok 4 · X TE 3, SMK Negeri 2 Purwokerto.</p>
       <div class="hero-ctas mt-6 flex flex-wrap justify-center gap-3">
@@ -928,8 +921,7 @@
     <div id="sheetFrostLayer" class="liquid-glass-sheet-frost" aria-hidden="true"></div>
 
     <!-- Terrava Header Band (Starts Seamlessly at Top Lip of Sheet) -->
-    <div id="heroTerravaGlass" data-glass-glow class="relative pt-7 sm:pt-9 pb-10 sm:pb-14 px-5 sm:px-10 overflow-hidden">
-      <div id="heroGlassGlare" class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+    <div id="heroTerravaGlass" class="relative pt-7 sm:pt-9 pb-10 sm:pb-14 px-5 sm:px-10 overflow-hidden">
       <div class="hero-sheet-inner relative z-20 max-w-6xl mx-auto">
         <div class="flex flex-wrap items-center justify-between gap-3 text-[11px] sm:text-xs text-white/95 font-medium">
           <span>&copy; 2026 Growth Together</span>
@@ -958,8 +950,7 @@
     <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
     <!-- ================= OUR STORY ================= -->
-    <section id="story" data-glass-glow class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
-      <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+    <section id="story" class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
       <div class="relative z-20 max-w-6xl mx-auto">
         <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
@@ -1023,8 +1014,7 @@
     <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
     <!-- ================= PLANTS ================= -->
-    <section id="plants" data-glass-glow class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
-      <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+    <section id="plants" class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
       <div class="relative z-20 max-w-3xl mx-auto">
         <div data-reveal class="max-w-xl">
           <p class="text-xs font-medium text-lime mb-3">Our Plants</p>
@@ -1044,8 +1034,7 @@
     <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
     <!-- ================= GROWTH JOURNAL ================= -->
-    <section id="journal" data-glass-glow class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
-      <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+    <section id="journal" class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
       <div class="relative z-20 max-w-6xl mx-auto">
         <div data-reveal id="journalHint" class="rounded-2xl glass-subcard px-4 py-3 flex items-center gap-3 mb-8 max-w-2xl">
           <i data-lucide="sprout" class="w-4 h-4 text-cream/75 shrink-0"></i>
@@ -1130,8 +1119,7 @@
     <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
   <!-- ================= TEAM ================= -->
-  <section id="team" data-glass-glow class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
-    <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+  <section id="team" class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
     <div class="relative z-20 max-w-6xl mx-auto">
       <div data-reveal class="max-w-xl">
         <p class="text-xs font-medium text-lime mb-3">Our Team</p>
@@ -1189,8 +1177,7 @@
   <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
   <!-- ================= TIMELINE ================= -->
-  <section id="timeline" data-glass-glow class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
-    <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+  <section id="timeline" class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
     <div class="max-w-3xl mx-auto relative z-20">
       <div data-reveal class="max-w-xl">
         <p class="text-xs font-medium text-lime mb-3">Timeline</p>
@@ -1234,8 +1221,7 @@
   <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
   <!-- ================= DOKUMENTASI PERJALANAN (ROLLING LIST) ================= -->
-  <section id="journey" data-glass-glow class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
-    <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+  <section id="journey" class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
     <div class="max-w-4xl mx-auto relative z-20">
       <div data-reveal class="max-w-xl mb-12">
         <p class="text-xs font-medium text-lime mb-3">Dokumentasi Foto</p>
@@ -1341,8 +1327,7 @@
   <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
   <!-- ================= DOKUMENTASI VIDEO (Editorial Minimalist Film Spread) ================= -->
-  <section id="video-journey" data-glass-glow class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
-    <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+  <section id="video-journey" class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
     <div class="relative z-20 max-w-6xl mx-auto">
       <!-- Editorial Baseline Header (no pills, no dots, no em dashes) -->
       <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
@@ -1426,8 +1411,7 @@
   <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
   <!-- ================= REFLECTION / WHY WE GROW ================= -->
-  <section data-glass-glow class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
-    <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+  <section class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
     <div class="relative z-20 max-w-6xl mx-auto">
       <div data-reveal class="max-w-xl">
         <p class="text-xs font-medium text-lime mb-3">Reflection</p>
@@ -1463,8 +1447,7 @@
   <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
   <!-- ================= FOOTER ================= -->
-  <footer data-glass-glow class="relative pt-14 pb-16 px-6 sm:px-10 overflow-hidden">
-    <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
+  <footer class="relative pt-14 pb-16 px-6 sm:px-10 overflow-hidden">
     <div class="relative z-20 max-w-6xl mx-auto">
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-10 pb-10 border-b border-white/15">
         <div>
@@ -2058,8 +2041,7 @@ void main(){
       // Animasi masuk hero bergaya Terrava (jalan sekali begitu halaman dibuka)
       gsap.timeline({ defaults: { ease: 'power3.out' } })
         .from('.hero-title', { opacity: 0, y: 24, duration: 0.72 })
-        .from('.hero-inline-pill', { opacity: 0, scaleX: 0.35, scaleY: 0.75, duration: 0.75, ease: 'back.out(1.6)' }, '-=0.45')
-        .from('.hero-sub', { opacity: 0, y: 14, duration: 0.6 }, '-=0.42')
+        .from('.hero-sub', { opacity: 0, y: 14, duration: 0.6 }, '-=0.45')
         .from('.hero-ctas', { opacity: 0, y: 14, duration: 0.6 }, '-=0.38')
         .from('.hero-sheet-inner', { opacity: 0, y: 22, duration: 0.72 }, '-=0.42')
         .from('.hero-terrava-wordmark', { yPercent: 45, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.58');
@@ -2103,24 +2085,8 @@ void main(){
       if (tp) tp.style.transform = 'scaleY(1)';
     }
 
-    // 5.5) Specular spotlight crystal + botanical glow di seluruh Liquid Glass sheet (desktop fine pointer)
     if (!prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      document.querySelectorAll('[data-glass-glow]').forEach((glassZone) => {
-        const glare = glassZone.querySelector('.glass-glare');
-        if (!glare) return;
-        glassZone.addEventListener('pointermove', (e) => {
-          const rect = glassZone.getBoundingClientRect();
-          const xPct = (((e.clientX - rect.left) / rect.width) * 100).toFixed(1);
-          const yPct = (((e.clientY - rect.top) / rect.height) * 100).toFixed(1);
-          glare.style.opacity = '1';
-          glare.style.background = `radial-gradient(640px circle at ${xPct}% ${yPct}%, rgba(255, 255, 255, 0.22), rgba(166, 224, 106, 0.09) 40%, transparent 70%)`;
-        });
-        glassZone.addEventListener('pointerleave', () => {
-          glare.style.opacity = '0';
-        });
-      });
-
-      // 5.55) Custom SVG Pointer (Tanda Panah + Tangan Menunjuk) & Magnetic CTAs
+      // 5.5) Custom SVG Pointer (Tanda Panah + Tangan Menunjuk) & Magnetic CTAs
       (function initCustomPointer() {
         const pointer = document.getElementById('customCursor');
         if (!pointer) return;
