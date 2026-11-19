@@ -145,7 +145,7 @@
   @keyframes panelFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   .panel-fade { animation: panelFade .35s ease-out both; }
 
-  /* ===== HowItWorks-style Journal Cards inside Smoky Glass ===== */
+  /* ===== Pinned Paper Note Cards (Catatan Kertas Note di atas Sheet Glass) ===== */
   .journal-stagger-container {
     position: relative;
     width: 100%;
@@ -155,18 +155,22 @@
   .journal-pin-card {
     position: relative;
     width: 100%;
-    transition: transform 0.3s ease, z-index 0s;
+    color: var(--color-ink);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), z-index 0s;
     margin-bottom: 32px;
+  }
+  .journal-pin-card :where(h2, h3, li, p, span) {
+    text-shadow: none !important;
   }
   .journal-pin-card:hover {
     z-index: 30 !important;
     transform: scale(1.02) !important;
   }
   /* Mobile mini-zigzag */
-  .journal-pin-card.jpc-rotate-pos { transform: rotate(3deg); margin-left: 12px; margin-right: -12px; }
-  .journal-pin-card.jpc-rotate-neg { transform: rotate(-3deg); margin-right: 12px; margin-left: -12px; }
-  .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(3deg) scale(1.02) !important; }
-  .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-3deg) scale(1.02) !important; }
+  .journal-pin-card.jpc-rotate-pos { transform: rotate(2.5deg); margin-left: 10px; margin-right: -10px; }
+  .journal-pin-card.jpc-rotate-neg { transform: rotate(-2.5deg); margin-right: 10px; margin-left: -10px; }
+  .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(2.5deg) scale(1.02) !important; }
+  .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-2.5deg) scale(1.02) !important; }
 
   @media (min-width: 768px) {
     .journal-pin-card {
@@ -179,47 +183,83 @@
     }
     .journal-pin-card.jpc-left { left: 10%; }
     .journal-pin-card.jpc-right { right: 10%; left: auto; }
-    .journal-pin-card.jpc-rotate-pos { transform: rotate(6deg); }
-    .journal-pin-card.jpc-rotate-neg { transform: rotate(-6deg); }
-    .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(6deg) scale(1.05) !important; }
-    .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-6deg) scale(1.05) !important; }
+    .journal-pin-card.jpc-rotate-pos { transform: rotate(4.5deg); }
+    .journal-pin-card.jpc-rotate-neg { transform: rotate(-4.5deg); }
+    .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(4.5deg) scale(1.04) !important; }
+    .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-4.5deg) scale(1.04) !important; }
   }
   .journal-pin-card-inner {
-    background: linear-gradient(155deg, rgba(255, 255, 255, 0.22) 0%, rgba(16, 40, 26, 0.42) 100%);
-    padding: 8px;
-    border-radius: 25px;
+    background: linear-gradient(175deg, #FFFDF7 0%, #F4EEDF 100%);
+    padding: 11px 12px 13px;
+    border-radius: 14px;
+    border: 1px solid rgba(23, 40, 31, 0.14);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.65),
-      0 14px 36px rgba(8, 22, 14, 0.26),
-      0 0 28px rgba(166, 224, 106, 0.16);
-    border: 1px solid rgba(255, 255, 255, 0.44);
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      inset 0 -2px 6px rgba(138, 122, 88, 0.08),
+      0 18px 34px -8px rgba(8, 22, 14, 0.42),
+      0 6px 14px rgba(8, 22, 14, 0.22);
+    transition: box-shadow 0.28s ease;
+  }
+  .journal-pin-card:hover .journal-pin-card-inner {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.96),
+      inset 0 -2px 6px rgba(138, 122, 88, 0.06),
+      0 24px 44px -8px rgba(8, 22, 14, 0.48),
+      0 10px 20px rgba(8, 22, 14, 0.24);
   }
   .journal-pin-icon {
     display: block;
-    width: 28px;
-    height: 28px;
-    margin: 0 auto 12px auto;
+    width: 26px;
+    height: 26px;
+    margin: 0 auto 10px auto;
+    filter: drop-shadow(0 2px 3px rgba(13, 26, 19, 0.28));
   }
   .journal-content-card {
-    border-radius: 15px;
-    padding: 16px;
-    border: 1px solid;
+    border-radius: 10px;
+    padding: 14px 15px 16px;
+    border: 1px solid rgba(23, 40, 31, 0.10);
+    border-top-width: 3px;
     position: relative;
     overflow: hidden;
+    background-color: #FCF9F0;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 25px,
+      rgba(23, 40, 31, 0.06) 25px,
+      rgba(23, 40, 31, 0.06) 26px
+    );
+    background-position: 0 8px;
   }
   .journal-content-card.jcc-kertas {
-    background: rgba(232, 123, 168, 0.12);
-    border-color: rgba(232, 123, 168, 0.30);
+    background-color: #FDF7F9;
+    border-color: rgba(163, 50, 96, 0.18);
+    border-top-color: #A33260;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 25px,
+      rgba(163, 50, 96, 0.07) 25px,
+      rgba(163, 50, 96, 0.07) 26px
+    );
   }
   .journal-content-card.jcc-krokot {
-    background: rgba(232, 169, 106, 0.12);
-    border-color: rgba(232, 169, 106, 0.30);
+    background-color: #FCF7EE;
+    border-color: rgba(156, 90, 28, 0.18);
+    border-top-color: #9C5A1C;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 25px,
+      rgba(156, 90, 28, 0.07) 25px,
+      rgba(156, 90, 28, 0.07) 26px
+    );
   }
   .journal-card-number {
     font-family: var(--font-display);
     font-weight: 800;
     font-variant-numeric: tabular-nums;
-    font-size: 1.75rem;
+    font-size: 1.65rem;
     line-height: 1;
     margin-bottom: 10px;
     display: block;
@@ -232,13 +272,48 @@
     stroke-dasharray: 8 6;
     animation: dashFlow 3s linear infinite;
   }
-  /* ===== End HowItWorks-style ===== */
+  /* ===== End Pinned Paper Note Cards ===== */
 
   /* ===== Crystal Clear Botanical Frost & Rim Glow Liquid Glass ===== */
+  @property --glass-clear-r {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 32px;
+  }
+  @property --glass-clear-core {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+  }
+  @property --glass-clear-mid {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+  }
+  @property --glass-lens-alpha {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+  html {
+    --glass-clear-r: 32px;
+    --glass-clear-core: 1;
+    --glass-clear-mid: 1;
+    --glass-lens-alpha: 0;
+    transition:
+      --glass-clear-r 0.20s cubic-bezier(0.22, 1, 0.36, 1),
+      --glass-clear-core 0.16s ease-out,
+      --glass-clear-mid 0.18s ease-out,
+      --glass-lens-alpha 0.18s ease-out;
+  }
+  html.glass-clear-hold {
+    --glass-clear-r: 164px;
+    --glass-clear-core: 0;
+    --glass-clear-mid: 0.36;
+    --glass-lens-alpha: 1;
+  }
   .liquid-glass-nav {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(16, 40, 26, 0.24) 100%);
-    backdrop-filter: blur(16px) saturate(190%) brightness(1.08);
-    -webkit-backdrop-filter: blur(16px) saturate(190%) brightness(1.08);
+    position: relative;
     border: 1px solid rgba(255, 255, 255, 0.48);
     box-shadow:
       inset 0 1px 1px rgba(255, 255, 255, 0.72),
@@ -247,8 +322,36 @@
       0 0 28px rgba(166, 224, 106, 0.16);
     color: var(--color-cream);
   }
+  .liquid-glass-nav > :not(.liquid-glass-nav-frost) {
+    position: relative;
+    z-index: 1;
+  }
+  .liquid-glass-nav-frost {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(16, 40, 26, 0.24) 100%);
+    backdrop-filter: blur(16px) saturate(190%) brightness(1.08);
+    -webkit-backdrop-filter: blur(16px) saturate(190%) brightness(1.08);
+    -webkit-mask-image: radial-gradient(
+      circle var(--glass-clear-r) at var(--nx, -999px) var(--ny, -999px),
+      rgba(0, 0, 0, var(--glass-clear-core)) 0%,
+      rgba(0, 0, 0, var(--glass-clear-core)) 44%,
+      rgba(0, 0, 0, var(--glass-clear-mid)) 74%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    mask-image: radial-gradient(
+      circle var(--glass-clear-r) at var(--nx, -999px) var(--ny, -999px),
+      rgba(0, 0, 0, var(--glass-clear-core)) 0%,
+      rgba(0, 0, 0, var(--glass-clear-core)) 44%,
+      rgba(0, 0, 0, var(--glass-clear-mid)) 74%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    transition: background 0.3s ease;
+  }
   .liquid-glass-nav.scrolled {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(14, 34, 22, 0.42) 100%);
     border-color: rgba(255, 255, 255, 0.54);
     box-shadow:
       inset 0 1px 1px rgba(255, 255, 255, 0.78),
@@ -256,11 +359,18 @@
       0 14px 40px rgba(8, 22, 14, 0.30),
       0 0 34px rgba(166, 224, 106, 0.22);
   }
+  .liquid-glass-nav.scrolled > .liquid-glass-nav-frost {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(14, 34, 22, 0.42) 100%);
+  }
   body.video-live .liquid-glass-nav {
+    border-color: rgba(255, 255, 255, 0.38);
+  }
+  body.video-live .liquid-glass-nav > .liquid-glass-nav-frost {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     background: rgba(13, 28, 19, 0.90);
-    border-color: rgba(255, 255, 255, 0.38);
+    -webkit-mask-image: none;
+    mask-image: none;
   }
   .nav-pill-link {
     position: relative;
@@ -274,6 +384,24 @@
     box-shadow: 0 0 16px rgba(166, 224, 106, 0.22);
   }
   .liquid-glass-sheet {
+    border-top: 1.5px solid rgba(255, 255, 255, 0.68);
+    box-shadow:
+      inset 0 2px 1px rgba(255, 255, 255, 0.78),
+      inset 0 28px 68px rgba(255, 255, 255, 0.10),
+      inset 0 1px 40px rgba(166, 224, 106, 0.14),
+      0 -16px 52px rgba(166, 224, 106, 0.24),
+      0 -4px 20px rgba(255, 255, 255, 0.28);
+  }
+  .liquid-glass-sheet > :not(.liquid-glass-sheet-frost):not(.liquid-glass-sheet-lens) {
+    position: relative;
+    z-index: 1;
+  }
+  .liquid-glass-sheet-frost {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
     background: linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.16) 0%,
@@ -282,13 +410,36 @@
     );
     backdrop-filter: blur(14px) saturate(185%) brightness(1.08);
     -webkit-backdrop-filter: blur(14px) saturate(185%) brightness(1.08);
-    border-top: 1.5px solid rgba(255, 255, 255, 0.68);
-    box-shadow:
-      inset 0 2px 1px rgba(255, 255, 255, 0.78),
-      inset 0 28px 68px rgba(255, 255, 255, 0.10),
-      inset 0 1px 40px rgba(166, 224, 106, 0.14),
-      0 -16px 52px rgba(166, 224, 106, 0.24),
-      0 -4px 20px rgba(255, 255, 255, 0.28);
+    -webkit-mask-image: radial-gradient(
+      circle var(--glass-clear-r) at var(--gx, -999px) var(--gy, -999px),
+      rgba(0, 0, 0, var(--glass-clear-core)) 0%,
+      rgba(0, 0, 0, var(--glass-clear-core)) 44%,
+      rgba(0, 0, 0, var(--glass-clear-mid)) 74%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    mask-image: radial-gradient(
+      circle var(--glass-clear-r) at var(--gx, -999px) var(--gy, -999px),
+      rgba(0, 0, 0, var(--glass-clear-core)) 0%,
+      rgba(0, 0, 0, var(--glass-clear-core)) 44%,
+      rgba(0, 0, 0, var(--glass-clear-mid)) 74%,
+      rgba(0, 0, 0, 1) 100%
+    );
+  }
+  .liquid-glass-sheet-lens {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: var(--glass-lens-alpha, 0);
+    background: radial-gradient(
+      circle 168px at var(--gx, -999px) var(--gy, -999px),
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.03) 40%,
+      rgba(255, 255, 255, 0.14) 56%,
+      rgba(166, 224, 106, 0.07) 72%,
+      transparent 100%
+    );
   }
   .liquid-glass-sheet :where(h2, h3, li),
   .liquid-glass-sheet p:not([class*="text-ink"]) {
@@ -367,6 +518,21 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* ===== Prevent accidental text highlight & suppress ambient haze inside held crystal spotlight ===== */
+  html.glass-clear-hold body,
+  html.glass-clear-hold .liquid-glass-sheet,
+  html.glass-clear-hold .liquid-glass-nav {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  html.glass-clear-hold :is(input, textarea, select, [contenteditable="true"]) {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  html.glass-clear-hold .glass-glare {
+    opacity: 0 !important;
+  }
+
   /* ===== Terrava Hero Composition over User Painting ===== */
   .hero-painting-scrim {
     background: linear-gradient(
@@ -408,6 +574,7 @@
   <!-- ================= NAVBAR (Smoky Botanical Liquid Glass Floating Island) ================= -->
   <nav id="siteNav" class="fixed top-0 inset-x-0 z-50 pt-3 md:pt-4 px-3 sm:px-6 pointer-events-none transition-all duration-300">
     <div id="navInner" class="pointer-events-auto max-w-6xl mx-auto rounded-full liquid-glass-nav transition-all duration-300 ease-out flex items-center justify-between px-4 sm:px-6 md:px-7 py-2 md:py-2.5">
+      <span class="liquid-glass-nav-frost" aria-hidden="true"></span>
       <a href="#home" class="flex items-center gap-2.5 font-display font-semibold text-base md:text-lg tracking-tight shrink-0 group mr-2 text-cream">
         <span class="w-8 h-8 rounded-full bg-white/15 border border-white/25 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shrink-0">
           <i data-lucide="leaf" class="w-4 h-4 text-lime"></i>
@@ -445,6 +612,7 @@
 
     <!-- Floating Glass Mobile Menu Card -->
     <div id="mobileMenu" class="pointer-events-auto lg:hidden max-h-0 opacity-0 pointer-events-none scale-95 overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] max-w-sm sm:max-w-md mx-auto mt-2.5 rounded-3xl liquid-glass-nav shadow-2xl">
+      <span class="liquid-glass-nav-frost" aria-hidden="true"></span>
       <div class="p-4 sm:p-5 flex flex-col gap-1 text-sm font-medium text-cream">
         <a href="#home" class="py-2.5 px-3.5 rounded-2xl hover:bg-white/10 hover:text-lime transition-colors flex items-center justify-between">
           <span>Home</span>
@@ -559,6 +727,8 @@
 
   <!-- ================= CONNECTED FULL-WIDTH LIQUID GLASS SHEET ================= -->
   <main id="connectedGlassSheet" class="liquid-glass-sheet relative z-10 w-full rounded-t-[28px] sm:rounded-t-[40px] text-cream overflow-x-clip">
+    <div id="sheetFrostLayer" class="liquid-glass-sheet-frost" aria-hidden="true"></div>
+    <div id="sheetLensGlow" class="liquid-glass-sheet-lens" aria-hidden="true"></div>
 
     <!-- Terrava Header Band (Starts Seamlessly at Top Lip of Sheet) -->
     <div id="heroTerravaGlass" data-glass-glow class="relative pt-7 sm:pt-9 pb-10 sm:pb-14 px-5 sm:px-10 overflow-hidden">
@@ -1483,6 +1653,96 @@
       })();
     }
 
+    // 5.56) Cursor-following crystal-clear aperture on Liquid Glass while holding left-click
+    (function initLiquidGlassClearHold() {
+      const root = document.documentElement;
+      const sheet = document.getElementById('connectedGlassSheet');
+      const sheetFrost = document.getElementById('sheetFrostLayer');
+      const sheetLens = document.getElementById('sheetLensGlow');
+      const navFrosts = Array.from(document.querySelectorAll('.liquid-glass-nav > .liquid-glass-nav-frost'));
+
+      let activePointerId = null;
+      let clearActive = false;
+      let lastX = -999;
+      let lastY = -999;
+
+      const syncLens = (clientX, clientY) => {
+        if (typeof clientX === 'number' && typeof clientY === 'number') {
+          lastX = clientX;
+          lastY = clientY;
+        }
+        if (!Number.isFinite(lastX) || lastX < -500) return;
+
+        if (sheet && sheetFrost) {
+          const sr = sheet.getBoundingClientRect();
+          const sx = (lastX - sr.left).toFixed(1) + 'px';
+          const sy = (lastY - sr.top).toFixed(1) + 'px';
+          sheetFrost.style.setProperty('--gx', sx);
+          sheetFrost.style.setProperty('--gy', sy);
+          if (sheetLens) {
+            sheetLens.style.setProperty('--gx', sx);
+            sheetLens.style.setProperty('--gy', sy);
+          }
+        }
+
+        for (let i = 0; i < navFrosts.length; i++) {
+          const frost = navFrosts[i];
+          const nav = frost.parentElement;
+          if (!nav) continue;
+          const nr = nav.getBoundingClientRect();
+          frost.style.setProperty('--nx', (lastX - nr.left).toFixed(1) + 'px');
+          frost.style.setProperty('--ny', (lastY - nr.top).toFixed(1) + 'px');
+        }
+      };
+
+      const setClearHold = (active) => {
+        clearActive = active;
+        root.classList.toggle('glass-clear-hold', active);
+        if (!active) activePointerId = null;
+      };
+
+      document.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
+        if (e.pointerType && e.pointerType === 'touch') return;
+        const target = e.target instanceof Element ? e.target : null;
+        if (target && target.closest('input, textarea, select, [contenteditable="true"], #authOverlay:not(.hidden), #addFormOverlay:not(.hidden), #vcSeekTrack')) {
+          return;
+        }
+        activePointerId = e.pointerId;
+        syncLens(e.clientX, e.clientY);
+        setClearHold(true);
+      }, { passive: true });
+
+      const releaseClearHold = (e) => {
+        if (!clearActive) return;
+        if (e && typeof e.pointerId === 'number' && activePointerId !== null && e.pointerId !== activePointerId) return;
+        setClearHold(false);
+      };
+
+      window.addEventListener('pointermove', (e) => {
+        lastX = e.clientX;
+        lastY = e.clientY;
+        if (!clearActive) return;
+        if ((e.buttons & 1) === 0) {
+          setClearHold(false);
+          return;
+        }
+        syncLens(e.clientX, e.clientY);
+      }, { passive: true });
+
+      window.addEventListener('scroll', () => {
+        if (clearActive) syncLens();
+      }, { passive: true });
+
+      window.addEventListener('pointerup', releaseClearHold, { passive: true });
+      window.addEventListener('pointercancel', releaseClearHold, { passive: true });
+      window.addEventListener('blur', () => setClearHold(false));
+      window.addEventListener('contextmenu', () => setClearHold(false));
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) setClearHold(false);
+      });
+    })();
+
     // =====================================================
     // 5.55) SUPABASE CONFIG (diinisialisasi sebelum plant tabs memanggil loadPlantStatus)
     // Ganti dua baris di bawah ini dengan URL & anon/publishable key
@@ -1754,9 +2014,9 @@
     function journalCardHtml(entry, index) {
       const isKertas = entry.plant_id === 'kertas';
       const colorClass = isKertas ? 'jcc-kertas' : 'jcc-krokot';
-      const pinColor = isKertas ? 'text-kertas-on-dark' : 'text-krokot-on-dark';
-      const numColor = isKertas ? 'color: var(--color-kertas-on-dark)' : 'color: var(--color-krokot-on-dark)';
-      const badgeClass = isKertas ? 'text-kertas-on-dark bg-kertas-on-dark/15' : 'text-krokot-on-dark bg-krokot-on-dark/15';
+      const pinColor = isKertas ? 'text-kertas' : 'text-krokot';
+      const numColor = isKertas ? 'color: var(--color-kertas)' : 'color: var(--color-krokot)';
+      const badgeClass = isKertas ? 'text-kertas bg-kertas/10 border border-kertas/20 font-semibold' : 'text-krokot bg-krokot/10 border border-krokot/20 font-semibold';
       const ownerName = entry.profiles?.name || 'Anggota';
       const canManage = currentUser && entry.user_id === currentUser.id;
       const isEven = index % 2 === 0;
@@ -1767,33 +2027,33 @@
 
       const hasMeasurements = (entry.height_cm != null) || (entry.leaf_count != null) || (entry.leaf_width_cm != null);
       const measurementHtml = hasMeasurements ? `
-        <div class="flex flex-wrap gap-1.5 mb-2.5 pt-2 border-t border-white/12">
-          ${entry.height_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono font-semibold bg-lime/15 text-lime px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>${entry.height_cm} cm</span>` : ''}
-          ${entry.leaf_count != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-white/10 text-cream/85 px-2 py-0.5 rounded-md"><i data-lucide="leaf" class="w-3 h-3"></i>${entry.leaf_count} daun</span>` : ''}
-          ${entry.leaf_width_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-white/10 text-cream/85 px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>lebar ${entry.leaf_width_cm} cm</span>` : ''}
+        <div class="flex flex-wrap gap-1.5 mb-2.5 pt-2 border-t border-ink/10">
+          ${entry.height_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono font-semibold bg-forest/10 text-forest border border-forest/15 px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>${entry.height_cm} cm</span>` : ''}
+          ${entry.leaf_count != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/[0.06] text-ink/80 border border-ink/10 px-2 py-0.5 rounded-md"><i data-lucide="leaf" class="w-3 h-3"></i>${entry.leaf_count} daun</span>` : ''}
+          ${entry.leaf_width_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/[0.06] text-ink/80 border border-ink/10 px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>lebar ${entry.leaf_width_cm} cm</span>` : ''}
         </div>` : '';
 
       return `
-        <div class="journal-pin-card ${posClass}" data-id="${entry.id}">
+        <div class="journal-pin-card ${posClass}" data-cursor-dark data-id="${entry.id}">
           <div class="journal-pin-card-inner">
             ${pinSvg}
             <div class="journal-content-card ${colorClass}">
               <span class="journal-card-number" style="${numColor}">${num}</span>
               <div class="flex items-center justify-between mb-2">
-                <span class="text-[10px] font-mono uppercase tracking-wider ${badgeClass} px-2.5 py-1 rounded-full">${plantLabel[entry.plant_id] || entry.plant_id}</span>
-                ${canManage ? `<button type="button" class="js-delete text-cream/65 hover:text-cream" data-id="${entry.id}" aria-label="Hapus update ini"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+                <span class="text-[10px] font-mono uppercase tracking-wider ${badgeClass} px-2.5 py-0.5 rounded-full">${plantLabel[entry.plant_id] || entry.plant_id}</span>
+                ${canManage ? `<button type="button" class="js-delete text-ink/45 hover:text-kertas transition-colors" data-id="${entry.id}" aria-label="Hapus update ini"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
               </div>
-              <p class="font-mono text-xs text-cream/65 mb-2">${formatDate(entry.date)} \u00B7 by ${escapeHtml(ownerName)}</p>
-              <div class="h-1.5 bg-white/15 rounded-full overflow-hidden mb-2">
-                <div class="h-full rounded-full" style="width:${stagePercent[entry.stage] || 0}%;background:${isKertas ? 'var(--color-kertas-on-dark)' : 'var(--color-krokot-on-dark)'}"></div>
+              <p class="font-mono text-xs text-ink/65 mb-2.5">${formatDate(entry.date)} \u00B7 by ${escapeHtml(ownerName)}</p>
+              <div class="h-1.5 bg-ink/10 rounded-full overflow-hidden mb-2">
+                <div class="h-full rounded-full" style="width:${stagePercent[entry.stage] || 0}%;background:${isKertas ? 'var(--color-kertas)' : 'var(--color-krokot)'}"></div>
               </div>
-              <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center justify-between mb-2.5">
                 <span class="text-xs font-semibold" style="${numColor}">${stageLabel[entry.stage] || entry.stage}</span>
-                <span class="inline-flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-cream/85">${conditionDotHtml(entry.condition)}${conditionLabel[entry.condition] || entry.condition}</span>
+                <span class="inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-ink/[0.06] border border-ink/12 text-ink/85">${conditionDotHtml(entry.condition)}${conditionLabel[entry.condition] || entry.condition}</span>
               </div>
               ${measurementHtml}
-              <p class="text-sm text-cream font-semibold leading-snug mb-1">${escapeHtml(entry.activity)}</p>
-              ${entry.notes ? `<p class="text-xs text-cream/75 leading-relaxed">${escapeHtml(entry.notes)}</p>` : ''}
+              <p class="text-sm text-ink font-semibold leading-snug mb-1">${escapeHtml(entry.activity)}</p>
+              ${entry.notes ? `<p class="text-xs text-ink-soft/80 leading-relaxed">${escapeHtml(entry.notes)}</p>` : ''}
             </div>
           </div>
         </div>`;
