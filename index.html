@@ -119,31 +119,29 @@
     fill: var(--color-lime);
   }
   ::selection { background: var(--color-lime); color: var(--color-ink); }
-  @keyframes bounce-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
-  .scroll-cue { animation: bounce-y 1.8s ease-in-out infinite; }
-  .jf-btn, .sf-btn, .cf-btn { color: rgba(247, 244, 234, 0.92); background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.30); text-shadow: none; }
-  .jf-btn:hover, .sf-btn:hover, .cf-btn:hover { background: rgba(255, 255, 255, 0.22); border-color: rgba(255, 255, 255, 0.50); color: #FFFFFF; box-shadow: 0 0 18px rgba(255, 255, 255, 0.18); }
-  .jf-btn.active, .sf-btn.active, .cf-btn.active { background: var(--color-lime); color: var(--color-ink); opacity: 1; border-color: var(--color-lime); font-weight: 600; box-shadow: 0 0 22px rgba(166, 224, 106, 0.44); text-shadow: none; }
+  .jf-btn, .sf-btn, .cf-btn {
+    color: rgba(247, 244, 234, 0.90);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.16);
+    text-shadow: none;
+    transition: background-color 0.16s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.16s ease, color 0.16s ease;
+  }
+  .jf-btn:hover, .sf-btn:hover, .cf-btn:hover { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.30); color: #F7F4EA; }
+  .jf-btn.active, .sf-btn.active, .cf-btn.active { background: var(--color-lime); color: var(--color-ink); opacity: 1; border-color: var(--color-lime); font-weight: 500; text-shadow: none; }
   .auth-tab { color: var(--color-ink); opacity: 0.55; }
-  .auth-tab.active { background: var(--color-cream); color: var(--color-ink); opacity: 1; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+  .auth-tab.active { background: var(--color-cream); color: var(--color-ink); opacity: 1; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); }
 
-  /* garis tipis ala blueprint/kisi teknis, dipakai sebagai tekstur latar yang subtle */
+  /* garis tipis kisi teknis */
   .bg-grid { background-image: linear-gradient(currentColor 1px, transparent 1px), linear-gradient(90deg, currentColor 1px, transparent 1px); background-size: 44px 44px; }
-
-  /* bingkai sudut ala viewfinder kamera — elemen visual khas di seluruh halaman */
-  .frame { position: relative; }
-  .frame::before, .frame::after { content: ''; position: absolute; width: 20px; height: 20px; pointer-events: none; }
-  .frame::before { top: -1px; left: -1px; border-top: 2px solid currentColor; border-left: 2px solid currentColor; }
-  .frame::after { bottom: -1px; right: -1px; border-bottom: 2px solid currentColor; border-right: 2px solid currentColor; }
 
   .stem { stroke-dasharray: 300; stroke-dashoffset: 300; }
   .navlink { position: relative; }
-  .navlink::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.3s ease; }
+  .navlink::after { content: ''; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
   .navlink:hover::after { transform: scaleX(1); transform-origin: left; }
 
-  #tabIndicator { transition: left .4s cubic-bezier(.65,0,.35,1), width .4s cubic-bezier(.65,0,.35,1), background-color .3s; }
+  #tabIndicator { transition: left 0.28s cubic-bezier(0.22, 1, 0.36, 1), width 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease; }
   @keyframes panelFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-  .panel-fade { animation: panelFade .35s ease-out both; }
+  .panel-fade { animation: panelFade 0.28s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
   /* ===== Pinned Paper Note Cards (Catatan Kertas Note di atas Sheet Glass) ===== */
   .journal-stagger-container {
@@ -156,7 +154,7 @@
     position: relative;
     width: 100%;
     color: var(--color-ink);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), z-index 0s;
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), z-index 0s;
     margin-bottom: 32px;
   }
   .journal-pin-card :where(h2, h3, li, p, span) {
@@ -164,13 +162,13 @@
   }
   .journal-pin-card:hover {
     z-index: 30 !important;
-    transform: scale(1.02) !important;
+    transform: translateY(-2px);
   }
   /* Mobile mini-zigzag */
-  .journal-pin-card.jpc-rotate-pos { transform: rotate(2.5deg); margin-left: 10px; margin-right: -10px; }
-  .journal-pin-card.jpc-rotate-neg { transform: rotate(-2.5deg); margin-right: 10px; margin-left: -10px; }
-  .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(2.5deg) scale(1.02) !important; }
-  .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-2.5deg) scale(1.02) !important; }
+  .journal-pin-card.jpc-rotate-pos { transform: rotate(2deg); margin-left: 8px; margin-right: -8px; }
+  .journal-pin-card.jpc-rotate-neg { transform: rotate(-2deg); margin-right: 8px; margin-left: -8px; }
+  .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(2deg) translateY(-2px); }
+  .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-2deg) translateY(-2px); }
 
   @media (min-width: 768px) {
     .journal-pin-card {
@@ -183,94 +181,86 @@
     }
     .journal-pin-card.jpc-left { left: 10%; }
     .journal-pin-card.jpc-right { right: 10%; left: auto; }
-    .journal-pin-card.jpc-rotate-pos { transform: rotate(4.5deg); }
-    .journal-pin-card.jpc-rotate-neg { transform: rotate(-4.5deg); }
-    .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(4.5deg) scale(1.04) !important; }
-    .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-4.5deg) scale(1.04) !important; }
+    .journal-pin-card.jpc-rotate-pos { transform: rotate(3.5deg); }
+    .journal-pin-card.jpc-rotate-neg { transform: rotate(-3.5deg); }
+    .journal-pin-card.jpc-rotate-pos:hover { transform: rotate(3.5deg) translateY(-3px); }
+    .journal-pin-card.jpc-rotate-neg:hover { transform: rotate(-3.5deg) translateY(-3px); }
   }
   .journal-pin-card-inner {
-    background: linear-gradient(175deg, #FFFDF7 0%, #F4EEDF 100%);
-    padding: 11px 12px 13px;
-    border-radius: 14px;
-    border: 1px solid rgba(23, 40, 31, 0.14);
+    background: linear-gradient(180deg, #FDFBF5 0%, #F4EEDF 100%);
+    padding: 8px;
+    border-radius: 16px;
+    border: 1px solid rgba(23, 40, 31, 0.12);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.92),
-      inset 0 -2px 6px rgba(138, 122, 88, 0.08),
-      0 18px 34px -8px rgba(8, 22, 14, 0.42),
-      0 6px 14px rgba(8, 22, 14, 0.22);
-    transition: box-shadow 0.28s ease;
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      0 14px 28px -8px rgba(8, 22, 14, 0.34),
+      0 4px 10px rgba(8, 22, 14, 0.16);
+    transition: box-shadow 0.22s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .journal-pin-card:hover .journal-pin-card-inner {
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.96),
-      inset 0 -2px 6px rgba(138, 122, 88, 0.06),
-      0 24px 44px -8px rgba(8, 22, 14, 0.48),
-      0 10px 20px rgba(8, 22, 14, 0.24);
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      0 18px 34px -8px rgba(8, 22, 14, 0.40),
+      0 6px 14px rgba(8, 22, 14, 0.20);
   }
   .journal-pin-icon {
     display: block;
-    width: 26px;
-    height: 26px;
-    margin: 0 auto 10px auto;
-    filter: drop-shadow(0 2px 3px rgba(13, 26, 19, 0.28));
+    width: 22px;
+    height: 22px;
+    margin: 2px auto 8px auto;
+    filter: drop-shadow(0 1px 2px rgba(13, 26, 19, 0.26));
   }
   .journal-content-card {
-    border-radius: 10px;
-    padding: 14px 15px 16px;
-    border: 1px solid rgba(23, 40, 31, 0.10);
-    border-top-width: 3px;
+    border-radius: 8px;
+    padding: 14px 16px 16px;
+    border: 1px solid rgba(23, 40, 31, 0.09);
+    border-top-width: 2px;
     position: relative;
     overflow: hidden;
-    background-color: #FCF9F0;
+    background-color: #FAF7EE;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0px,
       transparent 25px,
-      rgba(23, 40, 31, 0.06) 25px,
-      rgba(23, 40, 31, 0.06) 26px
+      rgba(23, 40, 31, 0.055) 25px,
+      rgba(23, 40, 31, 0.055) 26px
     );
     background-position: 0 8px;
   }
   .journal-content-card.jcc-kertas {
-    background-color: #FDF7F9;
-    border-color: rgba(163, 50, 96, 0.18);
+    background-color: #FCF8F9;
+    border-color: rgba(163, 50, 96, 0.14);
     border-top-color: #A33260;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0px,
       transparent 25px,
-      rgba(163, 50, 96, 0.07) 25px,
-      rgba(163, 50, 96, 0.07) 26px
+      rgba(163, 50, 96, 0.06) 25px,
+      rgba(163, 50, 96, 0.06) 26px
     );
   }
   .journal-content-card.jcc-krokot {
-    background-color: #FCF7EE;
-    border-color: rgba(156, 90, 28, 0.18);
+    background-color: #FBF7F0;
+    border-color: rgba(156, 90, 28, 0.14);
     border-top-color: #9C5A1C;
     background-image: repeating-linear-gradient(
       to bottom,
       transparent 0px,
       transparent 25px,
-      rgba(156, 90, 28, 0.07) 25px,
-      rgba(156, 90, 28, 0.07) 26px
+      rgba(156, 90, 28, 0.06) 25px,
+      rgba(156, 90, 28, 0.06) 26px
     );
   }
   .journal-card-number {
     font-family: var(--font-display);
-    font-weight: 800;
+    font-weight: 600;
     font-variant-numeric: tabular-nums;
-    font-size: 1.65rem;
+    font-size: 1.25rem;
     line-height: 1;
-    margin-bottom: 10px;
-    display: block;
-    letter-spacing: -0.02em;
-  }
-  @keyframes dashFlow {
-    to { stroke-dashoffset: -140; }
+    letter-spacing: -0.01em;
   }
   .journal-dash-path {
-    stroke-dasharray: 8 6;
-    animation: dashFlow 3s linear infinite;
+    stroke-dasharray: 6 6;
   }
   /* ===== End Pinned Paper Note Cards ===== */
 
@@ -314,12 +304,10 @@
   }
   .liquid-glass-nav {
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.48);
+    border: 1px solid rgba(255, 255, 255, 0.24);
     box-shadow:
-      inset 0 1px 1px rgba(255, 255, 255, 0.72),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.18),
-      0 10px 32px rgba(8, 22, 14, 0.20),
-      0 0 28px rgba(166, 224, 106, 0.16);
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 8px 24px rgba(8, 22, 14, 0.18);
     color: var(--color-cream);
   }
   .liquid-glass-nav > :not(.liquid-glass-nav-frost) {
@@ -332,9 +320,9 @@
     z-index: 0;
     pointer-events: none;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(16, 40, 26, 0.24) 100%);
-    backdrop-filter: blur(16px) saturate(190%) brightness(1.08);
-    -webkit-backdrop-filter: blur(16px) saturate(190%) brightness(1.08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(16, 40, 26, 0.28) 100%);
+    backdrop-filter: blur(16px) saturate(160%) brightness(1.04);
+    -webkit-backdrop-filter: blur(16px) saturate(160%) brightness(1.04);
     -webkit-mask-image: radial-gradient(
       circle var(--glass-clear-r) at var(--nx, -999px) var(--ny, -999px),
       rgba(0, 0, 0, var(--glass-clear-core)) 0%,
@@ -349,21 +337,19 @@
       rgba(0, 0, 0, var(--glass-clear-mid)) 74%,
       rgba(0, 0, 0, 1) 100%
     );
-    transition: background 0.3s ease;
+    transition: background-color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .liquid-glass-nav.scrolled {
-    border-color: rgba(255, 255, 255, 0.54);
+    border-color: rgba(255, 255, 255, 0.28);
     box-shadow:
-      inset 0 1px 1px rgba(255, 255, 255, 0.78),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.20),
-      0 14px 40px rgba(8, 22, 14, 0.30),
-      0 0 34px rgba(166, 224, 106, 0.22);
+      inset 0 1px 0 rgba(255, 255, 255, 0.32),
+      0 10px 28px rgba(8, 22, 14, 0.24);
   }
   .liquid-glass-nav.scrolled > .liquid-glass-nav-frost {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(14, 34, 22, 0.42) 100%);
+    background: linear-gradient(180deg, rgba(20, 46, 30, 0.42) 0%, rgba(14, 34, 22, 0.54) 100%);
   }
   body.video-live .liquid-glass-nav {
-    border-color: rgba(255, 255, 255, 0.38);
+    border-color: rgba(255, 255, 255, 0.22);
   }
   body.video-live .liquid-glass-nav > .liquid-glass-nav-frost {
     backdrop-filter: none;
@@ -376,21 +362,17 @@
     position: relative;
     padding: 0.35rem 0.75rem;
     border-radius: 9999px;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color 0.16s cubic-bezier(0.22, 1, 0.36, 1), color 0.16s ease;
   }
   .nav-pill-link:hover {
-    background: rgba(166, 224, 106, 0.20);
-    color: var(--color-lime);
-    box-shadow: 0 0 16px rgba(166, 224, 106, 0.22);
+    background: rgba(255, 255, 255, 0.10);
+    color: var(--color-cream);
   }
   .liquid-glass-sheet {
-    border-top: 1.5px solid rgba(255, 255, 255, 0.68);
+    border-top: 1px solid rgba(255, 255, 255, 0.42);
     box-shadow:
-      inset 0 2px 1px rgba(255, 255, 255, 0.78),
-      inset 0 28px 68px rgba(255, 255, 255, 0.10),
-      inset 0 1px 40px rgba(166, 224, 106, 0.14),
-      0 -16px 52px rgba(166, 224, 106, 0.24),
-      0 -4px 20px rgba(255, 255, 255, 0.28);
+      inset 0 1px 0 rgba(255, 255, 255, 0.48),
+      0 -10px 30px rgba(8, 22, 14, 0.18);
   }
   .liquid-glass-sheet > :not(.liquid-glass-sheet-frost):not(.liquid-glass-sheet-lens) {
     position: relative;
@@ -446,76 +428,46 @@
     text-shadow: 0 1px 14px rgba(8, 22, 14, 0.48), 0 1px 2px rgba(8, 22, 14, 0.34);
   }
   .glass-subcard {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.36);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.55),
-      inset 0 0 26px rgba(255, 255, 255, 0.06),
-      0 10px 30px rgba(8, 22, 14, 0.18),
-      0 0 24px rgba(166, 224, 106, 0.10);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(14, 34, 22, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 8px 24px rgba(8, 22, 14, 0.16);
+    transition: border-color 0.18s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.18s ease;
   }
   .glass-subcard:hover {
-    border-color: rgba(166, 224, 106, 0.58);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.72),
-      0 14px 36px rgba(8, 22, 14, 0.24),
-      0 0 32px rgba(166, 224, 106, 0.24);
+    border-color: rgba(255, 255, 255, 0.30);
+    background: rgba(14, 34, 22, 0.42);
   }
   .glass-divider {
     height: 1px;
     max-width: 72rem;
     margin: 0 auto;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.44) 28%, rgba(166, 224, 106, 0.52) 50%, rgba(255, 255, 255, 0.44) 72%, transparent 100%);
-    box-shadow: 0 0 18px rgba(166, 224, 106, 0.26);
+    background: rgba(255, 255, 255, 0.14);
   }
   /* ===== End Liquid Glass ===== */
 
   /* ===== Editorial Video Deck ===== */
-  /* R-11/R-12/R-13: crisp neutral hairline frame without blur/glow clutter */
   .cinema-frame {
     background: rgba(11, 20, 14, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.24);
+    border: 1px solid rgba(255, 255, 255, 0.16);
   }
 
-  /* ===== Our Story Modular Liquid Glass Bento (Konsep B) ===== */
-  .story-crystal-pill {
-    background: linear-gradient(135deg, rgba(16, 36, 24, 0.58) 0%, rgba(16, 36, 24, 0.38) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.36);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48), 0 6px 20px rgba(8, 20, 13, 0.20);
-  }
+  /* ===== Our Story Modular Bento ===== */
   .story-crystal-card {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.19) 0%, rgba(14, 34, 22, 0.36) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    box-shadow:
-      inset 0 1.5px 1px rgba(255, 255, 255, 0.62),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.14),
-      0 18px 44px rgba(8, 22, 14, 0.24),
-      0 0 32px rgba(166, 224, 106, 0.14);
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    background: rgba(14, 34, 22, 0.36);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 10px 26px rgba(8, 22, 14, 0.18);
+    transition: border-color 0.18s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.18s ease;
   }
   .story-crystal-strip {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.17) 0%, rgba(14, 34, 22, 0.36) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.34);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.56),
-      0 10px 28px rgba(8, 22, 14, 0.20),
-      0 0 24px rgba(166, 224, 106, 0.11);
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    background: rgba(14, 34, 22, 0.36);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 20px rgba(8, 22, 14, 0.16);
+    transition: border-color 0.18s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.18s ease;
   }
   .story-crystal-card:hover,
   .story-crystal-strip:hover {
-    border-color: rgba(166, 224, 106, 0.52);
-    box-shadow:
-      inset 0 1.5px 1px rgba(255, 255, 255, 0.72),
-      0 18px 44px rgba(8, 22, 14, 0.26),
-      0 0 32px rgba(166, 224, 106, 0.22);
-  }
-  .story-badge-num {
-    background: rgba(13, 28, 19, 0.56);
-    border: 1px solid rgba(255, 255, 255, 0.32);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
-    font-variant-numeric: tabular-nums;
+    border-color: rgba(255, 255, 255, 0.32);
+    background: rgba(14, 34, 22, 0.44);
   }
 
   /* ===== Prevent accidental text highlight & suppress ambient haze inside held crystal spotlight ===== */
@@ -544,14 +496,7 @@
     );
   }
   .hero-title-shadow {
-    text-shadow: 0 3px 28px rgba(10, 22, 14, 0.58), 0 1px 4px rgba(10, 22, 14, 0.44);
-  }
-  .hero-wordmark-gradient {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.84) 60%, rgba(235, 255, 214, 0.46) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 6px 28px rgba(166, 224, 106, 0.22));
+    text-shadow: 0 2px 20px rgba(10, 22, 14, 0.45);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -572,12 +517,12 @@
   </div>
 
   <!-- ================= NAVBAR (Smoky Botanical Liquid Glass Floating Island) ================= -->
-  <nav id="siteNav" class="fixed top-0 inset-x-0 z-50 pt-3 md:pt-4 px-3 sm:px-6 pointer-events-none transition-all duration-300">
-    <div id="navInner" class="pointer-events-auto max-w-6xl mx-auto rounded-full liquid-glass-nav transition-all duration-300 ease-out flex items-center justify-between px-4 sm:px-6 md:px-7 py-2 md:py-2.5">
+  <nav id="siteNav" class="fixed top-0 inset-x-0 z-50 pt-3 md:pt-4 px-3 sm:px-6 pointer-events-none">
+    <div id="navInner" class="pointer-events-auto max-w-6xl mx-auto rounded-full liquid-glass-nav transition-[max-width,padding,background-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] flex items-center justify-between px-4 sm:px-6 md:px-7 py-2 md:py-2.5">
       <span class="liquid-glass-nav-frost" aria-hidden="true"></span>
       <a href="#home" class="flex items-center gap-2.5 font-display font-semibold text-base md:text-lg tracking-tight shrink-0 group mr-2 text-cream">
-        <span class="w-8 h-8 rounded-full bg-white/15 border border-white/25 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 shrink-0">
-          <i data-lucide="leaf" class="w-4 h-4 text-lime"></i>
+        <span class="w-8 h-8 rounded-full bg-white/12 border border-white/20 flex items-center justify-center shrink-0">
+          <i data-lucide="leaf" class="w-4 h-4 text-cream"></i>
         </span>
         <span class="group-hover:text-lime transition-colors whitespace-nowrap">Growth Together</span>
       </a>
@@ -611,7 +556,7 @@
     </div>
 
     <!-- Floating Glass Mobile Menu Card -->
-    <div id="mobileMenu" class="pointer-events-auto lg:hidden max-h-0 opacity-0 pointer-events-none scale-95 overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] max-w-sm sm:max-w-md mx-auto mt-2.5 rounded-3xl liquid-glass-nav shadow-2xl">
+    <div id="mobileMenu" class="pointer-events-auto lg:hidden max-h-0 opacity-0 pointer-events-none scale-95 overflow-hidden transition-[max-height,opacity,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] max-w-sm sm:max-w-md mx-auto mt-2.5 rounded-3xl liquid-glass-nav shadow-xl">
       <span class="liquid-glass-nav-frost" aria-hidden="true"></span>
       <div class="p-4 sm:p-5 flex flex-col gap-1 text-sm font-medium text-cream">
         <a href="#home" class="py-2.5 px-3.5 rounded-2xl hover:bg-white/10 hover:text-lime transition-colors flex items-center justify-between">
@@ -666,11 +611,11 @@
 
       <form id="signInForm" class="space-y-4">
         <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Email</label>
+          <label class="block text-xs font-medium text-ink/70 mb-2">Email</label>
           <input type="email" name="email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
         </div>
         <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Password</label>
+          <label class="block text-xs font-medium text-ink/70 mb-2">Password</label>
           <input type="password" name="password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
         </div>
         <p id="signInError" class="text-xs text-kertas hidden"></p>
@@ -679,15 +624,15 @@
 
       <form id="registerForm" class="space-y-4 hidden">
         <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Name</label>
+          <label class="block text-xs font-medium text-ink/70 mb-2">Name</label>
           <input type="text" name="name" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
         </div>
         <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Email</label>
+          <label class="block text-xs font-medium text-ink/70 mb-2">Email</label>
           <input type="email" name="email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
         </div>
         <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Password</label>
+          <label class="block text-xs font-medium text-ink/70 mb-2">Password</label>
           <input type="password" name="password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-cream focus:border-forest focus:outline-none">
         </div>
         <p id="registerError" class="text-xs text-kertas hidden"></p>
@@ -708,16 +653,16 @@
       <h1 class="hero-title hero-title-shadow font-display font-semibold text-white tracking-tight leading-[1.06] text-[2.15rem] sm:text-5xl md:text-[3.75rem]">
         Growing Plants,<br>
         as One
-        <span class="hero-inline-pill inline-flex align-middle w-[58px] sm:w-[84px] h-[30px] sm:h-[42px] rounded-xl overflow-hidden border border-white/75 shadow-[0_0_24px_rgba(255,255,255,0.32)] mx-1.5 -translate-y-1 bg-forest will-change-transform">
+        <span class="hero-inline-pill inline-flex align-middle w-[58px] sm:w-[84px] h-[30px] sm:h-[42px] rounded-lg overflow-hidden border border-white/50 shadow-sm mx-1.5 -translate-y-1 bg-forest will-change-transform">
           <img src="images/perkembangan-4-bloom.jpg" alt="Bougainvillea mekar" class="w-full h-full object-cover">
         </span>
-        Mission.
+        Mission
       </h1>
       <p class="hero-sub hero-title-shadow mt-4 text-xs sm:text-sm md:text-base text-white/95 max-w-lg mx-auto leading-relaxed">Proyek kolaborasi menanam Bougainvillea &amp; Portulaca oleh Kelompok 4 · X TE 3, SMK Negeri 2 Purwokerto.</p>
       <div class="hero-ctas mt-6 flex flex-wrap justify-center gap-3">
-        <a href="#story" data-magnetic="5" data-cursor-dark class="inline-flex items-center gap-3 bg-white/95 hover:bg-white text-ink pl-4 pr-1.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold shadow-[0_0_28px_rgba(255,255,255,0.36)] transition-colors duration-200">
+        <a href="#story" data-magnetic="5" data-cursor-dark class="inline-flex items-center gap-3 bg-cream hover:bg-white text-ink pl-4 pr-1.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold shadow-sm transition-colors duration-150">
           <span>Explore Our Project</span>
-          <span class="w-7 h-7 rounded-lg bg-ink text-cream inline-flex items-center justify-center">
+          <span class="w-7 h-7 rounded-md bg-ink text-cream inline-flex items-center justify-center">
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </span>
         </a>
@@ -751,7 +696,7 @@
         </nav>
 
         <div class="mt-6 sm:mt-8 overflow-hidden" aria-hidden="true">
-          <div class="hero-terrava-wordmark hero-wordmark-gradient font-display font-extrabold tracking-[-0.045em] leading-[0.88] text-center whitespace-nowrap select-none will-change-transform pb-1 text-[2.2rem] sm:text-[4.6rem] md:text-[6.2rem] lg:text-[7.8rem]">
+          <div class="hero-terrava-wordmark font-display font-semibold tracking-[-0.03em] leading-[0.88] text-center whitespace-nowrap select-none will-change-transform pb-1 text-cream/90 text-[2.2rem] sm:text-[4.6rem] md:text-[6.2rem] lg:text-[7.8rem]">
             Growth Together
           </div>
         </div>
@@ -766,61 +711,57 @@
       <div class="relative z-20 max-w-6xl mx-auto">
         <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full story-crystal-pill mb-4">
-              <span class="text-xs font-medium tracking-[0.06em] text-lime">Our Story</span>
-              <span class="text-white/35" aria-hidden="true">·</span>
-              <span class="text-xs text-cream/90">X TE 3</span>
-            </div>
+            <p class="text-xs font-medium text-lime mb-3">Our Story · X TE 3</p>
             <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight text-cream max-w-xl">Growing Something Bigger Than Plants</h2>
           </div>
-          <p class="text-xs sm:text-sm font-medium text-cream/85 md:pb-1 shrink-0">Teknik Elektronika Industri · SMKN 2 Purwokerto</p>
+          <p class="text-xs sm:text-sm font-medium text-cream/80 md:pb-1 shrink-0">Teknik Elektronika Industri · SMKN 2 Purwokerto</p>
         </div>
 
         <div data-reveal class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
           <div class="lg:col-span-7 flex flex-col gap-5">
-            <article class="story-crystal-card rounded-3xl p-6 sm:p-7 flex-1">
-              <div class="flex items-center gap-3 mb-3">
-                <span class="story-badge-num text-xs font-semibold text-lime px-2.5 py-0.5 rounded-full shrink-0">01</span>
+            <article class="story-crystal-card rounded-2xl p-6 flex-1">
+              <div class="flex items-baseline gap-2.5 mb-3">
+                <span class="font-mono text-xs font-medium text-lime tabular-nums shrink-0">01</span>
                 <h3 class="font-display font-semibold text-base sm:text-lg text-cream">Dari Tugas Kelas Jadi Tanggung Jawab Nyata</h3>
               </div>
-              <p class="text-sm sm:text-[15px] leading-relaxed text-cream/90">Semua berawal dari tugas sederhana: menanam dan merawat tumbuhan di pembelajaran Teknik Elektronika Industri kelas X TE 3. Untuk Kelompok 4, enam anggota dibagi ke dua sub-tim merawat <em>Bougainvillea</em> dan <em>Portulaca</em>, belajar merawat sesuatu yang benar-benar hidup.</p>
+              <p class="text-sm sm:text-[15px] leading-relaxed text-cream/85">Semua berawal dari tugas sederhana: menanam dan merawat tumbuhan di pembelajaran Teknik Elektronika Industri kelas X TE 3. Untuk Kelompok 4, enam anggota dibagi ke dua sub-tim merawat <em>Bougainvillea</em> dan <em>Portulaca</em>, belajar merawat sesuatu yang benar-benar hidup.</p>
             </article>
 
-            <article class="story-crystal-card rounded-3xl p-6 sm:p-7 flex-1">
-              <div class="flex items-center gap-3 mb-3">
-                <span class="story-badge-num text-xs font-semibold text-lime px-2.5 py-0.5 rounded-full shrink-0">02</span>
+            <article class="story-crystal-card rounded-2xl p-6 flex-1">
+              <div class="flex items-baseline gap-2.5 mb-3">
+                <span class="font-mono text-xs font-medium text-lime tabular-nums shrink-0">02</span>
                 <h3 class="font-display font-semibold text-base sm:text-lg text-cream">Ritme Rawat, Layu, Lalu Tumbuh Bareng</h3>
               </div>
-              <p class="text-sm sm:text-[15px] leading-relaxed text-cream/90">Tidak ada yang instan soal menanam. Ada hari penyiraman nyaris terlewat, ada daun yang sempat layu sebelum pulih lagi, dan ada jadwal yang harus saling dikoordinasikan. Justru proses itulah yang melatih komunikasi tim dan konsistensi.</p>
+              <p class="text-sm sm:text-[15px] leading-relaxed text-cream/85">Tidak ada yang instan soal menanam. Ada hari penyiraman nyaris terlewat, ada daun yang sempat layu sebelum pulih lagi, dan ada jadwal yang harus saling dikoordinasikan. Justru proses itulah yang melatih komunikasi tim dan konsistensi.</p>
             </article>
           </div>
 
           <div class="lg:col-span-5 flex flex-col justify-between gap-4">
             <div class="story-crystal-strip rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-5 flex-1">
               <div>
-                <p class="text-xs font-medium text-lime mb-1">Keanekaragaman</p>
+                <p class="text-xs font-medium text-cream/70 mb-1">Keanekaragaman</p>
                 <h3 class="font-display font-semibold text-base sm:text-lg text-cream">2 Spesies Tanaman</h3>
-                <p class="text-xs text-cream/80 mt-1">Bougainvillea &amp; Portulaca dalam dua jalur rawat.</p>
+                <p class="text-xs text-cream/75 mt-1">Bougainvillea &amp; Portulaca dalam dua jalur rawat.</p>
               </div>
-              <span class="font-display font-semibold text-3xl sm:text-4xl text-cream/95 tabular-nums shrink-0">02</span>
+              <span class="font-display font-medium text-3xl sm:text-4xl text-cream/90 tabular-nums shrink-0">02</span>
             </div>
 
             <div class="story-crystal-strip rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-5 flex-1">
               <div>
-                <p class="text-xs font-medium text-lime mb-1">Kolaborasi</p>
+                <p class="text-xs font-medium text-cream/70 mb-1">Kolaborasi</p>
                 <h3 class="font-display font-semibold text-base sm:text-lg text-cream">6 Anggota Tim</h3>
-                <p class="text-xs text-cream/80 mt-1">Membagi jadwal siram, cek tanah, dan catatan harian.</p>
+                <p class="text-xs text-cream/75 mt-1">Membagi jadwal siram, cek tanah, dan catatan harian.</p>
               </div>
-              <span class="font-display font-semibold text-3xl sm:text-4xl text-cream/95 tabular-nums shrink-0">06</span>
+              <span class="font-display font-medium text-3xl sm:text-4xl text-cream/90 tabular-nums shrink-0">06</span>
             </div>
 
             <div class="story-crystal-strip rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-5 flex-1">
               <div>
-                <p class="text-xs font-medium text-lime mb-1">Komitmen</p>
+                <p class="text-xs font-medium text-cream/70 mb-1">Komitmen</p>
                 <h3 class="font-display font-semibold text-base sm:text-lg text-cream">1 Tujuan Bersama</h3>
-                <p class="text-xs text-cream/80 mt-1">Konsisten menjaga pertumbuhan tanaman sejak hari pertama.</p>
+                <p class="text-xs text-cream/75 mt-1">Konsisten menjaga pertumbuhan tanaman sejak hari pertama.</p>
               </div>
-              <span class="font-display font-semibold text-3xl sm:text-4xl text-cream/95 tabular-nums shrink-0">01</span>
+              <span class="font-display font-medium text-3xl sm:text-4xl text-cream/90 tabular-nums shrink-0">01</span>
             </div>
           </div>
         </div>
@@ -834,14 +775,14 @@
       <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
       <div class="relative z-20 max-w-3xl mx-auto">
         <div data-reveal class="max-w-xl">
-          <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-4">Our Plants</p>
+          <p class="text-xs font-medium text-lime mb-3">Our Plants</p>
           <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight text-cream">Two Species, One Mission</h2>
         </div>
 
-        <div data-reveal class="relative mt-10 inline-flex p-1 rounded-full bg-white/14 border border-white/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.42),0_0_24px_rgba(166,224,106,0.14)]">
-          <div id="tabIndicator" class="absolute top-1 bottom-1 rounded-full shadow-[0_0_18px_rgba(255,255,255,0.28)]"></div>
-          <button type="button" class="plant-tab relative z-10 px-6 py-2.5 rounded-full text-sm font-semibold transition-colors" data-plant="kertas">Bougainvillea</button>
-          <button type="button" class="plant-tab relative z-10 px-6 py-2.5 rounded-full text-sm font-semibold transition-colors" data-plant="krokot">Portulaca</button>
+        <div data-reveal class="relative mt-8 inline-flex p-1 rounded-full bg-white/10 border border-white/20">
+          <div id="tabIndicator" class="absolute top-1 bottom-1 rounded-full"></div>
+          <button type="button" class="plant-tab relative z-10 px-6 py-2 rounded-full text-sm font-semibold transition-colors" data-plant="kertas">Bougainvillea</button>
+          <button type="button" class="plant-tab relative z-10 px-6 py-2 rounded-full text-sm font-semibold transition-colors" data-plant="krokot">Portulaca</button>
         </div>
 
         <div id="plantPanel" data-reveal class="mt-8 grid sm:grid-cols-2 gap-7 sm:gap-8 items-stretch"></div>
@@ -855,15 +796,15 @@
       <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
       <div class="relative z-20 max-w-6xl mx-auto">
         <div data-reveal id="journalHint" class="rounded-2xl glass-subcard px-4 py-3 flex items-center gap-3 mb-8 max-w-2xl">
-          <i data-lucide="sparkles" class="w-4 h-4 text-lime shrink-0"></i>
-          <p class="text-xs text-cream/90 flex-1">Baru di sini? Tambahkan update pertamamu buat mulai memantau tanaman.</p>
-          <button type="button" id="dismissHint" class="text-cream/70 hover:text-cream shrink-0" aria-label="Tutup"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+          <i data-lucide="sprout" class="w-4 h-4 text-cream/75 shrink-0"></i>
+          <p class="text-xs text-cream/85 flex-1">Tambahkan update baru untuk mencatat kondisi dan pertumbuhan tanaman.</p>
+          <button type="button" id="dismissHint" class="text-cream/65 hover:text-cream shrink-0" aria-label="Tutup"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
         </div>
 
         <div data-reveal class="max-w-lg">
-          <div class="flex items-center gap-3 mb-4">
-            <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase">Plant Monitoring</p>
-            <span id="liveIndicator" class="inline-flex items-center gap-1.5 text-[11px] font-mono text-cream/80">
+          <div class="flex items-center gap-3 mb-3">
+            <p class="text-xs font-medium text-lime">Plant Monitoring</p>
+            <span id="liveIndicator" class="inline-flex items-center gap-1.5 text-[11px] font-mono text-cream/75">
               <span id="liveDot" class="w-1.5 h-1.5 rounded-full bg-white/35"></span>
               <span id="liveText">Connecting…</span>
             </span>
@@ -872,62 +813,62 @@
           <p id="latestUpdateLine" class="mt-3 text-sm font-medium text-lime min-h-[1.25rem]"></p>
         </div>
 
-        <button id="openAddForm" type="button" data-magnetic="5" data-cursor-dark class="mt-6 w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-lime text-ink px-7 py-4 rounded-full text-base font-semibold hover:bg-white transition-colors shadow-[0_0_28px_rgba(166,224,106,0.45)] hover:shadow-[0_0_36px_rgba(166,224,106,0.65)]">
-          <i data-lucide="plus" class="w-5 h-5"></i> Add Monitoring Update
+        <button id="openAddForm" type="button" data-magnetic="5" data-cursor-dark class="mt-6 w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-lime text-ink px-6 py-3.5 rounded-full text-sm sm:text-base font-semibold hover:bg-cream transition-colors shadow-sm">
+          <i data-lucide="plus" class="w-4 h-4"></i> Add Monitoring Update
         </button>
 
-        <p class="mt-10 text-xs font-mono uppercase tracking-wider text-cream/75 mb-3">Plant Status</p>
+        <p class="mt-10 text-xs font-medium text-cream/75 mb-3">Plant Status</p>
         <div id="plantStatusMini" class="grid sm:grid-cols-2 gap-3 mb-10 max-w-2xl"></div>
 
-        <p class="text-xs font-mono uppercase tracking-wider text-cream/75 mb-3">Team Leaderboard</p>
+        <p class="text-xs font-medium text-cream/75 mb-3">Team Leaderboard</p>
         <div id="leaderboardList" class="rounded-2xl glass-subcard divide-y divide-white/15 mb-10 max-w-2xl overflow-hidden"></div>
 
         <div class="flex items-center justify-between mb-4">
-          <p class="text-xs font-mono uppercase tracking-wider text-cream/75">Journal</p>
+          <p class="text-xs font-medium text-cream/75">Journal</p>
           <button type="button" id="toggleFilters" class="text-xs text-lime hover:text-white flex items-center gap-1 font-medium transition-colors">Filter &amp; search <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i></button>
         </div>
 
         <div id="filterPanel" class="hidden mb-6 space-y-3">
           <div class="flex flex-wrap gap-2" id="plantFilters">
-            <button type="button" class="jf-btn active px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="semua">All Plants</button>
-            <button type="button" class="jf-btn px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="kertas">Bougainvillea</button>
-            <button type="button" class="jf-btn px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="krokot">Portulaca</button>
+            <button type="button" class="jf-btn active px-4 py-2 rounded-full text-xs font-medium border" data-filter="semua">All Plants</button>
+            <button type="button" class="jf-btn px-4 py-2 rounded-full text-xs font-medium border" data-filter="kertas">Bougainvillea</button>
+            <button type="button" class="jf-btn px-4 py-2 rounded-full text-xs font-medium border" data-filter="krokot">Portulaca</button>
           </div>
           <div class="flex flex-wrap gap-2" id="stageFilters">
-            <button type="button" class="sf-btn active px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="semua">All Stages</button>
-            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="seed">Seed</button>
-            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="sprout">Sprout</button>
-            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="growing">Growing</button>
-            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="mature">Mature</button>
-            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="bloom">Bloom</button>
+            <button type="button" class="sf-btn active px-4 py-2 rounded-full text-xs font-medium border" data-filter="semua">All Stages</button>
+            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border" data-filter="seed">Seed</button>
+            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border" data-filter="sprout">Sprout</button>
+            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border" data-filter="growing">Growing</button>
+            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border" data-filter="mature">Mature</button>
+            <button type="button" class="sf-btn px-4 py-2 rounded-full text-xs font-medium border" data-filter="bloom">Bloom</button>
           </div>
           <div class="flex flex-wrap items-center gap-x-8 gap-y-3">
             <div class="flex flex-wrap gap-2" id="conditionFilters">
-              <button type="button" class="cf-btn active px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="semua">All Conditions</button>
-              <button type="button" class="cf-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="healthy"><span class="w-1.5 h-1.5 rounded-full" style="background:#4ADE80"></span>Healthy</button>
-              <button type="button" class="cf-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="attention"><span class="w-1.5 h-1.5 rounded-full" style="background:#FBBF24"></span>Needs Attention</button>
-              <button type="button" class="cf-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="recovering"><span class="w-1.5 h-1.5 rounded-full" style="background:#60A5FA"></span>Recovering</button>
-              <button type="button" class="cf-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border transition-all" data-filter="critical"><span class="w-1.5 h-1.5 rounded-full" style="background:#F87171"></span>Critical</button>
+              <button type="button" class="cf-btn active px-4 py-2 rounded-full text-xs font-medium border" data-filter="semua">All Conditions</button>
+              <button type="button" class="cf-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border" data-filter="healthy"><span class="w-1.5 h-1.5 rounded-full" style="background:#4ADE80"></span>Healthy</button>
+              <button type="button" class="cf-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border" data-filter="attention"><span class="w-1.5 h-1.5 rounded-full" style="background:#FBBF24"></span>Needs Attention</button>
+              <button type="button" class="cf-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border" data-filter="recovering"><span class="w-1.5 h-1.5 rounded-full" style="background:#60A5FA"></span>Recovering</button>
+              <button type="button" class="cf-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium border" data-filter="critical"><span class="w-1.5 h-1.5 rounded-full" style="background:#F87171"></span>Critical</button>
             </div>
             <div class="relative flex-1 min-w-[180px] max-w-xs">
               <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-cream/70"></i>
-              <input id="journalSearch" type="text" placeholder="Search activity / notes…" class="w-full border border-white/30 rounded-full pl-10 pr-4 py-2 text-xs bg-white/14 text-cream placeholder:text-cream/65 focus:border-lime focus:outline-none shadow-[inset_0_1px_0_rgba(255,255,255,0.28)]">
+              <input id="journalSearch" type="text" placeholder="Search" class="w-full border border-white/20 rounded-full pl-10 pr-4 py-2 text-xs bg-white/10 text-cream placeholder:text-cream/60 focus:border-lime focus:outline-none">
             </div>
           </div>
         </div>
 
         <div id="journalGrid" class="journal-stagger-container"><svg id="journalSvgPath" class="absolute top-0 left-0 w-full h-full pointer-events-none hidden md:block z-0" preserveAspectRatio="none"></svg></div>
 
-        <div id="journalEmpty" class="hidden mt-10 text-center py-16 px-6 border border-dashed border-white/35 glass-subcard rounded-2xl text-cream">
-          <i data-lucide="sprout" class="w-8 h-8 mx-auto text-lime/90 mb-4"></i>
-          <p class="font-display font-semibold text-lg">The journey has just begun.</p>
-          <p class="text-sm text-cream/85 mt-2 max-w-sm mx-auto">Belum ada catatan perkembangan tanaman. Pakai tombol <span class="font-semibold text-lime">Add Monitoring Update</span> di atas untuk menulis update pertama.</p>
+        <div id="journalEmpty" class="hidden mt-10 text-center py-16 px-6 border border-dashed border-white/25 glass-subcard rounded-2xl text-cream">
+          <i data-lucide="sprout" class="w-8 h-8 mx-auto text-cream/75 mb-4"></i>
+          <p class="font-display font-semibold text-lg">The journey has just begun</p>
+          <p class="text-sm text-cream/80 mt-2 max-w-sm mx-auto">Belum ada catatan perkembangan tanaman. Pakai tombol <span class="font-semibold text-lime">Add Monitoring Update</span> di atas untuk menulis update pertama.</p>
         </div>
 
-        <div id="journalErrorState" class="hidden mt-10 text-center py-16 px-6 border border-dashed border-kertas-on-dark/45 glass-subcard rounded-2xl text-cream">
+        <div id="journalErrorState" class="hidden mt-10 text-center py-16 px-6 border border-dashed border-kertas-on-dark/35 glass-subcard rounded-2xl text-cream">
           <i data-lucide="wifi-off" class="w-8 h-8 mx-auto text-kertas-on-dark mb-4"></i>
-          <p class="font-display font-semibold text-lg">Unable to load plant data.</p>
-          <button type="button" id="journalRetryBtn" class="mt-6 inline-flex items-center gap-2 bg-lime text-ink px-6 py-3 rounded-full text-sm font-semibold hover:bg-white transition-colors shadow-[0_0_22px_rgba(166,224,106,0.42)]">
+          <p class="font-display font-semibold text-lg">Unable to load plant data</p>
+          <button type="button" id="journalRetryBtn" class="mt-6 inline-flex items-center gap-2 bg-lime text-ink px-6 py-3 rounded-full text-sm font-semibold hover:bg-cream transition-colors">
             <i data-lucide="refresh-cw" class="w-4 h-4"></i> Try Again
           </button>
         </div>
@@ -941,7 +882,7 @@
     <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
     <div class="relative z-20 max-w-6xl mx-auto">
       <div data-reveal class="max-w-xl">
-        <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-4">Our Team</p>
+        <p class="text-xs font-medium text-lime mb-3">Our Team</p>
         <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight text-cream">Meet Our Team</h2>
       </div>
 
@@ -975,10 +916,10 @@
               <div class="flex items-center justify-between pt-6 border-t border-white/20 mt-6">
                 <!-- Arrow navigation buttons -->
                 <div class="flex items-center gap-3">
-                  <button id="teamPrevBtn" type="button" data-magnetic="4" class="w-11 h-11 rounded-full bg-white/18 border border-white/35 text-cream flex items-center justify-center hover:bg-lime hover:text-ink hover:border-lime transition-colors shadow-sm hover:shadow-[0_0_22px_rgba(166,224,106,0.48)] cursor-pointer" aria-label="Previous team member">
+                  <button id="teamPrevBtn" type="button" data-magnetic="4" class="w-11 h-11 rounded-full bg-white/12 border border-white/25 text-cream flex items-center justify-center hover:bg-lime hover:text-ink hover:border-lime transition-colors cursor-pointer" aria-label="Previous team member">
                     <i data-lucide="arrow-left" class="w-5 h-5"></i>
                   </button>
-                  <button id="teamNextBtn" type="button" data-magnetic="4" class="w-11 h-11 rounded-full bg-white/18 border border-white/35 text-cream flex items-center justify-center hover:bg-lime hover:text-ink hover:border-lime transition-colors shadow-sm hover:shadow-[0_0_22px_rgba(166,224,106,0.48)] cursor-pointer" aria-label="Next team member">
+                  <button id="teamNextBtn" type="button" data-magnetic="4" class="w-11 h-11 rounded-full bg-white/12 border border-white/25 text-cream flex items-center justify-center hover:bg-lime hover:text-ink hover:border-lime transition-colors cursor-pointer" aria-label="Next team member">
                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
                   </button>
                 </div>
@@ -1000,39 +941,39 @@
     <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
     <div class="max-w-3xl mx-auto relative z-20">
       <div data-reveal class="max-w-xl">
-        <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-4">Timeline</p>
+        <p class="text-xs font-medium text-lime mb-3">Timeline</p>
         <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight text-cream">How We Got Here</h2>
       </div>
 
-      <div class="relative mt-16">
-        <div class="absolute left-[22px] top-2 bottom-2 w-px bg-white/25">
-          <div id="timelineProgress" class="absolute inset-x-0 top-0 bg-lime shadow-[0_0_14px_rgba(166,224,106,0.6)]" style="height:100%; transform: scaleY(0); transform-origin: top;"></div>
+      <div class="relative mt-12">
+        <div class="absolute left-[22px] top-2 bottom-2 w-px bg-white/20">
+          <div id="timelineProgress" class="absolute inset-x-0 top-0 bg-lime/80" style="height:100%; transform: scaleY(0); transform-origin: top;"></div>
         </div>
 
-        <div class="relative pl-16 pb-14" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/14 border border-lime/65 flex items-center justify-center font-mono text-xs text-lime shadow-[0_0_20px_rgba(166,224,106,0.28)]">01</div>
+        <div class="relative pl-16 pb-12" data-reveal>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">01</div>
           <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Planning</h3>
-          <p class="text-sm md:text-base text-cream/85 leading-relaxed">Menentukan tanaman dan pembagian tugas.</p>
+          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Menentukan tanaman dan pembagian tugas.</p>
         </div>
-        <div class="relative pl-16 pb-14" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/14 border border-lime/65 flex items-center justify-center font-mono text-xs text-lime shadow-[0_0_20px_rgba(166,224,106,0.28)]">02</div>
+        <div class="relative pl-16 pb-12" data-reveal>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">02</div>
           <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Planting</h3>
-          <p class="text-sm md:text-base text-cream/85 leading-relaxed">Melakukan proses penanaman.</p>
+          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Melakukan proses penanaman.</p>
         </div>
-        <div class="relative pl-16 pb-14" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/14 border border-lime/65 flex items-center justify-center font-mono text-xs text-lime shadow-[0_0_20px_rgba(166,224,106,0.28)]">03</div>
+        <div class="relative pl-16 pb-12" data-reveal>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">03</div>
           <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Caring</h3>
-          <p class="text-sm md:text-base text-cream/85 leading-relaxed">Merawat dan memantau perkembangan tanaman.</p>
+          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Merawat dan memantau perkembangan tanaman.</p>
         </div>
-        <div class="relative pl-16 pb-14" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/14 border border-lime/65 flex items-center justify-center font-mono text-xs text-lime shadow-[0_0_20px_rgba(166,224,106,0.28)]">04</div>
+        <div class="relative pl-16 pb-12" data-reveal>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">04</div>
           <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Growth</h3>
-          <p class="text-sm md:text-base text-cream/85 leading-relaxed">Mengamati perubahan dan perkembangan tanaman.</p>
+          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Mengamati perubahan dan perkembangan tanaman.</p>
         </div>
         <div class="relative pl-16" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/14 border border-lime/65 flex items-center justify-center font-mono text-xs text-lime shadow-[0_0_20px_rgba(166,224,106,0.28)]">05</div>
+          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">05</div>
           <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Reflection</h3>
-          <p class="text-sm md:text-base text-cream/85 leading-relaxed">Mengevaluasi project dan pengalaman teamwork.</p>
+          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Mengevaluasi project dan pengalaman teamwork.</p>
         </div>
       </div>
     </div>
@@ -1045,152 +986,100 @@
     <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
     <div class="max-w-4xl mx-auto relative z-20">
       <div data-reveal class="max-w-xl mb-12">
-        <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-4">Dokumentasi Foto</p>
+        <p class="text-xs font-medium text-lime mb-3">Dokumentasi Foto</p>
         <h2 class="font-display font-semibold text-3xl md:text-5xl tracking-tight text-cream">Perjalanan Perkembangan</h2>
-        <p class="mt-4 text-sm md:text-base text-cream/85 leading-relaxed">
+        <p class="mt-4 text-sm md:text-base text-cream/80 leading-relaxed">
           Arsip dokumentasi tahapan pertumbuhan Bougainvillea &amp; Portulaca dari penanaman hingga mekar. Arahkan kursor pada desktop (atau lihat foto di HP) untuk melihat detail setiap proses.
         </p>
       </div>
 
       <!-- Rolling List Items -->
-      <div class="w-full flex flex-col border-t border-white/25" data-reveal>
+      <div class="w-full flex flex-col border-t border-white/20" data-reveal>
             <!-- Item 1: Planting -->
             <div data-cursor-label="Lihat" class="group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
-              <div class="relative overflow-hidden h-[52px] md:h-[72px]">
-                <div class="transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-1/2">
-                  <div class="h-[52px] md:h-[72px] flex items-center">
-                    <h3 class="text-3xl sm:text-5xl md:text-6xl font-display font-black text-cream uppercase tracking-tight">
-                      PLANTING
-                    </h3>
+              <div class="relative overflow-hidden h-[48px] md:h-[64px]">
+                <div class="transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
+                  <div class="h-[48px] md:h-[64px] flex items-center">
+                    <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold text-cream tracking-tight">Planting</h3>
                   </div>
-                  <div class="h-[52px] md:h-[72px] flex items-center">
-                    <h3 class="text-3xl sm:text-5xl md:text-6xl font-display font-black uppercase tracking-tight italic text-lime">
-                      PLANTING
-                    </h3>
+                  <div class="h-[48px] md:h-[64px] flex items-center">
+                    <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-lime">Planting</h3>
                   </div>
                 </div>
               </div>
-              <span class="absolute top-8 right-0 text-xs font-mono uppercase tracking-widest text-cream/65 transition-opacity duration-300 group-hover:opacity-0 hidden md:block">
-                01 / Persiapan &amp; Penanaman Bibit
-              </span>
-              <!-- Desktop Floating Image Reveal -->
-              <div class="pointer-events-none absolute right-0 top-1/2 z-20 h-36 w-60 -translate-y-1/2 overflow-hidden rounded-2xl shadow-2xl transition-all duration-500 ease-out opacity-0 scale-95 rotate-3 translate-x-4 group-hover:opacity-100 group-hover:scale-100 group-hover:rotate-0 group-hover:translate-x-0 hidden md:block border border-white/25 bg-ink">
-                <div class="relative h-full w-full">
-                  <img src="images/perkembangan-1-planting.jpg" alt="Proses penanaman bibit tanaman" class="w-full h-full object-cover grayscale transition-all duration-500 ease-out group-hover:grayscale-0">
-                  <div class="absolute inset-0 bg-lime/15 mix-blend-overlay"></div>
-                </div>
+              <span class="absolute top-8 right-0 text-xs font-mono text-cream/65 tabular-nums transition-opacity duration-200 group-hover:opacity-0 hidden md:block">01 · Persiapan &amp; penanaman bibit</span>
+              <div class="pointer-events-none absolute right-0 top-1/2 z-20 h-36 w-60 -translate-y-1/2 overflow-hidden rounded-xl shadow-xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 hidden md:block border border-white/20 bg-ink">
+                <img src="images/perkembangan-1-planting.jpg" alt="Proses penanaman bibit tanaman" class="w-full h-full object-cover">
               </div>
-              <!-- Mobile Inline Image Preview -->
               <div class="mt-3 md:hidden rounded-xl overflow-hidden aspect-video border border-white/15 relative">
                 <img src="images/perkembangan-1-planting.jpg" alt="Proses penanaman bibit tanaman" class="w-full h-full object-cover">
-                <div class="absolute bottom-2.5 left-2.5 px-3 py-1 rounded-full bg-ink/85 backdrop-blur text-[11px] font-mono text-lime border border-white/15">
-                  01 · Persiapan &amp; Penanaman Bibit
-                </div>
+                <div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-md bg-ink/85 text-[11px] font-mono text-cream border border-white/15">01 · Persiapan &amp; penanaman bibit</div>
               </div>
             </div>
 
             <!-- Item 2: Sprouting -->
             <div data-cursor-label="Lihat" class="group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
-              <div class="relative overflow-hidden h-[52px] md:h-[72px]">
-                <div class="transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-1/2">
-                  <div class="h-[52px] md:h-[72px] flex items-center">
-                    <h3 class="text-3xl sm:text-5xl md:text-6xl font-display font-black text-cream uppercase tracking-tight">
-                      SPROUTING
-                    </h3>
+              <div class="relative overflow-hidden h-[48px] md:h-[64px]">
+                <div class="transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
+                  <div class="h-[48px] md:h-[64px] flex items-center">
+                    <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold text-cream tracking-tight">Sprouting</h3>
                   </div>
-                  <div class="h-[52px] md:h-[72px] flex items-center">
-                    <h3 class="text-3xl sm:text-5xl md:text-6xl font-display font-black uppercase tracking-tight italic text-krokot-on-dark">
-                      SPROUTING
-                    </h3>
+                  <div class="h-[48px] md:h-[64px] flex items-center">
+                    <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-lime">Sprouting</h3>
                   </div>
                 </div>
               </div>
-              <span class="absolute top-8 right-0 text-xs font-mono uppercase tracking-widest text-cream/65 transition-opacity duration-300 group-hover:opacity-0 hidden md:block">
-                02 / Pertunasan &amp; Pemupukan
-              </span>
-              <!-- Desktop Floating Image Reveal -->
-              <div class="pointer-events-none absolute right-0 top-1/2 z-20 h-36 w-60 -translate-y-1/2 overflow-hidden rounded-2xl shadow-2xl transition-all duration-500 ease-out opacity-0 scale-95 rotate-3 translate-x-4 group-hover:opacity-100 group-hover:scale-100 group-hover:rotate-0 group-hover:translate-x-0 hidden md:block border border-white/25 bg-ink">
-                <div class="relative h-full w-full">
-                  <img src="images/perkembangan-2-sprout.jpg" alt="Pertunasan dan pemupukan tanaman" class="w-full h-full object-cover grayscale transition-all duration-500 ease-out group-hover:grayscale-0">
-                  <div class="absolute inset-0 bg-krokot/15 mix-blend-overlay"></div>
-                </div>
+              <span class="absolute top-8 right-0 text-xs font-mono text-cream/65 tabular-nums transition-opacity duration-200 group-hover:opacity-0 hidden md:block">02 · Pertunasan &amp; pemupukan</span>
+              <div class="pointer-events-none absolute right-0 top-1/2 z-20 h-36 w-60 -translate-y-1/2 overflow-hidden rounded-xl shadow-xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 hidden md:block border border-white/20 bg-ink">
+                <img src="images/perkembangan-2-sprout.jpg" alt="Pertunasan dan pemupukan tanaman" class="w-full h-full object-cover">
               </div>
-              <!-- Mobile Inline Image Preview -->
               <div class="mt-3 md:hidden rounded-xl overflow-hidden aspect-video border border-white/15 relative">
                 <img src="images/perkembangan-2-sprout.jpg" alt="Pertunasan dan pemupukan tanaman" class="w-full h-full object-cover">
-                <div class="absolute bottom-2.5 left-2.5 px-3 py-1 rounded-full bg-ink/85 backdrop-blur text-[11px] font-mono text-krokot-on-dark border border-white/15">
-                  02 · Pertunasan &amp; Pemupukan
-                </div>
+                <div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-md bg-ink/85 text-[11px] font-mono text-cream border border-white/15">02 · Pertunasan &amp; pemupukan</div>
               </div>
             </div>
 
             <!-- Item 3: Caring -->
             <div data-cursor-label="Lihat" class="group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
-              <div class="relative overflow-hidden h-[52px] md:h-[72px]">
-                <div class="transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-1/2">
-                  <div class="h-[52px] md:h-[72px] flex items-center">
-                    <h3 class="text-3xl sm:text-5xl md:text-6xl font-display font-black text-cream uppercase tracking-tight">
-                      CARING
-                    </h3>
+              <div class="relative overflow-hidden h-[48px] md:h-[64px]">
+                <div class="transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
+                  <div class="h-[48px] md:h-[64px] flex items-center">
+                    <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold text-cream tracking-tight">Caring</h3>
                   </div>
-                  <div class="h-[52px] md:h-[72px] flex items-center">
-                    <h3 class="text-3xl sm:text-5xl md:text-6xl font-display font-black uppercase tracking-tight italic text-sky-400">
-                      CARING
-                    </h3>
+                  <div class="h-[48px] md:h-[64px] flex items-center">
+                    <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-lime">Caring</h3>
                   </div>
                 </div>
               </div>
-              <span class="absolute top-8 right-0 text-xs font-mono uppercase tracking-widest text-cream/65 transition-opacity duration-300 group-hover:opacity-0 hidden md:block">
-                03 / Perawatan &amp; Penyiraman Rutin
-              </span>
-              <!-- Desktop Floating Image Reveal -->
-              <div class="pointer-events-none absolute right-0 top-1/2 z-20 h-36 w-60 -translate-y-1/2 overflow-hidden rounded-2xl shadow-2xl transition-all duration-500 ease-out opacity-0 scale-95 rotate-3 translate-x-4 group-hover:opacity-100 group-hover:scale-100 group-hover:rotate-0 group-hover:translate-x-0 hidden md:block border border-white/25 bg-ink">
-                <div class="relative h-full w-full">
-                  <img src="images/perkembangan-3-caring.jpg" alt="Penyiraman dan perawatan bersama tim" class="w-full h-full object-cover grayscale transition-all duration-500 ease-out group-hover:grayscale-0">
-                  <div class="absolute inset-0 bg-sky-500/15 mix-blend-overlay"></div>
-                </div>
+              <span class="absolute top-8 right-0 text-xs font-mono text-cream/65 tabular-nums transition-opacity duration-200 group-hover:opacity-0 hidden md:block">03 · Perawatan &amp; penyiraman rutin</span>
+              <div class="pointer-events-none absolute right-0 top-1/2 z-20 h-36 w-60 -translate-y-1/2 overflow-hidden rounded-xl shadow-xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 hidden md:block border border-white/20 bg-ink">
+                <img src="images/perkembangan-3-caring.jpg" alt="Penyiraman dan perawatan bersama tim" class="w-full h-full object-cover">
               </div>
-              <!-- Mobile Inline Image Preview -->
               <div class="mt-3 md:hidden rounded-xl overflow-hidden aspect-video border border-white/15 relative">
                 <img src="images/perkembangan-3-caring.jpg" alt="Penyiraman dan perawatan bersama tim" class="w-full h-full object-cover">
-                <div class="absolute bottom-2.5 left-2.5 px-3 py-1 rounded-full bg-ink/85 backdrop-blur text-[11px] font-mono text-sky-400 border border-white/15">
-                  03 · Perawatan &amp; Penyiraman Rutin
-                </div>
+                <div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-md bg-ink/85 text-[11px] font-mono text-cream border border-white/15">03 · Perawatan &amp; penyiraman rutin</div>
               </div>
             </div>
 
             <!-- Item 4: Blooming -->
             <div data-cursor-label="Lihat" class="group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
-              <div class="relative overflow-hidden h-[52px] md:h-[72px]">
-                <div class="transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-y-1/2">
-                  <div class="h-[52px] md:h-[72px] flex items-center">
-                    <h3 class="text-3xl sm:text-5xl md:text-6xl font-display font-black text-cream uppercase tracking-tight">
-                      BLOOMING
-                    </h3>
+              <div class="relative overflow-hidden h-[48px] md:h-[64px]">
+                <div class="transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
+                  <div class="h-[48px] md:h-[64px] flex items-center">
+                    <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold text-cream tracking-tight">Blooming</h3>
                   </div>
-                  <div class="h-[52px] md:h-[72px] flex items-center">
-                    <h3 class="text-3xl sm:text-5xl md:text-6xl font-display font-black uppercase tracking-tight italic text-kertas-on-dark">
-                      BLOOMING
-                    </h3>
+                  <div class="h-[48px] md:h-[64px] flex items-center">
+                    <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold tracking-tight text-lime">Blooming</h3>
                   </div>
                 </div>
               </div>
-              <span class="absolute top-8 right-0 text-xs font-mono uppercase tracking-widest text-cream/65 transition-opacity duration-300 group-hover:opacity-0 hidden md:block">
-                04 / Bunga Mekar Sempurna
-              </span>
-              <!-- Desktop Floating Image Reveal -->
-              <div class="pointer-events-none absolute right-0 top-1/2 z-20 h-36 w-60 -translate-y-1/2 overflow-hidden rounded-2xl shadow-2xl transition-all duration-500 ease-out opacity-0 scale-95 rotate-3 translate-x-4 group-hover:opacity-100 group-hover:scale-100 group-hover:rotate-0 group-hover:translate-x-0 hidden md:block border border-white/25 bg-ink">
-                <div class="relative h-full w-full">
-                  <img src="images/perkembangan-4-bloom.jpg" alt="Bunga Bougainvillea mekar sempurna" class="w-full h-full object-cover grayscale transition-all duration-500 ease-out group-hover:grayscale-0">
-                  <div class="absolute inset-0 bg-kertas/15 mix-blend-overlay"></div>
-                </div>
+              <span class="absolute top-8 right-0 text-xs font-mono text-cream/65 tabular-nums transition-opacity duration-200 group-hover:opacity-0 hidden md:block">04 · Bunga mekar sempurna</span>
+              <div class="pointer-events-none absolute right-0 top-1/2 z-20 h-36 w-60 -translate-y-1/2 overflow-hidden rounded-xl shadow-xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] opacity-0 translate-x-3 group-hover:opacity-100 group-hover:translate-x-0 hidden md:block border border-white/20 bg-ink">
+                <img src="images/perkembangan-4-bloom.jpg" alt="Bunga Bougainvillea mekar sempurna" class="w-full h-full object-cover">
               </div>
-              <!-- Mobile Inline Image Preview -->
               <div class="mt-3 md:hidden rounded-xl overflow-hidden aspect-video border border-white/15 relative">
                 <img src="images/perkembangan-4-bloom.jpg" alt="Bunga Bougainvillea mekar sempurna" class="w-full h-full object-cover">
-                <div class="absolute bottom-2.5 left-2.5 px-3 py-1 rounded-full bg-ink/85 backdrop-blur text-[11px] font-mono text-kertas-on-dark border border-white/15">
-                  04 · Bunga Mekar Sempurna
-                </div>
+                <div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-md bg-ink/85 text-[11px] font-mono text-cream border border-white/15">04 · Bunga mekar sempurna</div>
               </div>
             </div>
           </div>
@@ -1206,7 +1095,7 @@
       <!-- Editorial Baseline Header (no pills, no dots, no em dashes) -->
       <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
         <div>
-          <p class="font-body text-xs font-medium tracking-[0.12em] text-lime uppercase mb-3">Dokumentasi Video</p>
+          <p class="text-xs font-medium text-lime mb-3">Dokumentasi Video</p>
           <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight text-cream">Behind The Growth</h2>
         </div>
         <p class="text-sm text-cream/85 max-w-md leading-relaxed">Enam rekaman lapangan di depan gedung SMKN 2 Purwokerto, mulai dari pengenalan tim hingga rutinitas perawatan tanaman.</p>
@@ -1232,7 +1121,7 @@
           <!-- Hairline Scrubber Track Directly Under Video -->
           <div class="mt-2">
             <div id="vcSeekTrack" class="relative py-3 cursor-pointer group/seek" role="slider" aria-label="Posisi waktu video" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
-              <div class="h-[2px] group-hover/seek:h-[4px] transition-all bg-white/25 w-full overflow-hidden">
+              <div class="h-[2px] group-hover/seek:h-[4px] transition-[height] duration-150 bg-white/25 w-full overflow-hidden">
                 <div id="vcSeekFill" class="h-full bg-lime pointer-events-none" style="width: 0%"></div>
               </div>
             </div>
@@ -1271,9 +1160,9 @@
 
         <!-- Right (4 cols): Minimalist Hairline Tracklist Index -->
         <div class="lg:col-span-4">
-          <div class="flex items-baseline justify-between pb-3 border-b border-white/25">
-            <p class="font-body text-xs font-medium tracking-[0.08em] uppercase text-cream/80">Indeks Rekaman</p>
-            <span class="font-mono text-xs tabular-nums text-cream/75">6 klip</span>
+          <div class="flex items-baseline justify-between pb-3 border-b border-white/20">
+            <p class="text-xs font-medium text-cream/80">Indeks Rekaman</p>
+            <span class="font-mono text-xs tabular-nums text-cream/70">6 klip</span>
           </div>
           <div id="vcPlaylist" class="divide-y divide-white/15"></div>
         </div>
@@ -1289,31 +1178,31 @@
     <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
     <div class="relative z-20 max-w-6xl mx-auto">
       <div data-reveal class="max-w-xl">
-        <p class="font-mono text-xs tracking-[0.2em] text-lime uppercase mb-4">Reflection</p>
+        <p class="text-xs font-medium text-lime mb-3">Reflection</p>
         <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight text-cream">More Than Just Growing Plants</h2>
-        <p class="mt-5 text-base md:text-lg text-cream/90 leading-relaxed">Melalui project ini kami belajar bahwa pertumbuhan butuh waktu, konsistensi, dan kerja sama. Menanam bukan cuma soal membuat tanaman hidup, tapi juga soal bertanggung jawab dan menjaga lingkungan terdekat.</p>
+        <p class="mt-4 text-base md:text-lg text-cream/85 leading-relaxed">Melalui project ini kami belajar bahwa pertumbuhan butuh waktu, konsistensi, dan kerja sama. Menanam bukan cuma soal membuat tanaman hidup, tapi juga soal bertanggung jawab dan menjaga lingkungan terdekat.</p>
       </div>
 
-      <div data-reveal-group class="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
-        <div class="frame glass-subcard text-lime rounded-2xl p-6">
-          <i data-lucide="wind" class="w-5 h-5 mb-4 text-lime"></i>
+      <div data-reveal-group class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="border-t border-white/20 pt-5">
+          <i data-lucide="wind" class="w-4 h-4 mb-3 text-cream/70"></i>
           <p class="font-display font-semibold text-base text-cream mb-1.5">Manfaat Lingkungan</p>
-          <p class="text-sm text-cream/85 leading-relaxed">Membantu menjaga kualitas udara dan kondisi tanah di sekitar area penanaman.</p>
+          <p class="text-sm text-cream/80 leading-relaxed">Membantu menjaga kualitas udara dan kondisi tanah di sekitar area penanaman.</p>
         </div>
-        <div class="frame glass-subcard text-lime rounded-2xl p-6">
-          <i data-lucide="users-round" class="w-5 h-5 mb-4 text-lime"></i>
+        <div class="border-t border-white/20 pt-5">
+          <i data-lucide="users-round" class="w-4 h-4 mb-3 text-cream/70"></i>
           <p class="font-display font-semibold text-base text-cream mb-1.5">Kerja Sama Tim</p>
-          <p class="text-sm text-cream/85 leading-relaxed">Belajar berkoordinasi dan saling mengandalkan antar anggota kelompok.</p>
+          <p class="text-sm text-cream/80 leading-relaxed">Belajar berkoordinasi dan saling mengandalkan antar anggota kelompok.</p>
         </div>
-        <div class="frame glass-subcard text-lime rounded-2xl p-6">
-          <i data-lucide="hand-heart" class="w-5 h-5 mb-4 text-lime"></i>
+        <div class="border-t border-white/20 pt-5">
+          <i data-lucide="hand-heart" class="w-4 h-4 mb-3 text-cream/70"></i>
           <p class="font-display font-semibold text-base text-cream mb-1.5">Tanggung Jawab</p>
-          <p class="text-sm text-cream/85 leading-relaxed">Konsisten merawat sesuatu yang hidup, bukan cuma tugas sekali kumpul.</p>
+          <p class="text-sm text-cream/80 leading-relaxed">Konsisten merawat sesuatu yang hidup, bukan cuma tugas sekali kumpul.</p>
         </div>
-        <div class="frame glass-subcard text-lime rounded-2xl p-6">
-          <i data-lucide="globe" class="w-5 h-5 mb-4 text-lime"></i>
+        <div class="border-t border-white/20 pt-5">
+          <i data-lucide="globe" class="w-4 h-4 mb-3 text-cream/70"></i>
           <p class="font-display font-semibold text-base text-cream mb-1.5">Kesadaran Lingkungan</p>
-          <p class="text-sm text-cream/85 leading-relaxed">Memahami pentingnya penghijauan sejak dari lingkungan terdekat.</p>
+          <p class="text-sm text-cream/80 leading-relaxed">Memahami pentingnya penghijauan sejak dari lingkungan terdekat.</p>
         </div>
       </div>
     </div>
@@ -1325,12 +1214,12 @@
   <footer data-glass-glow class="relative pt-14 pb-16 px-6 sm:px-10 overflow-hidden">
     <div class="glass-glare pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 z-10" aria-hidden="true"></div>
     <div class="relative z-20 max-w-6xl mx-auto">
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-10 pb-10 border-b border-white/20">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-10 pb-10 border-b border-white/15">
         <div>
           <div class="flex items-center gap-2 font-display font-semibold text-xl text-cream">
             <i data-lucide="leaf" class="w-5 h-5 text-lime"></i> Growth Together
           </div>
-          <p class="font-display italic text-cream/80 mt-2">"One Team, One Earth, One Future."</p>
+          <p class="text-sm text-cream/75 mt-2">One Team, One Earth, One Future</p>
         </div>
         <div class="text-sm text-cream/80 space-y-1">
           <p class="text-cream font-medium">Kelompok 4 — X TE 3</p>
@@ -1354,7 +1243,7 @@
       <h3 class="font-display font-semibold text-xl mb-6">Add Growth Update</h3>
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Plant</label>
+          <label class="block text-xs font-medium text-ink/70 mb-2">Plant</label>
           <select name="plant" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream">
             <option value="" disabled selected>Pilih tanaman</option>
             <option value="kertas">Bougainvillea</option>
@@ -1363,11 +1252,11 @@
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Date</label>
+            <label class="block text-xs font-medium text-ink/70 mb-2">Date</label>
             <input type="date" name="date" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream">
           </div>
           <div>
-            <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Growth Stage</label>
+            <label class="block text-xs font-medium text-ink/70 mb-2">Growth Stage</label>
             <select name="stage" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream">
               <option value="" disabled selected>Pilih tahap</option>
               <option value="seed">Seed</option>
@@ -1379,7 +1268,7 @@
           </div>
         </div>
         <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Condition</label>
+          <label class="block text-xs font-medium text-ink/70 mb-2">Condition</label>
           <select name="condition" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream">
             <option value="" disabled selected>Pilih kondisi</option>
             <option value="healthy">Healthy</option>
@@ -1413,11 +1302,11 @@
         </div>
 
         <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Activity</label>
+          <label class="block text-xs font-medium text-ink/70 mb-2">Activity</label>
           <input type="text" name="activity" required maxlength="120" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream" placeholder="cth. Watered the plant and checked the soil">
         </div>
         <div>
-          <label class="block text-xs font-mono uppercase tracking-wider text-ink/65 mb-1.5">Notes <span class="normal-case text-ink/60">(optional)</span></label>
+          <label class="block text-xs font-medium text-ink/70 mb-2">Notes <span class="normal-case text-ink/60">(optional)</span></label>
           <textarea name="notes" rows="2" maxlength="200" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm focus:border-forest focus:outline-none bg-cream resize-none" placeholder="Catatan tambahan..."></textarea>
         </div>
       </div>
@@ -1800,22 +1689,22 @@
         const p = PLANTS[key];
         const statusId = key === 'kertas' ? 'plantStatusKertas' : 'plantStatusKrokot';
         panel.innerHTML =
-          '<div class="panel-fade group relative rounded-3xl overflow-hidden aspect-[4/5] ring-1 ring-cream/10 shadow-2xl shadow-ink/50">' +
-            '<img src="' + p.photo + '" alt="Foto ' + p.name + ' (' + p.local + ')" class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105" loading="eager" decoding="async">' +
-            '<div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/0 to-ink/0"></div>' +
-            '<span class="absolute bottom-4 left-4 font-mono text-[11px] tracking-[0.2em] uppercase" style="color:' + p.color + '">' + p.species + '</span>' +
+          '<div class="panel-fade relative rounded-2xl overflow-hidden aspect-[4/5] border border-white/15 shadow-lg">' +
+            '<img src="' + p.photo + '" alt="Foto ' + p.name + ' (' + p.local + ')" class="w-full h-full object-cover object-center" loading="eager" decoding="async">' +
+            '<div class="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/0 to-ink/0"></div>' +
+            '<span class="absolute bottom-4 left-4 font-mono text-xs text-cream/90">' + p.species + '</span>' +
           '</div>' +
           '<div class="panel-fade flex flex-col">' +
             '<h3 class="font-display font-semibold text-2xl text-cream">' + p.name + '</h3>' +
             '<p class="text-sm text-cream/70 mt-1 mb-5">' + p.local + '</p>' +
             '<ul class="space-y-3 text-sm text-cream/85 leading-relaxed">' +
               p.points.map(function (pt) {
-                return '<li class="flex gap-2.5"><i data-lucide="' + pt.icon + '" class="w-4 h-4 mt-0.5 shrink-0" style="color:' + p.color + '"></i><span>' + pt.text + '</span></li>';
+                return '<li class="flex gap-2.5"><i data-lucide="' + pt.icon + '" class="w-4 h-4 mt-0.5 shrink-0 text-cream/70"></i><span>' + pt.text + '</span></li>';
               }).join('') +
             '</ul>' +
             '<p class="mt-6 text-xs text-cream/70">Dirawat oleh <span class="text-cream/90">' + p.team + '</span></p>' +
-            '<div id="' + statusId + '" class="mt-4 inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full w-fit" style="color:' + p.color + '; background:' + p.color + '26; border: 1px solid ' + p.color + '44">' +
-              '<i data-lucide="sprout" class="w-3.5 h-3.5"></i> <span class="status-text">' + p.status + '</span>' +
+            '<div id="' + statusId + '" class="mt-4 inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md w-fit bg-white/10 text-cream/90 border border-white/15">' +
+              '<i data-lucide="sprout" class="w-3.5 h-3.5 text-lime"></i> <span class="status-text">' + p.status + '</span>' +
             '</div>' +
           '</div>';
         lucide.createIcons();
@@ -2016,21 +1905,21 @@
       const colorClass = isKertas ? 'jcc-kertas' : 'jcc-krokot';
       const pinColor = isKertas ? 'text-kertas' : 'text-krokot';
       const numColor = isKertas ? 'color: var(--color-kertas)' : 'color: var(--color-krokot)';
-      const badgeClass = isKertas ? 'text-kertas bg-kertas/10 border border-kertas/20 font-semibold' : 'text-krokot bg-krokot/10 border border-krokot/20 font-semibold';
+      const badgeClass = isKertas ? 'text-kertas bg-kertas/10 border border-kertas/20 font-medium' : 'text-krokot bg-krokot/10 border border-krokot/20 font-medium';
       const ownerName = entry.profiles?.name || 'Anggota';
       const canManage = currentUser && entry.user_id === currentUser.id;
       const isEven = index % 2 === 0;
       const posClass = isEven ? 'jpc-left jpc-rotate-pos' : 'jpc-right jpc-rotate-neg';
       const num = String(index + 1).padStart(2, '0');
 
-      const pinSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="journal-pin-icon ${pinColor}"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg>`;
+      const pinSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" class="journal-pin-icon ${pinColor}"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M16 3a1 1 0 0 1 .117 1.993l-.117 .007v4.764l1.894 3.789a1 1 0 0 1 .1 .331l.006 .116v2a1 1 0 0 1 -.883 .993l-.117 .007h-4v4a1 1 0 0 1 -1.993 .117l-.007 -.117v-4h-4a1 1 0 0 1 -.993 -.883l-.007 -.117v-2a1 1 0 0 1 .06 -.34l.046 -.107l1.894 -3.791v-4.762a1 1 0 0 1 -.117 -1.993l.117 -.007h8z"/></svg>`;
 
       const hasMeasurements = (entry.height_cm != null) || (entry.leaf_count != null) || (entry.leaf_width_cm != null);
       const measurementHtml = hasMeasurements ? `
         <div class="flex flex-wrap gap-1.5 mb-2.5 pt-2 border-t border-ink/10">
-          ${entry.height_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono font-semibold bg-forest/10 text-forest border border-forest/15 px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>${entry.height_cm} cm</span>` : ''}
-          ${entry.leaf_count != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/[0.06] text-ink/80 border border-ink/10 px-2 py-0.5 rounded-md"><i data-lucide="leaf" class="w-3 h-3"></i>${entry.leaf_count} daun</span>` : ''}
-          ${entry.leaf_width_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/[0.06] text-ink/80 border border-ink/10 px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>lebar ${entry.leaf_width_cm} cm</span>` : ''}
+          ${entry.height_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono font-medium bg-forest/10 text-forest border border-forest/15 px-2 py-0.5 rounded-md tabular-nums"><i data-lucide="ruler" class="w-3 h-3"></i>${entry.height_cm} cm</span>` : ''}
+          ${entry.leaf_count != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/[0.06] text-ink/80 border border-ink/10 px-2 py-0.5 rounded-md tabular-nums"><i data-lucide="leaf" class="w-3 h-3"></i>${entry.leaf_count} daun</span>` : ''}
+          ${entry.leaf_width_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/[0.06] text-ink/80 border border-ink/10 px-2 py-0.5 rounded-md tabular-nums"><i data-lucide="ruler" class="w-3 h-3"></i>lebar ${entry.leaf_width_cm} cm</span>` : ''}
         </div>` : '';
 
       return `
@@ -2038,18 +1927,20 @@
           <div class="journal-pin-card-inner">
             ${pinSvg}
             <div class="journal-content-card ${colorClass}">
-              <span class="journal-card-number" style="${numColor}">${num}</span>
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-[10px] font-mono uppercase tracking-wider ${badgeClass} px-2.5 py-0.5 rounded-full">${plantLabel[entry.plant_id] || entry.plant_id}</span>
-                ${canManage ? `<button type="button" class="js-delete text-ink/45 hover:text-kertas transition-colors" data-id="${entry.id}" aria-label="Hapus update ini"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+              <div class="flex items-center justify-between gap-2 mb-2.5">
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="journal-card-number" style="${numColor}">${num}</span>
+                  <span class="text-[11px] ${badgeClass} px-2 py-0.5 rounded-md">${plantLabel[entry.plant_id] || entry.plant_id}</span>
+                </div>
+                ${canManage ? `<button type="button" class="js-delete text-ink/45 hover:text-kertas transition-colors shrink-0" data-id="${entry.id}" aria-label="Hapus update ini"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
               </div>
-              <p class="font-mono text-xs text-ink/65 mb-2.5">${formatDate(entry.date)} \u00B7 by ${escapeHtml(ownerName)}</p>
+              <p class="font-mono text-xs text-ink/65 mb-2.5">${formatDate(entry.date)} · ${escapeHtml(ownerName)}</p>
               <div class="h-1.5 bg-ink/10 rounded-full overflow-hidden mb-2">
                 <div class="h-full rounded-full" style="width:${stagePercent[entry.stage] || 0}%;background:${isKertas ? 'var(--color-kertas)' : 'var(--color-krokot)'}"></div>
               </div>
               <div class="flex items-center justify-between mb-2.5">
                 <span class="text-xs font-semibold" style="${numColor}">${stageLabel[entry.stage] || entry.stage}</span>
-                <span class="inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full bg-ink/[0.06] border border-ink/12 text-ink/85">${conditionDotHtml(entry.condition)}${conditionLabel[entry.condition] || entry.condition}</span>
+                <span class="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-md bg-ink/[0.06] border border-ink/10 text-ink/85">${conditionDotHtml(entry.condition)}${conditionLabel[entry.condition] || entry.condition}</span>
               </div>
               ${measurementHtml}
               <p class="text-sm text-ink font-semibold leading-snug mb-1">${escapeHtml(entry.activity)}</p>
@@ -2160,7 +2051,7 @@
         pathD += ' C ' + cp1x + ' ' + fromY + ', ' + cp2x + ' ' + toY + ', ' + toX + ' ' + toY;
       }
       svgEl.setAttribute('viewBox', '0 0 1000 ' + totalHeight);
-      svgEl.innerHTML = `<path d="${pathD}" stroke="#A6E06A" stroke-opacity="0.28" stroke-width="2" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke" class="journal-dash-path"/>`;
+      svgEl.innerHTML = `<path d="${pathD}" stroke="#F7F4EA" stroke-opacity="0.22" stroke-width="1.5" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke" class="journal-dash-path"/>`;
     }
 
     // Re-calculate stagger height on resize
@@ -2328,10 +2219,10 @@
         const sizeItems = [];
         if (plant.current_height_cm != null) sizeItems.push(`tinggi ${plant.current_height_cm} cm`);
         if (plant.current_leaf_count != null) sizeItems.push(`${plant.current_leaf_count} daun`);
-        return `<div class="glass-subcard border ${isKertas ? 'border-kertas-on-dark/40' : 'border-krokot-on-dark/40'} rounded-2xl p-4">
-          <p class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas-on-dark' : 'text-krokot-on-dark'} mb-1">${plantLabel[plant.id]}</p>
+        return `<div class="glass-subcard rounded-2xl p-4">
+          <p class="text-xs font-medium ${isKertas ? 'text-kertas-on-dark' : 'text-krokot-on-dark'} mb-1">${plantLabel[plant.id]}</p>
           <p class="text-sm font-semibold text-cream">${label}</p>
-          ${sizeItems.length ? `<p class="text-xs text-cream/75 mt-1.5 font-mono font-medium">${sizeItems.join(' · ')}</p>` : ''}
+          ${sizeItems.length ? `<p class="text-xs text-cream/75 mt-1.5 font-mono tabular-nums">${sizeItems.join(' · ')}</p>` : ''}
         </div>`;
       }).join('');
       if (!prefersReducedMotion) requestAnimationFrame(() => ScrollTrigger.refresh());
@@ -2703,7 +2594,7 @@
       team.forEach((_, i) => {
         const dot = document.createElement('button');
         dot.type = 'button';
-        dot.className = 'h-2 rounded-full transition-all duration-300 ' + (i === 0 ? 'w-6 bg-lime' : 'w-2 bg-white/25');
+        dot.className = 'h-2 rounded-full transition-[width,background-color] duration-200 ' + (i === 0 ? 'w-6 bg-lime' : 'w-2 bg-white/25');
         dot.setAttribute('aria-label', `Go to team member ${i + 1}`);
         dot.addEventListener('click', () => go(i));
         dotsWrap.appendChild(dot);
@@ -2765,22 +2656,22 @@
         // Animate quote words
         const words = current.quote.split(' ');
         quoteEl.innerHTML = words.map((word, i) => 
-          `<span class="quote-word inline-block opacity-0 filter blur-sm translate-y-1 transition-all duration-300" style="transition-delay: ${i * 22}ms">${word}&nbsp;</span>`
+          `<span class="quote-word inline-block opacity-0 translate-y-1 transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]" style="transition-delay: ${i * 18}ms">${word}&nbsp;</span>`
         ).join('');
 
         requestAnimationFrame(() => {
           quoteEl.querySelectorAll('.quote-word').forEach((w) => {
-            w.classList.remove('opacity-0', 'blur-sm', 'translate-y-1');
-            w.classList.add('opacity-100', 'blur-none', 'translate-y-0');
+            w.classList.remove('opacity-0', 'translate-y-1');
+            w.classList.add('opacity-100', 'translate-y-0');
           });
         });
 
         // Dots update
         Array.from(dotsWrap.children).forEach((dot, i) => {
           if (i === activeIndex) {
-            dot.className = 'h-2 rounded-full transition-all duration-300 w-6 bg-lime';
+            dot.className = 'h-2 rounded-full transition-[width,background-color] duration-200 w-6 bg-lime';
           } else {
-            dot.className = 'h-2 rounded-full transition-all duration-300 w-2 bg-white/25';
+            dot.className = 'h-2 rounded-full transition-[width,background-color] duration-200 w-2 bg-white/25';
           }
         });
       }
