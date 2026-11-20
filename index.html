@@ -815,6 +815,13 @@
   .hero-title-shadow {
     text-shadow: 0 2px 20px rgba(10, 22, 14, 0.45);
   }
+  .hero-wordmark-wrap {
+    container-type: inline-size;
+  }
+  .hero-terrava-wordmark {
+    font-size: clamp(1.95rem, 11.4vw, 8.85rem);
+    font-size: clamp(1.95rem, 12.2cqw, 8.85rem);
+  }
 
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -1059,9 +1066,9 @@
           <a href="app.html" class="hover:text-lime transition-colors">Field App</a>
         </nav>
 
-        <div class="mt-6 sm:mt-8 overflow-hidden" aria-hidden="true">
+        <div class="hero-wordmark-wrap mt-6 sm:mt-8 overflow-hidden" aria-hidden="true">
           <div class="hero-wordmark-parallax will-change-transform">
-            <div class="hero-terrava-wordmark font-display font-semibold tracking-[-0.03em] leading-[1.05] text-center whitespace-nowrap select-none will-change-transform pb-2 sm:pb-3 text-cream/90 text-[2.2rem] sm:text-[4.6rem] md:text-[6.2rem] lg:text-[7.8rem]">
+            <div class="hero-terrava-wordmark font-display font-semibold tracking-[-0.035em] leading-[1.05] text-center whitespace-nowrap select-none will-change-transform pb-2 sm:pb-3 text-cream/90">
               Growth Together
             </div>
           </div>
