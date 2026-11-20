@@ -524,12 +524,13 @@
     border-radius: inherit;
     background: linear-gradient(
       180deg,
-      rgba(255, 255, 255, 0.16) 0%,
-      rgba(18, 42, 28, 0.19) 14%,
-      rgba(14, 34, 22, 0.24) 100%
+      rgba(10, 26, 17, 0.44) 0%,
+      rgba(11, 28, 18, 0.46) 14%,
+      rgba(13, 32, 21, 0.36) 35%,
+      rgba(14, 34, 22, 0.34) 100%
     );
-    backdrop-filter: blur(14px) saturate(185%) brightness(1.08);
-    -webkit-backdrop-filter: blur(14px) saturate(185%) brightness(1.08);
+    backdrop-filter: blur(15px) saturate(130%) brightness(0.86);
+    -webkit-backdrop-filter: blur(15px) saturate(130%) brightness(0.86);
     -webkit-mask-image: radial-gradient(
       circle var(--glass-clear-r) at var(--gx, -999px) var(--gy, -999px),
       rgba(0, 0, 0, var(--glass-clear-core)) 0%,
@@ -628,7 +629,8 @@
     pointer-events: none;
   }
   .liquid-glass-sheet :where(h2, h3, li),
-  .liquid-glass-sheet p:not([class*="text-ink"]) {
+  .liquid-glass-sheet p:not([class*="text-ink"]),
+  #heroTerravaGlass :where(span, a, .hero-terrava-wordmark) {
     text-shadow: 0 1px 14px rgba(8, 22, 14, 0.48), 0 1px 2px rgba(8, 22, 14, 0.34);
   }
   .glass-subcard {
@@ -772,10 +774,10 @@
 
   <!-- ================= FIXED PAINTERLY BACKGROUND ACROSS WHOLE LANDING PAGE ================= -->
   <div id="globalPaintingBg" class="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-ink" aria-hidden="true">
-    <img id="globalBgImg" src="images/hero-painting.jpg?v=2" alt="" width="1024" height="582" fetchpriority="high" class="hero-painting-bg w-full h-full object-cover object-center will-change-transform">
+    <img id="globalBgImg" src="images/hero-painting.jpg?v=3" alt="" width="1024" height="626" fetchpriority="high" class="hero-painting-bg w-full h-full object-cover object-center will-change-transform">
     <div id="paintingLensLayer" class="painting-lens-layer">
       <div id="paintingLensZoom" class="painting-lens-zoom">
-        <img id="lensBgImg" src="images/hero-painting.jpg?v=2" alt="" width="1024" height="582" decoding="async" class="hero-painting-bg w-full h-full object-cover object-center will-change-transform">
+        <img id="lensBgImg" src="images/hero-painting.jpg?v=3" alt="" width="1024" height="626" decoding="async" class="hero-painting-bg w-full h-full object-cover object-center will-change-transform">
       </div>
     </div>
     <div class="hero-painting-scrim absolute inset-0"></div>
