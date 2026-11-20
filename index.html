@@ -698,6 +698,41 @@
     background: rgba(14, 34, 22, 0.44);
   }
 
+  /* ===== Botanical Zigzag Timeline ===== */
+  .tl-card {
+    background: rgba(11, 28, 18, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 12px 28px rgba(8, 22, 14, 0.22);
+    transition: border-color 0.22s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.22s ease;
+  }
+  .tl-row:hover .tl-card,
+  .tl-row.is-reached .tl-card {
+    border-color: rgba(166, 224, 106, 0.38);
+    background: rgba(11, 28, 18, 0.72);
+  }
+  .tl-node {
+    background: rgba(14, 34, 22, 0.90);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    box-shadow: 0 0 0 4px rgba(14, 34, 22, 0.32);
+    transition: border-color 0.28s ease, background-color 0.28s ease, color 0.28s ease;
+  }
+  .tl-row.is-reached .tl-node,
+  .tl-row:hover .tl-node {
+    background: #173824;
+    border-color: rgba(166, 224, 106, 0.78);
+    color: #DDF7BA;
+  }
+  .tl-branch {
+    transition: background-color 0.25s ease;
+  }
+  .tl-row.is-reached .tl-branch,
+  .tl-row:hover .tl-branch {
+    background: rgba(166, 224, 106, 0.65);
+  }
+  .tl-phase {
+    text-shadow: 0 1px 6px rgba(8, 22, 14, 0.58);
+  }
+
   /* ===== Prevent accidental text highlight while holding crystal glass lens ===== */
   html.glass-clear-hold body,
   html.glass-clear-hold .liquid-glass-sheet,
@@ -1200,44 +1235,25 @@
 
   <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
-  <!-- ================= TIMELINE ================= -->
-  <section id="timeline" class="relative py-16 md:py-24 px-6 sm:px-10 overflow-hidden">
-    <div class="max-w-3xl mx-auto relative z-20">
-      <div data-reveal class="max-w-xl">
-        <p class="text-xs font-medium text-lime mb-3">Timeline</p>
-        <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight text-cream">How We Got Here</h2>
+  <!-- ================= TIMELINE (Zigzag Botanical Track) ================= -->
+  <section id="timeline" class="relative pt-12 pb-16 md:pt-14 md:pb-20 px-6 sm:px-10 overflow-hidden">
+    <div class="max-w-5xl mx-auto relative z-20">
+      <div data-reveal class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-9 md:mb-10">
+        <div>
+          <p class="text-xs font-medium text-lime mb-2.5">Timeline</p>
+          <h2 class="font-display font-semibold text-3xl md:text-4xl tracking-tight text-cream">How We Got Here</h2>
+        </div>
+        <p class="text-xs sm:text-sm text-cream/85 max-w-lg leading-relaxed md:text-right">
+          Lima fase pengerjaan dari perencanaan hingga evaluasi tim.
+        </p>
       </div>
 
-      <div class="relative mt-12">
-        <div class="absolute left-[22px] top-2 bottom-2 w-px bg-white/20">
-          <div id="timelineProgress" class="absolute inset-x-0 top-0 bg-lime/80" style="height:100%; transform: scaleY(0); transform-origin: top;"></div>
+      <div id="timelineTrack" class="relative">
+        <div id="timelineSpine" class="pointer-events-none absolute left-[22px] md:left-1/2 -translate-x-1/2 top-6 bottom-6 w-px bg-white/25" aria-hidden="true">
+          <div id="timelineProgress" class="absolute inset-x-0 top-0 h-full bg-lime/85" style="transform: scaleY(0); transform-origin: top;"></div>
         </div>
 
-        <div class="relative pl-16 pb-12" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">01</div>
-          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Planning</h3>
-          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Menentukan tanaman dan pembagian tugas.</p>
-        </div>
-        <div class="relative pl-16 pb-12" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">02</div>
-          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Planting</h3>
-          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Melakukan proses penanaman.</p>
-        </div>
-        <div class="relative pl-16 pb-12" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">03</div>
-          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Caring</h3>
-          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Merawat dan memantau perkembangan tanaman.</p>
-        </div>
-        <div class="relative pl-16 pb-12" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">04</div>
-          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Growth</h3>
-          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Mengamati perubahan dan perkembangan tanaman.</p>
-        </div>
-        <div class="relative pl-16" data-reveal>
-          <div class="absolute left-0 top-0 w-11 h-11 rounded-full bg-white/10 border border-white/25 flex items-center justify-center font-mono text-xs text-lime tabular-nums">05</div>
-          <h3 class="font-display font-semibold text-xl text-cream mb-1.5">Reflection</h3>
-          <p class="text-sm md:text-base text-cream/80 leading-relaxed">Mengevaluasi project dan pengalaman teamwork.</p>
-        </div>
+        <ol id="timelineSteps" class="relative space-y-5 sm:space-y-5 md:space-y-5 list-none m-0 p-0"></ol>
       </div>
     </div>
   </section>
@@ -2074,6 +2090,93 @@ void main(){
       syncScrollSpy();
     })();
 
+    // 4.5) Zigzag Botanical Timeline (#timelineSteps)
+    const syncTimelineReached = (function initZigzagTimeline() {
+      const track = document.getElementById('timelineTrack');
+      const stepsEl = document.getElementById('timelineSteps');
+      const spine = document.getElementById('timelineSpine');
+      if (!track || !stepsEl || !spine) return () => {};
+
+      const TIMELINE_STEPS = [
+        { num: '01', title: 'Planning', phase: 'Persiapan Tim', desc: 'Menentukan tanaman dan pembagian tugas.' },
+        { num: '02', title: 'Planting', phase: 'Hari Tanam', desc: 'Melakukan proses penanaman.' },
+        { num: '03', title: 'Caring', phase: 'Perawatan Rutin', desc: 'Merawat dan memantau perkembangan tanaman.' },
+        { num: '04', title: 'Growth', phase: 'Pengamatan Tumbuh', desc: 'Mengamati perubahan dan perkembangan tanaman.' },
+        { num: '05', title: 'Reflection', phase: 'Evaluasi Akhir', desc: 'Mengevaluasi project dan pengalaman teamwork.' },
+      ];
+
+      stepsEl.innerHTML = TIMELINE_STEPS.map((step, i) => {
+        const isLeft = i % 2 === 0;
+        const cardOrder = isLeft ? 'md:order-1 md:pr-9' : 'md:order-3 md:pl-9';
+        const cardAlign = isLeft ? 'md:text-right' : 'md:text-left';
+        const desktopTwig = isLeft
+          ? 'hidden md:block right-[-6px] w-[42px]'
+          : 'hidden md:block left-[-6px] w-[42px]';
+        const oppOrder = isLeft
+          ? 'md:order-3 md:pl-9 md:justify-start'
+          : 'md:order-1 md:pr-9 md:justify-end md:text-right';
+
+        return `<li class="tl-row group grid grid-cols-[44px_1fr] md:grid-cols-[1fr_56px_1fr] items-center gap-x-4 md:gap-x-0" data-reveal>
+          <div class="order-1 md:order-2 relative z-10 flex justify-center">
+            <div class="tl-node w-11 h-11 rounded-full flex items-center justify-center font-mono text-xs font-medium tabular-nums text-lime">${step.num}</div>
+          </div>
+
+          <div class="order-2 ${cardOrder} relative min-w-0">
+            <span class="tl-branch md:hidden absolute top-1/2 -left-4 w-4 h-px bg-white/25 pointer-events-none" aria-hidden="true"></span>
+            <span class="tl-branch ${desktopTwig} absolute top-1/2 h-px bg-white/25 pointer-events-none" aria-hidden="true"></span>
+            <article class="tl-card rounded-2xl p-4 sm:p-5 ${cardAlign}">
+              <p class="font-mono text-[11px] font-medium text-lime/90 mb-1.5 md:hidden">Fase ${step.num} · ${step.phase}</p>
+              <h3 class="font-display font-semibold text-xl text-cream mb-1">${step.title}</h3>
+              <p class="text-sm md:text-[15px] text-cream/85 leading-relaxed">${step.desc}</p>
+            </article>
+          </div>
+
+          <div class="hidden md:flex items-center ${oppOrder}">
+            <span class="tl-phase font-mono text-xs text-cream/90 tracking-tight">${step.phase}</span>
+          </div>
+        </li>`;
+      }).join('');
+
+      const rows = Array.from(stepsEl.querySelectorAll('.tl-row'));
+      const nodes = Array.from(stepsEl.querySelectorAll('.tl-node'));
+      let nodeFractions = [];
+
+      const offsetTopWithin = (el, root) => {
+        let y = 0;
+        let cur = el;
+        while (cur && cur !== root) {
+          y += cur.offsetTop;
+          cur = cur.offsetParent;
+        }
+        return y;
+      };
+
+      const syncSpineGeometry = () => {
+        if (!nodes.length) return;
+        const centers = nodes.map((n) => offsetTopWithin(n, track) + n.offsetHeight / 2);
+        const startY = centers[0];
+        const endY = centers[centers.length - 1];
+        const span = Math.max(1, endY - startY);
+        spine.style.top = `${startY}px`;
+        spine.style.height = `${span}px`;
+        nodeFractions = centers.map((c) => Math.max(0, Math.min(1, (c - startY) / span)));
+      };
+
+      const syncReached = (progress) => {
+        rows.forEach((row, i) => {
+          const thr = nodeFractions[i] ?? 0;
+          row.classList.toggle('is-reached', progress > 0.005 && (progress + 0.02 >= thr));
+        });
+      };
+
+      syncSpineGeometry();
+      if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(syncSpineGeometry).observe(stepsEl);
+      }
+      window.addEventListener('resize', syncSpineGeometry, { passive: true });
+      return syncReached;
+    })();
+
     // 5) Animasi & scroll-effect yang agak berat — dilewati kalau reduced motion aktif
     if (!prefersReducedMotion) {
       // Animasi masuk hero bergaya Terrava (jalan sekali begitu halaman dibuka)
@@ -2112,15 +2215,22 @@ void main(){
         gsap.from(group.children, { opacity: 0, y: 28, duration: 0.7, stagger: 0.12, ease: 'power2.out', scrollTrigger: { trigger: group, start: 'top 85%' } });
       });
 
-      // Garis timeline "tumbuh" mengikuti scroll
+      // Garis timeline "tumbuh" mengikuti scroll & menyalakan milestone yang terlewati
       gsap.to('#timelineProgress', {
         scaleY: 1, ease: 'none',
-        scrollTrigger: { trigger: '#timeline', start: 'top 60%', end: 'bottom 70%', scrub: 1 },
+        scrollTrigger: {
+          trigger: '#timelineTrack',
+          start: 'top 68%',
+          end: 'bottom 68%',
+          scrub: 0.6,
+          onUpdate: (self) => syncTimelineReached(self.progress),
+        },
       });
     } else {
       // versi statis buat reduced motion: langsung tampil penuh, gak usah nunggu scroll
       const tp = document.getElementById('timelineProgress');
       if (tp) tp.style.transform = 'scaleY(1)';
+      syncTimelineReached(1);
     }
 
     if (!prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
