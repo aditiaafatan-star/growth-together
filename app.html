@@ -4,324 +4,802 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; script-src-attr 'none'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://dlrkhfucexjozycpwpel.supabase.co wss://dlrkhfucexjozycpwpel.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'none'">
-<title>Growth Together — Monitoring</title>
-<meta name="theme-color" content="#1F4B37">
+<title>Growth Together · Field Monitoring App</title>
+<meta name="theme-color" content="#0D1A13">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <script src="https://cdn.jsdelivr.net/npm/lucide@1.31.0/dist/umd/lucide.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style type="text/tailwindcss">
   @theme {
     --color-cream: #F7F4EA;
     --color-ink: #0D1A13;
+    --color-ink-soft: #17281F;
     --color-forest: #1F4B37;
     --color-sage: #6F8F7B;
+    --color-mist: #E4E9E0;
+    --color-lime: #A6E06A;
     --color-kertas: #A33260;
     --color-krokot: #9C5A1C;
+    --color-kertas-on-dark: #E87BA8;
+    --color-krokot-on-dark: #E8A96A;
     --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
     --font-body: 'Inter', system-ui, sans-serif;
   }
-  body { font-family: var(--font-body); background: var(--color-cream); color: var(--color-ink); }
-  h1, h2, h3 { font-family: var(--font-display); }
-  .jf-btn, .sf-btn { opacity: 0.6; }
-  .jf-btn.active, .sf-btn.active { background: var(--color-ink); color: var(--color-cream); opacity: 1; }
-  .math-tab { opacity: 0.6; }
-  .math-tab.active { background: var(--color-forest); color: var(--color-cream); opacity: 1; }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--color-ink);
+    color: var(--color-cream);
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); }
+  button:not(:disabled), a[href], summary, select:not(:disabled), label[for], [role="button"] { cursor: pointer; }
+  button:disabled, select:disabled { cursor: not-allowed; }
+  ::selection { background: var(--color-lime); color: var(--color-ink); }
+
+  :focus-visible {
+    outline: 2px solid var(--color-lime);
+    outline-offset: 2px;
+  }
+
+  /* ===== Top Reading Progress Hairline (matching index.html) ===== */
+  .scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 60;
+    pointer-events: none;
+    transform-origin: left center;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, rgba(166, 224, 106, 0.55) 0%, #A6E06A 65%, #E7FAD0 100%);
+    box-shadow: 0 0 10px rgba(166, 224, 106, 0.45);
+    will-change: transform;
+  }
+
+  /* ===== Painterly Background Scrim ===== */
+  .hero-painting-scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 24, 16, 0.28) 0%,
+      rgba(10, 24, 16, 0.14) 38%,
+      rgba(10, 24, 16, 0.24) 100%
+    );
+  }
+  .hero-title-shadow {
+    text-shadow: 0 2px 20px rgba(10, 22, 14, 0.50);
+  }
+
+  /* ===== Botanical Liquid Glass Nav & Connected Sheet (matching index.html) ===== */
+  .liquid-glass-nav {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: linear-gradient(180deg, rgba(20, 46, 30, 0.48) 0%, rgba(13, 30, 20, 0.62) 100%);
+    backdrop-filter: blur(16px) saturate(150%) brightness(1.02);
+    -webkit-backdrop-filter: blur(16px) saturate(150%) brightness(1.02);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 8px 24px rgba(8, 22, 14, 0.24);
+    color: var(--color-cream);
+    transition: background-color 0.2s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease;
+  }
+  .liquid-glass-nav.scrolled {
+    border-color: rgba(255, 255, 255, 0.30);
+    background: linear-gradient(180deg, rgba(16, 38, 25, 0.72) 0%, rgba(11, 27, 18, 0.84) 100%);
+  }
+
+  .liquid-glass-sheet {
+    position: relative;
+    border-top: 1px solid rgba(255, 255, 255, 0.40);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.44),
+      0 -10px 30px rgba(8, 22, 14, 0.22);
+    isolation: isolate;
+  }
+  .liquid-glass-sheet::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 26, 17, 0.56) 0%,
+      rgba(11, 28, 18, 0.60) 24%,
+      rgba(13, 32, 21, 0.54) 100%
+    );
+    backdrop-filter: blur(16px) saturate(130%) brightness(0.86);
+    -webkit-backdrop-filter: blur(16px) saturate(130%) brightness(0.86);
+    pointer-events: none;
+  }
+
+  .glass-subcard {
+    background: rgba(12, 30, 20, 0.48);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 8px 22px rgba(8, 22, 14, 0.16);
+    transition: border-color 0.18s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.18s ease;
+  }
+  .glass-subcard:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+  .glass-divider {
+    height: 1px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.14);
+    will-change: transform;
+  }
+
+  /* ===== Filter & Tab Pills ===== */
+  .jf-btn, .sf-btn {
+    color: rgba(247, 244, 234, 0.85);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    transition: background-color 0.16s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.16s ease, color 0.16s ease;
+  }
+  .jf-btn:hover, .sf-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.30);
+    color: #F7F4EA;
+  }
+  .jf-btn.active, .sf-btn.active {
+    background: var(--color-lime);
+    color: var(--color-ink);
+    border-color: var(--color-lime);
+    font-weight: 600;
+  }
+  .auth-tab {
+    color: var(--color-ink);
+    opacity: 0.6;
+    transition: background-color 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+  }
+  .auth-tab.active {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    opacity: 1;
+    box-shadow: 0 1px 3px rgba(13, 26, 19, 0.12);
+  }
+  .math-tab {
+    color: rgba(247, 244, 234, 0.78);
+    transition: background-color 0.18s ease, color 0.18s ease;
+  }
+  .math-tab:hover { color: #F7F4EA; }
+  .math-tab.active {
+    background: var(--color-lime);
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  /* ===== Paper Note Journal Cards (matching index.html aesthetic) ===== */
+  .journal-note-shell {
+    background: linear-gradient(180deg, #FDFBF5 0%, #F4EEDF 100%);
+    padding: 7px;
+    border-radius: 18px;
+    border: 1px solid rgba(23, 40, 31, 0.14);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      0 12px 26px -8px rgba(8, 22, 14, 0.34),
+      0 4px 10px rgba(8, 22, 14, 0.14);
+    color: var(--color-ink);
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+  }
+  .journal-note-shell:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.92),
+      0 16px 32px -8px rgba(8, 22, 14, 0.42),
+      0 6px 14px rgba(8, 22, 14, 0.18);
+  }
+  .journal-note-paper {
+    border-radius: 11px;
+    padding: 14px 16px 16px;
+    border: 1px solid rgba(23, 40, 31, 0.09);
+    border-top-width: 2.5px;
+    background-color: #FAF7EE;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 25px,
+      rgba(23, 40, 31, 0.05) 25px,
+      rgba(23, 40, 31, 0.05) 26px
+    );
+    background-position: 0 8px;
+  }
+  .journal-note-paper.jcc-kertas {
+    background-color: #FCF8F9;
+    border-color: rgba(163, 50, 96, 0.14);
+    border-top-color: #A33260;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 25px,
+      rgba(163, 50, 96, 0.055) 25px,
+      rgba(163, 50, 96, 0.055) 26px
+    );
+  }
+  .journal-note-paper.jcc-krokot {
+    background-color: #FBF7F0;
+    border-color: rgba(156, 90, 28, 0.14);
+    border-top-color: #9C5A1C;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 25px,
+      rgba(156, 90, 28, 0.055) 25px,
+      rgba(156, 90, 28, 0.055) 26px
+    );
+  }
+
+  /* Safe-area spacing for PWA / TWA notch & gesture bar */
+  .pt-safe { padding-top: max(0.75rem, env(safe-area-inset-top)); }
+  .pb-safe { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    .scroll-progress-bar { display: none; }
+  }
 </style>
 </head>
-<body class="min-h-screen pb-24">
+<body class="min-h-screen bg-ink text-cream antialiased overflow-x-hidden relative">
 
-  <!-- top bar -->
-  <header class="sticky top-0 z-30 bg-cream/95 backdrop-blur border-b border-ink/10 px-5 py-4 flex items-center justify-between">
-    <div class="flex items-center gap-2 font-display font-bold text-forest">
-      <i data-lucide="leaf" class="w-5 h-5"></i> Growth Together
-    </div>
-    <div id="authArea">
-      <button id="openAuthBtn" class="text-sm font-semibold text-forest">Sign In</button>
-      <div id="userArea" class="hidden items-center gap-3">
-        <span id="streakBadge" class="hidden items-center gap-1 text-xs font-medium text-krokot"><i data-lucide="flame" class="w-3.5 h-3.5"></i><span id="streakCount">0</span></span>
-        <button id="helpBtn" type="button" class="w-7 h-7 rounded-full border border-ink/15 flex items-center justify-center text-ink/65" aria-label="Bantuan"><i data-lucide="help-circle" class="w-3.5 h-3.5"></i></button>
-        <span id="welcomeText" class="text-xs text-ink/60"></span>
-        <button id="signOutBtn" class="text-xs border border-ink/20 rounded-full px-3 py-1">Logout</button>
+  <!-- Top Scroll Progress Hairline -->
+  <div id="scrollProgressBar" class="scroll-progress-bar" aria-hidden="true"></div>
+
+  <!-- ================= FIXED PAINTERLY BACKGROUND (matching index.html) ================= -->
+  <div id="globalPaintingBg" class="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-ink" aria-hidden="true">
+    <img src="images/hero-painting.jpg?v=3" alt="" width="1024" height="626" fetchpriority="high" class="app-painting-bg w-full h-full object-cover object-center will-change-transform">
+    <div class="hero-painting-scrim absolute inset-0"></div>
+  </div>
+
+  <!-- ================= FLOATING BOTANICAL GLASS TOP BAR ================= -->
+  <header class="fixed top-0 inset-x-0 z-40 pt-safe px-3 sm:px-6 pointer-events-none">
+    <div id="appNavPill" class="pointer-events-auto max-w-5xl mx-auto rounded-full liquid-glass-nav px-3.5 sm:px-5 py-2 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <a href="index.html" class="inline-flex items-center gap-2 font-display font-semibold text-sm sm:text-base tracking-tight text-cream hover:text-lime transition-colors min-h-[36px] shrink-0" title="Kembali ke website utama">
+          <span class="w-7 h-7 rounded-full bg-white/12 border border-white/20 flex items-center justify-center shrink-0">
+            <i data-lucide="leaf" class="w-3.5 h-3.5 text-lime" aria-hidden="true"></i>
+          </span>
+          <span class="whitespace-nowrap">Growth Together</span>
+        </a>
+        <span class="hidden sm:inline-block h-4 w-px bg-white/20" aria-hidden="true"></span>
+        <a href="index.html" class="hidden sm:inline-flex items-center gap-1 text-xs font-medium text-cream/75 hover:text-lime transition-colors px-2 py-1 rounded-full">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5" aria-hidden="true"></i>
+          <span>Website</span>
+        </a>
+      </div>
+
+      <div id="authArea" class="flex items-center gap-2 shrink-0">
+        <button id="openAuthBtn" type="button" class="font-semibold text-xs text-ink bg-cream hover:bg-lime px-4 py-2 min-h-[36px] rounded-full transition-colors shadow-sm">Sign In</button>
+        <div id="userArea" class="hidden items-center gap-1.5 sm:gap-2">
+          <span id="streakBadge" class="hidden items-center gap-1 text-xs font-mono font-semibold text-krokot-on-dark bg-krokot-on-dark/15 border border-krokot-on-dark/30 px-2.5 py-1 rounded-full tabular-nums" title="Streak harian">
+            <i data-lucide="flame" class="w-3.5 h-3.5" aria-hidden="true"></i><span id="streakCount">0</span>
+          </span>
+          <button id="helpBtn" type="button" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center text-cream/85 hover:text-lime transition-colors" aria-label="Panduan aplikasi">
+            <i data-lucide="help-circle" class="w-4 h-4" aria-hidden="true"></i>
+          </button>
+          <span id="welcomeText" class="hidden sm:inline-block text-xs font-medium text-cream/85 max-w-[110px] truncate px-1"></span>
+          <button id="signOutBtn" type="button" class="text-xs font-medium text-cream/90 hover:text-white border border-white/25 hover:border-red-300/70 hover:bg-red-500/20 rounded-full px-3 py-1.5 min-h-[36px] transition-colors">Logout</button>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- onboarding modal: 3 langkah, cuma tampil otomatis pertama kali (profiles.onboarded_at masih kosong) -->
-  <div id="onboardOverlay" class="fixed inset-0 z-[60] hidden items-center justify-center p-4 bg-ink/60 backdrop-blur-sm">
-    <div class="bg-cream rounded-3xl p-8 w-full max-w-sm text-center">
+  <!-- ================= ONBOARDING MODAL (3 langkah, tampil pertama kali) ================= -->
+  <div id="onboardOverlay" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-ink/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="obTitle">
+    <div id="onboardCard" class="bg-cream text-ink rounded-3xl p-7 sm:p-8 w-full max-w-sm text-center shadow-2xl border border-white/40">
       <div id="obStep0">
-        <i data-lucide="sprout" class="w-10 h-10 mx-auto text-forest mb-5"></i>
-        <h2 class="font-display font-bold text-xl mb-3">Welcome to Growth Together</h2>
-        <p class="text-sm text-ink/60 leading-relaxed">Aplikasi ini bantu kelompok kamu memantau pertumbuhan Bougainvillea &amp; Portulaca bareng-bareng, dari HP masing-masing.</p>
+        <div class="w-14 h-14 rounded-2xl bg-forest/10 border border-forest/15 flex items-center justify-center mx-auto mb-5">
+          <i data-lucide="sprout" class="w-7 h-7 text-forest" aria-hidden="true"></i>
+        </div>
+        <h2 id="obTitle" class="font-display font-bold text-xl tracking-tight mb-2.5">Welcome to Growth Together</h2>
+        <p class="text-sm text-ink/70 leading-relaxed">Aplikasi lapangan Kelompok 4 (X TE 3) untuk memantau pertumbuhan Bougainvillea &amp; Portulaca bareng dari HP masing-masing.</p>
       </div>
       <div id="obStep1" class="hidden">
-        <i data-lucide="camera" class="w-10 h-10 mx-auto text-forest mb-5"></i>
-        <h2 class="font-display font-bold text-xl mb-3">Monitor your plants</h2>
-        <p class="text-sm text-ink/60 leading-relaxed">Tambahkan update kapan pun kamu cek tanaman — tahap pertumbuhan, kondisi, dan catatan singkat.</p>
+        <div class="w-14 h-14 rounded-2xl bg-forest/10 border border-forest/15 flex items-center justify-center mx-auto mb-5">
+          <i data-lucide="camera" class="w-7 h-7 text-forest" aria-hidden="true"></i>
+        </div>
+        <h2 class="font-display font-bold text-xl tracking-tight mb-2.5">Catat &amp; Ukur Tanaman</h2>
+        <p class="text-sm text-ink/70 leading-relaxed">Tambahkan update kapan pun kamu mengecek tanaman: tahap tumbuh, kondisi, foto lapangan, serta tinggi dan jumlah daun untuk grafik matematika.</p>
       </div>
       <div id="obStep2" class="hidden">
-        <i data-lucide="flame" class="w-10 h-10 mx-auto text-krokot mb-5"></i>
-        <h2 class="font-display font-bold text-xl mb-3">Grow together</h2>
-        <p class="text-sm text-ink/60 leading-relaxed">Tiap update kasih kamu XP dan naikin level. Update tiap hari buat jaga streak — dan lihat progress kelompok di leaderboard.</p>
+        <div class="w-14 h-14 rounded-2xl bg-krokot/10 border border-krokot/20 flex items-center justify-center mx-auto mb-5">
+          <i data-lucide="flame" class="w-7 h-7 text-krokot" aria-hidden="true"></i>
+        </div>
+        <h2 class="font-display font-bold text-xl tracking-tight mb-2.5">Jaga Streak &amp; Tumbuh Bareng</h2>
+        <p class="text-sm text-ink/70 leading-relaxed">Setiap update memberi XP dan menaikkan level. Update rutin setiap hari untuk menjaga streak dan pantau progres kelompok di leaderboard.</p>
       </div>
-      <div class="flex gap-2 justify-center mt-7 mb-6" id="obDots">
-        <span class="ob-dot w-1.5 h-1.5 rounded-full bg-forest" data-i="0"></span>
-        <span class="ob-dot w-1.5 h-1.5 rounded-full bg-ink/15" data-i="1"></span>
-        <span class="ob-dot w-1.5 h-1.5 rounded-full bg-ink/15" data-i="2"></span>
+      <div class="flex gap-2 justify-center mt-7 mb-6" id="obDots" aria-hidden="true">
+        <span class="ob-dot h-2 w-6 rounded-full bg-forest transition-all" data-i="0"></span>
+        <span class="ob-dot h-2 w-2 rounded-full bg-ink/20 transition-all" data-i="1"></span>
+        <span class="ob-dot h-2 w-2 rounded-full bg-ink/20 transition-all" data-i="2"></span>
       </div>
       <div class="flex gap-3">
-        <button id="obBack" type="button" class="hidden flex-1 border border-ink/20 py-3 rounded-full text-sm font-semibold">Back</button>
-        <button id="obNext" type="button" class="flex-1 bg-forest text-cream py-3 rounded-full text-sm font-semibold">Next</button>
+        <button id="obBack" type="button" class="hidden flex-1 border border-ink/20 text-ink hover:bg-ink/5 py-3 min-h-[44px] rounded-full text-sm font-semibold transition-colors">Back</button>
+        <button id="obNext" type="button" class="flex-1 bg-forest hover:bg-ink text-cream py-3 min-h-[44px] rounded-full text-sm font-semibold transition-colors">Next</button>
       </div>
     </div>
   </div>
 
-  <!-- auth screen (tampil kalau belum login) -->
-  <section id="authScreen" class="px-5 py-10 max-w-sm mx-auto">
-    <div class="flex gap-1.5 mb-6 p-1 bg-ink/5 rounded-full">
-      <button id="tabSignIn" class="jf-btn active flex-1 py-2 rounded-full text-sm font-semibold">Sign In</button>
-      <button id="tabRegister" class="jf-btn flex-1 py-2 rounded-full text-sm font-semibold">Register</button>
+  <!-- ================= AUTH SCREEN (tampil kalau belum login) ================= -->
+  <section id="authScreen" class="min-h-screen flex flex-col justify-between pt-24 sm:pt-28">
+    <div class="max-w-lg mx-auto px-5 text-center pb-8 app-hero-copy">
+      <p class="text-xs font-medium text-lime mb-2.5 tracking-wide">Field Monitoring · X TE 3</p>
+      <h1 class="hero-title-shadow font-display font-semibold text-white tracking-tight leading-[1.08] text-3xl sm:text-4xl">
+        Monitor Tanaman<br>Langsung dari Lapangan
+      </h1>
+      <p class="hero-title-shadow mt-3 text-xs sm:text-sm text-white/90 max-w-sm mx-auto leading-relaxed">
+        Masuk dengan akun anggota Kelompok 4 untuk mencatat perawatan, foto harian, dan kurva pertumbuhan matematika.
+      </p>
     </div>
-    <form id="signInForm" class="space-y-3">
-      <input type="email" name="email" placeholder="Email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-      <input type="password" name="password" placeholder="Password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-      <p id="signInError" class="hidden text-xs text-kertas"></p>
-      <button type="submit" class="w-full bg-forest text-cream py-3 rounded-full text-sm font-semibold">Sign In</button>
-    </form>
-    <form id="registerForm" class="space-y-3 hidden">
-      <input type="text" name="name" placeholder="Nama" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-      <input type="email" name="email" placeholder="Email" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-      <input type="password" name="password" placeholder="Password" required minlength="6" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-      <p id="registerError" class="hidden text-xs text-kertas"></p>
-      <p id="registerSuccess" class="hidden text-xs text-forest"></p>
-      <button type="submit" class="w-full bg-forest text-cream py-3 rounded-full text-sm font-semibold">Create Account</button>
-    </form>
+
+    <div class="liquid-glass-sheet w-full rounded-t-[28px] sm:rounded-t-[36px] flex-1 pt-8 pb-12 px-5 sm:px-8">
+      <div class="max-w-sm mx-auto">
+        <div class="bg-cream text-ink rounded-3xl p-6 sm:p-7 shadow-2xl border border-white/50">
+          <div class="flex gap-1.5 mb-6 p-1 bg-ink/6 rounded-full" role="tablist" aria-label="Pilih mode masuk">
+            <button id="tabSignIn" type="button" role="tab" aria-selected="true" class="auth-tab active flex-1 py-2.5 min-h-[44px] rounded-full text-sm font-semibold">Sign In</button>
+            <button id="tabRegister" type="button" role="tab" aria-selected="false" class="auth-tab flex-1 py-2.5 min-h-[44px] rounded-full text-sm font-semibold">Register</button>
+          </div>
+
+          <form id="signInForm" class="space-y-4">
+            <div>
+              <label for="signInEmail" class="block text-xs font-medium text-ink/75 mb-1.5">Email</label>
+              <input id="signInEmail" type="email" name="email" placeholder="nama@email.com" required autocomplete="email" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white text-ink placeholder:text-ink/40 focus:border-forest focus:outline-none">
+            </div>
+            <div>
+              <label for="signInPassword" class="block text-xs font-medium text-ink/75 mb-1.5">Password</label>
+              <input id="signInPassword" type="password" name="password" placeholder="Minimal 6 karakter" required minlength="6" autocomplete="current-password" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white text-ink placeholder:text-ink/40 focus:border-forest focus:outline-none">
+            </div>
+            <p id="signInError" class="hidden text-xs font-medium text-kertas" role="alert"></p>
+            <button type="submit" class="w-full bg-forest hover:bg-ink text-cream py-3.5 min-h-[44px] rounded-full text-sm font-semibold transition-colors">Sign In</button>
+          </form>
+
+          <form id="registerForm" class="space-y-4 hidden">
+            <div>
+              <label for="regName" class="block text-xs font-medium text-ink/75 mb-1.5">Nama Lengkap</label>
+              <input id="regName" type="text" name="name" placeholder="Nama kamu" required autocomplete="name" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white text-ink placeholder:text-ink/40 focus:border-forest focus:outline-none">
+            </div>
+            <div>
+              <label for="regEmail" class="block text-xs font-medium text-ink/75 mb-1.5">Email</label>
+              <input id="regEmail" type="email" name="email" placeholder="nama@email.com" required autocomplete="email" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white text-ink placeholder:text-ink/40 focus:border-forest focus:outline-none">
+            </div>
+            <div>
+              <label for="regPassword" class="block text-xs font-medium text-ink/75 mb-1.5">Password</label>
+              <input id="regPassword" type="password" name="password" placeholder="Minimal 6 karakter" required minlength="6" autocomplete="new-password" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white text-ink placeholder:text-ink/40 focus:border-forest focus:outline-none">
+            </div>
+            <p id="registerError" class="hidden text-xs font-medium text-kertas" role="alert"></p>
+            <p id="registerSuccess" class="hidden text-xs font-medium text-forest" role="status"></p>
+            <button type="submit" class="w-full bg-forest hover:bg-ink text-cream py-3.5 min-h-[44px] rounded-full text-sm font-semibold transition-colors">Create Account</button>
+          </form>
+        </div>
+
+        <div class="mt-6 text-center">
+          <a href="index.html" class="inline-flex items-center gap-1.5 text-xs font-medium text-cream/80 hover:text-lime transition-colors py-2 px-3">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5" aria-hidden="true"></i>
+            <span>Kembali ke Halaman Utama Growth Together</span>
+          </a>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- main app (tampil kalau udah login) -->
-  <main id="mainApp" class="hidden px-5 py-6 max-w-lg mx-auto">
-    <div id="missionsCard" class="hidden rounded-2xl border border-ink/10 p-4 mb-4">
-      <p class="text-xs font-mono uppercase tracking-wider text-ink/60 mb-3">Today's Missions</p>
-      <div id="missionsList" class="space-y-2.5"></div>
-    </div>
+  <!-- ================= MAIN APP (tampil kalau udah login) ================= -->
+  <div id="mainApp" class="hidden min-h-screen flex flex-col">
 
-    <div id="levelCard" class="hidden rounded-2xl border border-ink/10 p-4 mb-4">
-      <div class="flex items-center justify-between mb-2">
+    <!-- Compact Painterly App Header Band over Painting -->
+    <div class="pt-20 sm:pt-24 pb-6 sm:pb-8 px-4 sm:px-6">
+      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-end justify-between gap-4 app-hero-copy">
         <div>
-          <p id="levelLabel" class="text-xs font-mono uppercase tracking-wider text-ink/60">Level 1</p>
-          <p id="xpLabel" class="font-display font-bold text-xl">0 XP</p>
+          <p class="text-xs font-medium text-lime mb-1.5">Field Monitoring · Kelompok 4 X TE 3</p>
+          <h1 class="hero-title-shadow font-display font-semibold text-white tracking-tight text-2xl sm:text-3xl md:text-4xl leading-tight">
+            Plant Monitoring Hub
+          </h1>
+          <p class="hero-title-shadow text-xs sm:text-sm text-white/85 mt-1">
+            Catat kondisi Bougainvillea &amp; Portulaca, selesaikan misi harian, dan pantau grafik laju tumbuh.
+          </p>
         </div>
-        <span class="flex items-center gap-1.5 text-sm font-medium text-krokot bg-krokot/10 px-3 py-1.5 rounded-full">
-          <i data-lucide="flame" class="w-4 h-4"></i><span id="streakLabel">0 hari</span>
-        </span>
+        <button id="openAddForm" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-lime hover:bg-cream text-ink px-6 py-3.5 min-h-[46px] rounded-full text-sm font-semibold transition-colors shadow-lg shrink-0">
+          <i data-lucide="plus" class="w-4 h-4" aria-hidden="true"></i>
+          <span>Tambah Update</span>
+        </button>
       </div>
-      <div class="h-2 rounded-full bg-ink/10 overflow-hidden mt-3">
-        <div id="levelProgressBar" class="h-full bg-forest" style="width:0%"></div>
-      </div>
-      <p id="levelNextLabel" class="text-[11px] text-ink/60 mt-1.5"></p>
     </div>
 
-    <p class="text-xs font-mono uppercase tracking-wider text-ink/60 mb-2.5">My Plants</p>
-    <div id="plantStatusRow" class="grid grid-cols-2 gap-3 mb-6"></div>
+    <!-- Connected Frosted Liquid Glass Sheet (matching index.html) -->
+    <main class="liquid-glass-sheet relative z-10 flex-1 w-full rounded-t-[28px] sm:rounded-t-[36px] pt-6 sm:pt-8 pb-24 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-5xl mx-auto">
 
-    <div id="leaderboardCard" class="hidden mb-6">
-      <p class="text-xs font-mono uppercase tracking-wider text-ink/60 mb-2.5">Team Leaderboard</p>
-      <div id="leaderboardList" class="rounded-2xl border border-ink/10 divide-y divide-ink/8"></div>
-    </div>
+        <!-- Quick Anchor Navigation Strip inside Sheet -->
+        <nav aria-label="Bagian aplikasi" class="flex items-center gap-2 overflow-x-auto pb-4 mb-5 border-b border-white/15 text-xs font-medium">
+          <a href="#plantsOverview" class="px-3.5 py-2 min-h-[36px] inline-flex items-center rounded-full bg-white/10 hover:bg-white/18 text-cream whitespace-nowrap transition-colors">Status Tanaman</a>
+          <a href="#mathReportCard" class="px-3.5 py-2 min-h-[36px] inline-flex items-center rounded-full bg-white/10 hover:bg-white/18 text-cream whitespace-nowrap transition-colors">Laporan Matematika</a>
+          <a href="#journalSection" class="px-3.5 py-2 min-h-[36px] inline-flex items-center rounded-full bg-white/10 hover:bg-white/18 text-cream whitespace-nowrap transition-colors">Growth Journal</a>
+          <a href="#leaderboardCard" class="px-3.5 py-2 min-h-[36px] inline-flex items-center rounded-full bg-white/10 hover:bg-white/18 text-cream whitespace-nowrap transition-colors">Leaderboard</a>
+        </nav>
 
-    <!-- LAPORAN MATEMATIKA & GRAFIK PERTUMBUHAN -->
-    <div id="mathReportCard" class="rounded-3xl border border-forest/20 bg-white/70 backdrop-blur-sm p-4.5 mb-6 shadow-xs">
-      <div class="flex items-center justify-between gap-2 mb-3.5">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-full bg-forest text-cream flex items-center justify-center shrink-0">
-            <i data-lucide="calculator" class="w-4 h-4"></i>
+        <!-- Responsive 2-Column Workspace on Desktop, Single Field-Priority Stack on Mobile -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-7 items-start">
+
+          <!-- LEFT RAIL (5 cols on lg): Status, Gamification, Missions, Leaderboard -->
+          <div class="lg:col-span-5 space-y-5 min-w-0">
+
+            <!-- My Plants Status -->
+            <section id="plantsOverview" class="app-reveal">
+              <div class="flex items-center justify-between mb-2.5">
+                <h2 class="text-xs font-mono uppercase tracking-wider text-lime">My Plants</h2>
+                <span class="text-[11px] font-mono text-cream/65">Live Supabase</span>
+              </div>
+              <div id="plantStatusRow" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
+                <div class="glass-subcard rounded-2xl p-4 text-xs text-cream/70">Memuat status tanaman...</div>
+              </div>
+            </section>
+
+            <!-- Level & Streak Card -->
+            <section id="levelCard" class="hidden glass-subcard rounded-2xl p-5 app-reveal">
+              <div class="flex items-center justify-between gap-3 mb-2">
+                <div>
+                  <p id="levelLabel" class="text-xs font-mono uppercase tracking-wider text-lime">Level 1</p>
+                  <p id="xpLabel" class="font-display font-bold text-2xl text-cream tabular-nums">0 XP</p>
+                </div>
+                <span class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-krokot-on-dark bg-krokot-on-dark/15 border border-krokot-on-dark/30 px-3 py-1.5 rounded-full tabular-nums">
+                  <i data-lucide="flame" class="w-4 h-4" aria-hidden="true"></i><span id="streakLabel">0 hari</span>
+                </span>
+              </div>
+              <div class="h-2 rounded-full bg-white/12 overflow-hidden mt-3">
+                <div id="levelProgressBar" class="h-full bg-lime rounded-full transition-[width] duration-500 ease-out" style="width:0%"></div>
+              </div>
+              <p id="levelNextLabel" class="text-xs text-cream/70 mt-2 font-mono"></p>
+            </section>
+
+            <!-- Today's Missions -->
+            <section id="missionsCard" class="hidden glass-subcard rounded-2xl p-5 app-reveal">
+              <div class="flex items-center justify-between mb-3.5">
+                <h2 class="text-xs font-mono uppercase tracking-wider text-lime">Today's Missions</h2>
+                <span class="text-[11px] font-mono text-cream/65">Harian</span>
+              </div>
+              <div id="missionsList" class="space-y-3"></div>
+            </section>
+
+            <!-- Team Leaderboard -->
+            <section id="leaderboardCard" class="hidden app-reveal">
+              <div class="flex items-center justify-between mb-2.5">
+                <h2 class="text-xs font-mono uppercase tracking-wider text-lime">Team Leaderboard</h2>
+                <span class="text-[11px] font-mono text-cream/65">Kelompok 4</span>
+              </div>
+              <div id="leaderboardList" class="glass-subcard rounded-2xl divide-y divide-white/12 overflow-hidden"></div>
+            </section>
+
+          </div>
+
+          <!-- RIGHT WORKSPACE (7 cols on lg): Laporan Matematika + Growth Journal -->
+          <div class="lg:col-span-7 space-y-6 min-w-0">
+
+            <!-- LAPORAN MATEMATIKA & GRAFIK PERTUMBUHAN -->
+            <section id="mathReportCard" class="glass-subcard rounded-3xl p-5 sm:p-6 app-reveal">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-lime/15 border border-lime/35 text-lime flex items-center justify-center shrink-0">
+                    <i data-lucide="calculator" class="w-5 h-5" aria-hidden="true"></i>
+                  </div>
+                  <div>
+                    <h2 class="font-display font-semibold text-base sm:text-lg text-cream leading-tight">Laporan Matematika</h2>
+                    <p class="text-xs text-cream/70">Kurva pertumbuhan &amp; analisis laju tinggi tanaman</p>
+                  </div>
+                </div>
+                <div class="inline-flex gap-1 bg-ink/55 border border-white/15 p-1 rounded-full text-xs font-medium self-start sm:self-auto" id="mathPlantTabs" role="tablist" aria-label="Pilih tanaman untuk grafik">
+                  <button id="mathTabKertas" type="button" role="tab" aria-selected="true" class="math-tab active px-3.5 py-1.5 min-h-[36px] rounded-full text-xs font-medium">Bougainvillea</button>
+                  <button id="mathTabKrokot" type="button" role="tab" aria-selected="false" class="math-tab px-3.5 py-1.5 min-h-[36px] rounded-full text-xs font-medium">Portulaca</button>
+                </div>
+              </div>
+
+              <!-- Ringkasan Metrik Matematika -->
+              <div class="grid grid-cols-2 gap-2.5 sm:gap-3 mb-4" id="mathMetricsSummary">
+                <div class="bg-ink/45 rounded-2xl p-3.5 border border-white/12">
+                  <span class="text-[11px] font-mono text-lime block mb-1">Tinggi Terkini (h)</span>
+                  <span id="mathCurrentHeight" class="text-lg sm:text-xl font-bold font-display text-cream tabular-nums block">-</span>
+                  <span id="mathInitialHeight" class="text-[11px] text-cream/70 block mt-0.5">Awal: -</span>
+                </div>
+                <div class="bg-ink/45 rounded-2xl p-3.5 border border-white/12">
+                  <span class="text-[11px] font-mono text-lime block mb-1">Pertumbuhan (Δh)</span>
+                  <span id="mathDeltaHeight" class="text-lg sm:text-xl font-bold font-display text-cream tabular-nums block">-</span>
+                  <span id="mathDurationDays" class="text-[11px] text-cream/70 block mt-0.5">Rentang: -</span>
+                </div>
+                <div class="bg-white/[0.06] rounded-2xl p-3.5 border border-white/10">
+                  <span class="text-[11px] font-mono text-cream/75 block mb-1">Laju Rata-rata (v̄)</span>
+                  <span id="mathAvgRate" class="text-sm sm:text-base font-bold font-display text-cream tabular-nums block">-</span>
+                  <span class="text-[11px] text-cream/65 block mt-0.5">v̄ = Δh / Δt (cm/hari)</span>
+                </div>
+                <div class="bg-white/[0.06] rounded-2xl p-3.5 border border-white/10">
+                  <span class="text-[11px] font-mono text-cream/75 block mb-1">Morfologi Terkini</span>
+                  <span id="mathLeavesSummary" class="text-sm sm:text-base font-bold font-display text-cream tabular-nums block">-</span>
+                  <span id="mathWidthSummary" class="text-[11px] text-cream/65 block mt-0.5">Lebar daun: -</span>
+                </div>
+              </div>
+
+              <!-- Wadah Grafik Pertumbuhan (SVG Responsif Dark Botanical) -->
+              <div class="bg-ink/60 rounded-2xl p-4 border border-white/14 mb-4">
+                <div class="flex items-center justify-between gap-2 mb-2.5">
+                  <span class="text-xs font-semibold text-cream/90 flex items-center gap-1.5">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-lime" aria-hidden="true"></i> Grafik Tinggi Tanaman (cm)
+                  </span>
+                  <span id="mathDataPointsCount" class="text-[11px] font-mono text-cream/70 tabular-nums">0 titik</span>
+                </div>
+                <div id="mathChartContainer" class="w-full overflow-hidden"></div>
+              </div>
+
+              <!-- Tabel Data Rekap Matematika & Aksi Ekspor -->
+              <details class="group bg-ink/45 rounded-2xl border border-white/14 overflow-hidden">
+                <summary class="flex items-center justify-between px-4 py-3.5 min-h-[44px] text-xs font-semibold select-none text-cream/90 hover:bg-white/5 transition-colors">
+                  <span class="flex items-center gap-2"><i data-lucide="table" class="w-4 h-4 text-lime" aria-hidden="true"></i> Rekap Tabel Data Pengamatan</span>
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform group-open:rotate-180 text-cream/70" aria-hidden="true"></i>
+                </summary>
+                <div class="p-4 border-t border-white/10">
+                  <div class="overflow-x-auto max-h-60 mb-3.5">
+                    <table class="w-full text-left text-xs" id="mathDataTable">
+                      <thead class="bg-white/8 font-mono text-cream/75 text-[11px]">
+                        <tr>
+                          <th class="p-2 rounded-l-lg">Tgl</th>
+                          <th class="p-2">h (cm)</th>
+                          <th class="p-2">Δh</th>
+                          <th class="p-2">Laju</th>
+                          <th class="p-2">Daun</th>
+                          <th class="p-2 rounded-r-lg">Lebar</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-white/10" id="mathTableBody">
+                        <tr><td colspan="6" class="p-4 text-center text-cream/65">Belum ada data ukuran.</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="flex flex-wrap gap-2">
+                    <button id="mathCopyTableBtn" type="button" class="flex-1 min-h-[44px] flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-full text-xs font-semibold bg-lime text-ink hover:bg-cream transition-colors">
+                      <i data-lucide="copy" class="w-3.5 h-3.5" aria-hidden="true"></i> Salin Tabel (Word/Docs)
+                    </button>
+                    <button id="mathExportCsvBtn" type="button" class="min-h-[44px] flex items-center justify-center gap-1.5 py-2.5 px-4 rounded-full text-xs font-semibold border border-white/25 text-cream hover:bg-white/10 transition-colors">
+                      <i data-lucide="download" class="w-3.5 h-3.5" aria-hidden="true"></i> CSV
+                    </button>
+                  </div>
+                </div>
+              </details>
+            </section>
+
+            <div class="glass-divider"></div>
+
+            <!-- GROWTH JOURNAL FEED -->
+            <section id="journalSection" class="app-reveal">
+              <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
+                <div>
+                  <p class="text-xs font-mono uppercase tracking-wider text-lime mb-1">Growth Journal</p>
+                  <h2 class="font-display font-semibold text-xl sm:text-2xl text-cream tracking-tight">Catatan Perkembangan</h2>
+                </div>
+                <div class="flex gap-2 overflow-x-auto pb-1" id="plantFilters" role="group" aria-label="Filter tanaman">
+                  <button type="button" class="jf-btn active px-4 py-2 min-h-[40px] rounded-full text-xs font-medium border shrink-0" data-filter="semua">Semua</button>
+                  <button type="button" class="jf-btn px-4 py-2 min-h-[40px] rounded-full text-xs font-medium border shrink-0" data-filter="kertas">Bougainvillea</button>
+                  <button type="button" class="jf-btn px-4 py-2 min-h-[40px] rounded-full text-xs font-medium border shrink-0" data-filter="krokot">Portulaca</button>
+                </div>
+              </div>
+
+              <div class="relative mb-5">
+                <label for="journalSearch" class="sr-only">Cari catatan perkembangan</label>
+                <i data-lucide="search" class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-cream/65" aria-hidden="true"></i>
+                <input id="journalSearch" type="text" placeholder="Cari aktivitas atau catatan..." class="w-full border border-white/20 rounded-full pl-11 pr-4 py-3 min-h-[44px] text-sm bg-ink/45 text-cream placeholder:text-cream/55 focus:border-lime focus:outline-none">
+              </div>
+
+              <div id="journalGrid" class="space-y-4">
+                <div class="glass-subcard rounded-2xl p-6 text-center text-xs text-cream/70">Memuat catatan perkembangan tanaman...</div>
+              </div>
+
+              <div id="journalEmpty" class="hidden glass-subcard rounded-2xl text-center py-14 px-6 border border-dashed border-white/25">
+                <i data-lucide="sprout" class="w-8 h-8 mx-auto text-lime/80 mb-3" aria-hidden="true"></i>
+                <p class="font-display font-semibold text-base text-cream">Belum ada catatan perkembangan</p>
+                <p class="text-xs text-cream/75 mt-1.5 max-w-xs mx-auto">Tekan tombol <span class="text-lime font-medium">Tambah Update</span> di atas untuk mencatat kondisi tanaman pertama kali.</p>
+              </div>
+
+              <div id="journalErrorState" class="hidden glass-subcard rounded-2xl text-center py-14 px-6 border border-dashed border-kertas-on-dark/40">
+                <i data-lucide="wifi-off" class="w-8 h-8 mx-auto text-kertas-on-dark mb-3" aria-hidden="true"></i>
+                <p class="font-display font-semibold text-base text-cream mb-1">Gagal memuat data tanaman</p>
+                <p class="text-xs text-cream/75 mb-5">Periksa koneksi internet lalu coba muat ulang.</p>
+                <button id="journalRetryBtn" type="button" class="inline-flex items-center gap-2 bg-lime text-ink px-5 py-2.5 min-h-[44px] rounded-full text-xs font-semibold hover:bg-cream transition-colors">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5" aria-hidden="true"></i> Coba Lagi
+                </button>
+              </div>
+            </section>
+
+          </div>
+        </div>
+
+        <!-- Subtle App Footer -->
+        <footer class="mt-12 pt-6 border-t border-white/14 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-cream/65 font-mono">
+          <span>Growth Together · Kelompok 4 X TE 3</span>
+          <a href="index.html" class="text-lime hover:text-cream transition-colors">Buka Website Utama</a>
+        </footer>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= OVERLAY FORM TAMBAH UPDATE (Paper Sheet Modal) ================= -->
+  <div id="addFormOverlay" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center sm:p-4 bg-ink/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="addFormTitle">
+    <form id="journalForm" class="bg-cream text-ink rounded-t-3xl sm:rounded-3xl p-6 sm:p-7 pb-safe w-full max-w-md max-h-[90vh] overflow-y-auto shadow-2xl border border-white/50">
+      <div class="w-10 h-1 bg-ink/20 rounded-full mx-auto mb-4 sm:hidden" aria-hidden="true"></div>
+      <div class="flex items-center justify-between mb-5">
+        <h3 id="addFormTitle" class="font-display font-bold text-xl tracking-tight text-ink">Tambah Update</h3>
+        <button type="button" id="closeAddFormIcon" class="w-10 h-10 rounded-full hover:bg-ink/8 flex items-center justify-center text-ink/65 hover:text-ink transition-colors" aria-label="Tutup form">
+          <i data-lucide="x" class="w-5 h-5" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5">
+        <div>
+          <label for="fPlant" class="block text-xs font-medium text-ink/75 mb-1.5">Tanaman</label>
+          <select id="fPlant" name="plant" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white text-ink focus:border-forest focus:outline-none">
+            <option value="" disabled selected>Pilih tanaman</option>
+            <option value="kertas">Bougainvillea</option>
+            <option value="krokot">Portulaca</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="fDate" class="block text-xs font-medium text-ink/75 mb-1.5">Tanggal</label>
+            <input id="fDate" type="date" name="date" required class="w-full border border-ink/15 rounded-xl px-3.5 py-3 text-sm bg-white text-ink focus:border-forest focus:outline-none">
           </div>
           <div>
-            <h3 class="font-display font-bold text-sm text-forest leading-tight">Laporan Matematika</h3>
-            <p class="text-[10px] text-ink/65">Kurva Pertumbuhan & Analisis Laju</p>
+            <label for="fStage" class="block text-xs font-medium text-ink/75 mb-1.5">Tahap Tumbuh</label>
+            <select id="fStage" name="stage" required class="w-full border border-ink/15 rounded-xl px-3.5 py-3 text-sm bg-white text-ink focus:border-forest focus:outline-none">
+              <option value="" disabled selected>Pilih tahap</option>
+              <option value="seed">Seed</option>
+              <option value="sprout">Sprout</option>
+              <option value="growing">Growing</option>
+              <option value="mature">Mature</option>
+              <option value="bloom">Bloom</option>
+            </select>
           </div>
         </div>
-        <div class="flex gap-1 bg-ink/5 p-1 rounded-full text-xs font-medium" id="mathPlantTabs">
-          <button id="mathTabKertas" type="button" class="math-tab active px-3 py-1 rounded-full text-[11px] font-semibold transition-all">Bougainvillea</button>
-          <button id="mathTabKrokot" type="button" class="math-tab px-3 py-1 rounded-full text-[11px] font-semibold transition-all">Portulaca</button>
-        </div>
-      </div>
 
-      <!-- Ringkasan Metrik Matematika -->
-      <div class="grid grid-cols-2 gap-2 mb-3.5" id="mathMetricsSummary">
-        <div class="bg-forest/5 rounded-2xl p-3 border border-forest/10">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-forest block mb-0.5">Tinggi Terkini (h)</span>
-          <span id="mathCurrentHeight" class="text-lg font-bold font-display text-forest block">-</span>
-          <span id="mathInitialHeight" class="text-[10px] text-ink/60 block">Awal: -</span>
+        <div>
+          <label for="fCondition" class="block text-xs font-medium text-ink/75 mb-1.5">Kondisi Tanaman</label>
+          <select id="fCondition" name="condition" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white text-ink focus:border-forest focus:outline-none">
+            <option value="" disabled selected>Pilih kondisi</option>
+            <option value="healthy">Healthy</option>
+            <option value="attention">Needs Attention</option>
+            <option value="recovering">Recovering</option>
+            <option value="critical">Critical</option>
+          </select>
         </div>
-        <div class="bg-forest/5 rounded-2xl p-3 border border-forest/10">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-forest block mb-0.5">Total Pertumbuhan (Δh)</span>
-          <span id="mathDeltaHeight" class="text-lg font-bold font-display text-forest block">-</span>
-          <span id="mathDurationDays" class="text-[10px] text-ink/60 block">Rentang: -</span>
-        </div>
-        <div class="bg-cream rounded-2xl p-3 border border-ink/10">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-ink/60 block mb-0.5">Laju Rata-rata (v̄)</span>
-          <span id="mathAvgRate" class="text-sm font-bold font-display text-ink block">-</span>
-          <span class="text-[10px] text-ink/60 block">v̄ = Δh / Δt (cm/hari)</span>
-        </div>
-        <div class="bg-cream rounded-2xl p-3 border border-ink/10">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-ink/60 block mb-0.5">Morfologi Terkini</span>
-          <span id="mathLeavesSummary" class="text-sm font-bold font-display text-ink block">-</span>
-          <span id="mathWidthSummary" class="text-[10px] text-ink/60 block">Lebar daun: -</span>
-        </div>
-      </div>
-
-      <!-- Wadah Grafik Pertumbuhan (SVG Responsif) -->
-      <div class="bg-white rounded-2xl p-3.5 border border-ink/10 mb-3.5">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-semibold text-ink/80 flex items-center gap-1.5">
-            <i data-lucide="trending-up" class="w-3.5 h-3.5 text-forest"></i> Grafik Tinggi Tanaman (cm)
-          </span>
-          <span id="mathDataPointsCount" class="text-[10px] font-mono text-ink/60">0 titik</span>
-        </div>
-        <div id="mathChartContainer" class="w-full overflow-hidden">
-          <!-- SVG dirender secara dinamis via JavaScript -->
-        </div>
-      </div>
-
-      <!-- Tabel Data Rekap Matematika & Aksi Ekspor -->
-      <details class="group bg-white rounded-2xl border border-ink/10 overflow-hidden">
-        <summary class="flex items-center justify-between px-3.5 py-3 text-xs font-semibold cursor-pointer select-none text-ink/75 hover:bg-ink/5">
-          <span class="flex items-center gap-1.5"><i data-lucide="table" class="w-3.5 h-3.5 text-forest"></i> Rekap Tabel Data Pengamatan</span>
-          <i data-lucide="chevron-down" class="w-3.5 h-3.5 transition-transform group-open:rotate-180 text-ink/60"></i>
-        </summary>
-        <div class="p-3.5 border-t border-ink/5">
-          <div class="overflow-x-auto max-h-56 mb-3">
-            <table class="w-full text-left text-[11px]" id="mathDataTable">
-              <thead class="bg-ink/5 font-mono text-ink/65 text-[10px]">
-                <tr>
-                  <th class="p-1.5">Tgl</th>
-                  <th class="p-1.5">h (cm)</th>
-                  <th class="p-1.5">Δh</th>
-                  <th class="p-1.5">Laju (cm/hr)</th>
-                  <th class="p-1.5">Daun</th>
-                  <th class="p-1.5">Lebar</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-ink/5" id="mathTableBody">
-                <tr><td colspan="6" class="p-3 text-center text-ink/60">Belum ada data ukuran.</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="flex gap-2">
-            <button id="mathCopyTableBtn" type="button" class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-full text-xs font-semibold bg-forest text-cream hover:bg-ink transition-colors">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i> Salin Tabel (Word/Docs)
-            </button>
-            <button id="mathExportCsvBtn" type="button" class="flex items-center justify-center gap-1.5 py-2 px-3.5 rounded-full text-xs font-semibold border border-ink/20 text-ink hover:bg-ink/5 transition-colors">
-              <i data-lucide="download" class="w-3.5 h-3.5"></i> CSV
-            </button>
-          </div>
-        </div>
-      </details>
-    </div>
-
-    <button id="openAddForm" class="w-full flex items-center justify-center gap-2 bg-forest text-cream py-3.5 rounded-full text-sm font-semibold mb-5">
-      <i data-lucide="plus" class="w-4 h-4"></i> Tambah Update
-    </button>
-
-    <div class="flex gap-2 mb-3 overflow-x-auto" id="plantFilters">
-      <button class="jf-btn active px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="semua">Semua</button>
-      <button class="jf-btn px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="kertas">Bougainvillea</button>
-      <button class="jf-btn px-3 py-1.5 rounded-full text-xs font-medium border border-ink/15 shrink-0" data-filter="krokot">Portulaca</button>
-    </div>
-    <div class="relative mb-5">
-      <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-ink/60"></i>
-      <input id="journalSearch" type="text" placeholder="Cari catatan..." class="w-full border border-ink/15 rounded-full pl-10 pr-4 py-2.5 text-sm bg-white">
-    </div>
-
-    <div id="journalGrid" class="space-y-4"></div>
-    <div id="journalEmpty" class="hidden text-center py-16">
-      <i data-lucide="sprout" class="w-8 h-8 mx-auto text-forest/70 mb-3"></i>
-      <p class="text-sm text-ink/65">Belum ada update. Tambahkan yang pertama.</p>
-    </div>
-    <div id="journalErrorState" class="hidden text-center py-16">
-      <p class="text-sm text-kertas mb-3">Gagal memuat data.</p>
-      <button id="journalRetryBtn" class="text-sm font-semibold text-forest">Coba Lagi</button>
-    </div>
-  </main>
-
-  <!-- overlay form tambah update -->
-  <div id="addFormOverlay" class="fixed inset-0 z-50 hidden items-end justify-center bg-ink/60">
-    <form id="journalForm" class="bg-cream rounded-t-3xl p-6 w-full max-h-[88vh] overflow-y-auto">
-      <div class="w-10 h-1 bg-ink/20 rounded-full mx-auto mb-5"></div>
-      <h3 class="font-display font-bold text-lg mb-4">Tambah Update</h3>
-      <div class="space-y-3">
-        <select name="plant" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-          <option value="" disabled selected>Pilih tanaman</option>
-          <option value="kertas">Bougainvillea</option>
-          <option value="krokot">Portulaca</option>
-        </select>
-        <input type="date" name="date" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-        <select name="stage" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-          <option value="" disabled selected>Tahap pertumbuhan</option>
-          <option value="seed">Seed</option><option value="sprout">Sprout</option>
-          <option value="growing">Growing</option><option value="mature">Mature</option><option value="bloom">Bloom</option>
-        </select>
-        <select name="condition" required class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-          <option value="" disabled selected>Kondisi</option>
-          <option value="healthy">Healthy</option><option value="attention">Needs Attention</option>
-          <option value="recovering">Recovering</option><option value="critical">Critical</option>
-        </select>
 
         <!-- PENGUKURAN PERTUMBUHAN (LAPORAN MATEMATIKA) -->
-        <div class="p-3.5 bg-forest/5 rounded-2xl border border-forest/15 space-y-2.5">
+        <div class="p-3.5 bg-forest/[0.06] rounded-2xl border border-forest/15 space-y-2.5">
           <div class="flex items-center justify-between text-xs font-semibold text-forest">
-            <span class="flex items-center gap-1.5"><i data-lucide="ruler" class="w-3.5 h-3.5"></i> Ukuran Pertumbuhan</span>
-            <span class="text-[10px] font-mono font-normal text-forest">Data Matematika</span>
+            <span class="flex items-center gap-1.5"><i data-lucide="ruler" class="w-3.5 h-3.5" aria-hidden="true"></i> Ukuran Pertumbuhan</span>
+            <span class="text-[10px] font-mono font-normal text-forest/85">Opsional · Matematika</span>
           </div>
           <div class="grid grid-cols-3 gap-2">
             <div>
-              <label class="block text-[10px] font-mono text-ink/65 mb-1">Tinggi (cm)</label>
-              <input type="number" name="height_cm" step="0.1" min="0" placeholder="12.5" class="w-full border border-ink/15 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-forest">
+              <label for="fHeight" class="block text-[11px] font-mono text-ink/70 mb-1">Tinggi (cm)</label>
+              <input id="fHeight" type="number" name="height_cm" step="0.1" min="0" placeholder="12.5" class="w-full border border-ink/15 rounded-xl px-2.5 py-2.5 text-xs bg-white text-ink focus:outline-none focus:border-forest">
             </div>
             <div>
-              <label class="block text-[10px] font-mono text-ink/65 mb-1">Jml Daun</label>
-              <input type="number" name="leaf_count" step="1" min="0" placeholder="8" class="w-full border border-ink/15 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-forest">
+              <label for="fLeaf" class="block text-[11px] font-mono text-ink/70 mb-1">Jml Daun</label>
+              <input id="fLeaf" type="number" name="leaf_count" step="1" min="0" placeholder="8" class="w-full border border-ink/15 rounded-xl px-2.5 py-2.5 text-xs bg-white text-ink focus:outline-none focus:border-forest">
             </div>
             <div>
-              <label class="block text-[10px] font-mono text-ink/65 mb-1">Lebar (cm)</label>
-              <input type="number" name="leaf_width_cm" step="0.1" min="0" placeholder="3.2" class="w-full border border-ink/15 rounded-xl px-2.5 py-2 text-xs bg-white focus:outline-none focus:border-forest">
+              <label for="fWidth" class="block text-[11px] font-mono text-ink/70 mb-1">Lebar (cm)</label>
+              <input id="fWidth" type="number" name="leaf_width_cm" step="0.1" min="0" placeholder="3.2" class="w-full border border-ink/15 rounded-xl px-2.5 py-2.5 text-xs bg-white text-ink focus:outline-none focus:border-forest">
             </div>
           </div>
-          <p class="text-[10px] text-ink/60">Isi saat melakukan pengukuran (opsional, untuk grafik & tabel laporan).</p>
+          <p class="text-[11px] text-ink/65">Isi saat mengukur untuk memperbarui kurva &amp; tabel laporan otomatis.</p>
         </div>
 
-        <input type="text" name="activity" placeholder="Aktivitas (cth: disiram & diukur)" required maxlength="120" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white">
-        <textarea name="notes" rows="2" placeholder="Catatan (opsional)" maxlength="200" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white resize-none"></textarea>
+        <div>
+          <label for="fActivity" class="block text-xs font-medium text-ink/75 mb-1.5">Aktivitas</label>
+          <input id="fActivity" type="text" name="activity" placeholder="cth: disiram dan diukur pagi hari" required maxlength="120" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white text-ink focus:border-forest focus:outline-none">
+        </div>
 
-        <label class="flex items-center justify-center gap-2 border border-dashed border-ink/25 rounded-xl px-4 py-4 text-sm text-ink/60 cursor-pointer">
-          <i data-lucide="camera" class="w-4 h-4"></i> <span id="photoLabel">Ambil / Pilih Foto (opsional)</span>
+        <div>
+          <label for="fNotes" class="block text-xs font-medium text-ink/75 mb-1.5">Catatan <span class="text-ink/50 font-normal">(opsional)</span></label>
+          <textarea id="fNotes" name="notes" rows="2" placeholder="Catatan kondisi tanah, sinar matahari, atau daun baru..." maxlength="200" class="w-full border border-ink/15 rounded-xl px-4 py-3 text-sm bg-white text-ink resize-none focus:border-forest focus:outline-none"></textarea>
+        </div>
+
+        <label for="photoInput" class="flex items-center justify-center gap-2 border border-dashed border-forest/35 hover:border-forest bg-forest/[0.04] rounded-xl px-4 py-3.5 min-h-[48px] text-sm font-medium text-forest transition-colors">
+          <i data-lucide="camera" class="w-4 h-4" aria-hidden="true"></i>
+          <span id="photoLabel" class="truncate">Ambil / Pilih Foto (opsional)</span>
           <input type="file" name="photo" accept="image/*" class="hidden" id="photoInput">
         </label>
-        <img id="photoPreview" class="hidden w-full h-40 object-cover rounded-xl" alt="Preview foto">
+        <img id="photoPreview" width="400" height="160" class="hidden w-full h-40 object-cover rounded-xl border border-ink/10" alt="Preview foto yang dipilih">
       </div>
-      <p id="journalFormError" class="hidden text-xs text-kertas text-center mt-3"></p>
+
+      <p id="journalFormError" class="hidden text-xs font-medium text-kertas text-center mt-3" role="alert"></p>
       <div class="flex gap-3 mt-5">
-        <button type="button" id="closeAddForm" class="flex-1 border border-ink/20 py-3 rounded-full text-sm font-semibold">Batal</button>
-        <button type="submit" id="submitUpdateBtn" class="flex-1 bg-forest text-cream py-3 rounded-full text-sm font-semibold">Simpan</button>
+        <button type="button" id="closeAddForm" class="flex-1 border border-ink/20 text-ink hover:bg-ink/5 py-3 min-h-[44px] rounded-full text-sm font-semibold transition-colors">Batal</button>
+        <button type="submit" id="submitUpdateBtn" class="flex-1 bg-forest hover:bg-ink text-cream py-3 min-h-[44px] rounded-full text-sm font-semibold transition-colors">Simpan</button>
       </div>
     </form>
   </div>
 
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden max-w-xs bg-ink text-cream rounded-2xl px-5 py-3 shadow-lg text-sm text-center"></div>
+  <!-- ================= TOAST NOTIFICATION ================= -->
+  <div id="toast" role="status" aria-live="polite" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[80] hidden max-w-xs bg-ink text-cream border border-lime/35 rounded-2xl px-5 py-3.5 shadow-2xl text-sm text-center"></div>
 
 <script>
 lucide.createIcons();
 
+// ===== GSAP + SCROLLTRIGGER SETUP =====
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+}
+
+// Adaptive frosted navbar on scroll
+const appNavPill = document.getElementById('appNavPill');
+const syncAppNav = () => {
+  if (!appNavPill) return;
+  appNavPill.classList.toggle('scrolled', window.scrollY > 24);
+};
+window.addEventListener('scroll', syncAppNav, { passive: true });
+syncAppNav();
+
+// Global subtle scroll progress bar + background painting parallax (matching index.html)
+if (!prefersReducedMotion && typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+  gsap.to('#scrollProgressBar', {
+    scaleX: 1,
+    ease: 'none',
+    scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.15 },
+  });
+
+  gsap.fromTo('.app-painting-bg',
+    { scale: 1.08, yPercent: -3 },
+    {
+      scale: 1.0,
+      yPercent: 3,
+      ease: 'none',
+      scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
+    }
+  );
+}
+
+let appMotionInitialized = false;
+function initAppEnterMotion() {
+  if (prefersReducedMotion || typeof gsap === 'undefined' || appMotionInitialized) return;
+  appMotionInitialized = true;
+
+  const blocks = document.querySelectorAll('#mainApp .app-reveal:not(.hidden)');
+  if (blocks.length) {
+    gsap.from(blocks, {
+      opacity: 0,
+      y: 24,
+      duration: 0.68,
+      stagger: 0.08,
+      ease: 'power3.out',
+      clearProps: 'transform',
+    });
+  }
+  gsap.utils.toArray('#mainApp .glass-divider').forEach((div) => {
+    gsap.from(div, {
+      scaleX: 0,
+      opacity: 0,
+      duration: 0.85,
+      ease: 'power3.out',
+      transformOrigin: 'center center',
+      clearProps: 'transform',
+      scrollTrigger: { trigger: div, start: 'top 92%', once: true },
+    });
+  });
+  if (typeof ScrollTrigger !== 'undefined') {
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  }
+}
+
 // ===== SUPABASE CONFIG — samain persis dengan yang di index.html =====
 const SUPABASE_URL = 'https://dlrkhfucexjozycpwpel.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_KRE9_2jn0FnzHdKJ6MXgbQ_luHLneQ7'; // <-- isi anon/publishable key yang sama kayak di index.html
+const SUPABASE_ANON_KEY = 'sb_publishable_KRE9_2jn0FnzHdKJ6MXgbQ_luHLneQ7';
 const isConfigured = !SUPABASE_ANON_KEY.startsWith('YOUR_');
 const sb = isConfigured ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
@@ -330,9 +808,12 @@ const plantLabel = { kertas: 'Bougainvillea', krokot: 'Portulaca' };
 const stageLabel = { seed: 'Seed', sprout: 'Sprout', growing: 'Growing', mature: 'Mature', bloom: 'Bloom' };
 const stagePercent = { seed: 20, sprout: 40, growing: 60, mature: 80, bloom: 100 };
 const conditionLabel = { healthy: 'Healthy', attention: 'Needs Attention', recovering: 'Recovering', critical: 'Critical' };
-const conditionColor = { healthy: '#2F7A4A', attention: '#8F6410', recovering: '#2B5FA8', critical: '#B3261E' };
-function conditionDotHtml(cond) {
-  const c = conditionColor[cond] || '#6F8F7B';
+const conditionColor = { healthy: '#4ADE80', attention: '#FBBF24', recovering: '#60A5FA', critical: '#F87171' };
+const conditionColorOnPaper = { healthy: '#2F7A4A', attention: '#8F6410', recovering: '#2B5FA8', critical: '#B3261E' };
+
+function conditionDotHtml(cond, onPaper) {
+  const map = onPaper ? conditionColorOnPaper : conditionColor;
+  const c = map[cond] || '#6F8F7B';
   return `<span class="inline-block w-1.5 h-1.5 rounded-full shrink-0 align-middle" style="background:${c}"></span>`;
 }
 
@@ -347,10 +828,23 @@ function safeImageUrl(raw) {
   } catch { return ''; }
 }
 function formatDate(s) { const d = new Date(s); return isNaN(d.getTime()) ? s : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
+
+let toastTimer = null;
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.remove('hidden');
-  setTimeout(() => t.classList.add('hidden'), 3000);
+  t.textContent = msg;
+  t.classList.remove('hidden');
+  if (!prefersReducedMotion && typeof gsap !== 'undefined') {
+    gsap.fromTo(t, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', overwrite: true });
+  }
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    if (!prefersReducedMotion && typeof gsap !== 'undefined') {
+      gsap.to(t, { opacity: 0, y: 10, duration: 0.24, onComplete: () => t.classList.add('hidden') });
+    } else {
+      t.classList.add('hidden');
+    }
+  }, 3200);
 }
 
 // ===== AUTH =====
@@ -363,8 +857,12 @@ document.getElementById('tabSignIn').addEventListener('click', () => switchTab('
 document.getElementById('tabRegister').addEventListener('click', () => switchTab('register'));
 function switchTab(tab) {
   const isSignIn = tab === 'signin';
-  document.getElementById('tabSignIn').classList.toggle('active', isSignIn);
-  document.getElementById('tabRegister').classList.toggle('active', !isSignIn);
+  const tIn = document.getElementById('tabSignIn');
+  const tReg = document.getElementById('tabRegister');
+  tIn.classList.toggle('active', isSignIn);
+  tReg.classList.toggle('active', !isSignIn);
+  tIn.setAttribute('aria-selected', String(isSignIn));
+  tReg.setAttribute('aria-selected', String(!isSignIn));
   signInForm.classList.toggle('hidden', !isSignIn);
   registerForm.classList.toggle('hidden', isSignIn);
 }
@@ -380,6 +878,12 @@ function updateAuthUI() {
   if (loggedIn) {
     const name = currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || '';
     document.getElementById('welcomeText').textContent = name;
+    initAppEnterMotion();
+  } else {
+    appMotionInitialized = false;
+  }
+  if (!prefersReducedMotion && typeof ScrollTrigger !== 'undefined') {
+    requestAnimationFrame(() => ScrollTrigger.refresh());
   }
 }
 
@@ -402,10 +906,13 @@ registerForm.addEventListener('submit', async (e) => {
   const { data, error } = await sb.auth.signUp({ email: fd.get('email'), password: fd.get('password'), options: { data: { name: fd.get('name') } } });
   if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
   registerForm.reset();
-  if (!data.session) { okEl.textContent = 'Cek email buat konfirmasi, lalu Sign In.'; okEl.classList.remove('hidden'); switchTab('signin'); }
+  if (!data.session) { okEl.textContent = 'Akun dibuat! Cek email untuk konfirmasi, lalu Sign In.'; okEl.classList.remove('hidden'); switchTab('signin'); }
 });
 
-document.getElementById('openAuthBtn').addEventListener('click', () => { authScreen.scrollIntoView({ behavior: 'smooth' }); });
+document.getElementById('openAuthBtn').addEventListener('click', () => {
+  authScreen.scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('signInEmail')?.focus();
+});
 document.getElementById('signOutBtn').addEventListener('click', async () => { if (sb) await sb.auth.signOut(); });
 
 if (sb) {
@@ -414,7 +921,11 @@ if (sb) {
     updateAuthUI();
     if (currentUser) { loadJournal(); loadPlantStatus(); loadGamification(); loadLeaderboard(); }
   });
-  sb.auth.getSession().then(({ data }) => { currentUser = data.session?.user ?? null; updateAuthUI(); if (currentUser) { loadJournal(); loadPlantStatus(); loadGamification(); loadLeaderboard(); } });
+  sb.auth.getSession().then(({ data }) => {
+    currentUser = data.session?.user ?? null;
+    updateAuthUI();
+    if (currentUser) { loadJournal(); loadPlantStatus(); loadGamification(); loadLeaderboard(); }
+  });
 }
 
 // ===== PLANT STATUS =====
@@ -425,22 +936,22 @@ async function loadPlantStatus() {
   const row = document.getElementById('plantStatusRow');
   row.innerHTML = data.map((plant) => {
     const isKertas = plant.id === 'kertas';
-    const label = plant.last_checked ? `${conditionDotHtml(plant.current_condition)} ${stageLabel[plant.current_stage] || ''}` : 'Belum ada data';
+    const label = plant.last_checked ? `${conditionDotHtml(plant.current_condition, false)} ${stageLabel[plant.current_stage] || ''}` : 'Belum ada data';
     const sizeItems = [];
     if (plant.current_height_cm != null) sizeItems.push(`tinggi ${plant.current_height_cm} cm`);
     if (plant.current_leaf_count != null) sizeItems.push(`${plant.current_leaf_count} daun`);
-    return `<div class="border ${isKertas ? 'border-kertas/30' : 'border-krokot/30'} rounded-2xl p-4">
-      <p class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas' : 'text-krokot'} mb-1">${plantLabel[plant.id]}</p>
-      <p class="text-sm font-semibold">${label}</p>
-      ${sizeItems.length ? `<p class="text-xs text-ink/70 mt-1.5 font-mono font-medium">${sizeItems.join(' · ')}</p>` : ''}
+    return `<div class="glass-subcard rounded-2xl p-4 border-t-2 ${isKertas ? 'border-t-kertas-on-dark/80' : 'border-t-krokot-on-dark/80'}">
+      <p class="text-[11px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas-on-dark' : 'text-krokot-on-dark'} mb-1">${plantLabel[plant.id]}</p>
+      <p class="text-sm font-semibold text-cream flex items-center gap-1.5">${label}</p>
+      ${sizeItems.length ? `<p class="text-xs text-cream/75 mt-1.5 font-mono tabular-nums">${sizeItems.join(' · ')}</p>` : ''}
     </div>`;
   }).join('');
+  if (!prefersReducedMotion && typeof ScrollTrigger !== 'undefined') {
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  }
 }
 
 // ===== GAMIFIKASI: level, XP, streak, missions, leaderboard =====
-// Semua query di bawah ini defensif: kalau migrasi Supabase (kolom xp/streak di profiles,
-// tabel xp_events, view leaderboard) belum dijalankan, bagian ini diam-diam sembunyi
-// tanpa mengganggu fitur monitoring utama yang sudah ada.
 function xpForLevel(level) { return 50 * level * (level - 1); }
 function levelForXp(xp) {
   let lvl = 1;
@@ -478,7 +989,7 @@ async function loadGamification() {
 
     const streakBadge = document.getElementById('streakBadge');
     document.getElementById('streakCount').textContent = profile.current_streak || 0;
-    streakBadge.classList.remove('hidden'); streakBadge.classList.add('flex');
+    streakBadge.classList.remove('hidden'); streakBadge.classList.add('inline-flex');
 
     const today = new Date().toISOString().slice(0, 10);
     const { data: events } = await sb
@@ -490,10 +1001,10 @@ async function loadGamification() {
 
     document.getElementById('missionsList').innerHTML = MISSION_DEFS.map((m) => {
       const done = doneSet.has(m.key);
-      return `<div class="flex items-center gap-3">
-        <i data-lucide="${done ? 'check-circle-2' : 'circle'}" class="w-5 h-5 ${done ? 'text-forest' : 'text-ink/60'} shrink-0"></i>
-        <span class="text-sm flex-1 ${done ? 'line-through text-ink/60' : ''}">${m.label}</span>
-        <span class="text-xs ${done ? 'text-ink/60' : 'text-forest font-medium'}">+${m.xp} XP</span>
+      return `<div class="flex items-center gap-3 py-1">
+        <i data-lucide="${done ? 'check-circle-2' : 'circle'}" class="w-5 h-5 ${done ? 'text-lime' : 'text-cream/45'} shrink-0" aria-hidden="true"></i>
+        <span class="text-sm flex-1 ${done ? 'line-through text-cream/50' : 'text-cream/95'}">${m.label}</span>
+        <span class="text-xs font-mono tabular-nums ${done ? 'text-cream/45' : 'text-lime font-semibold'}">+${m.xp} XP</span>
       </div>`;
     }).join('');
     document.getElementById('missionsCard').classList.remove('hidden');
@@ -505,6 +1016,9 @@ async function loadGamification() {
     document.getElementById('levelCard').classList.add('hidden');
     document.getElementById('streakBadge').classList.add('hidden');
   }
+  if (!prefersReducedMotion && typeof ScrollTrigger !== 'undefined') {
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  }
 }
 
 async function loadLeaderboard() {
@@ -514,16 +1028,20 @@ async function loadLeaderboard() {
     if (error || !data) throw error || new Error('no data');
     document.getElementById('leaderboardList').innerHTML = data.map((row) => {
       const isMe = currentUser && row.id === currentUser.id;
-      return `<div class="flex items-center gap-3 px-4 py-2.5 ${isMe ? 'bg-forest/5' : ''}">
-        <span class="text-xs text-ink/60 w-4">${row.rank}</span>
-        <div class="w-7 h-7 rounded-full ${isMe ? 'bg-forest text-cream' : 'bg-ink/5 text-ink/60'} flex items-center justify-center text-[10px] font-bold">${escapeHtml((row.name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase())}</div>
-        <span class="text-sm flex-1 ${isMe ? 'font-semibold' : ''}">${isMe ? 'You' : escapeHtml(row.name || 'Anggota')}</span>
-        <span class="text-xs text-ink/65">${(row.xp || 0).toLocaleString('id-ID')} XP</span>
+      const initials = escapeHtml((row.name || '?').split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase());
+      return `<div class="flex items-center gap-3 px-4 py-3 ${isMe ? 'bg-lime/12' : ''}">
+        <span class="text-xs font-mono tabular-nums ${isMe ? 'text-lime font-semibold' : 'text-cream/65'} w-5">${row.rank}</span>
+        <div class="w-8 h-8 rounded-full ${isMe ? 'bg-lime text-ink' : 'bg-white/12 text-cream/85'} flex items-center justify-center text-[11px] font-bold shrink-0">${initials}</div>
+        <span class="text-sm flex-1 truncate text-cream ${isMe ? 'font-semibold' : ''}">${isMe ? 'You' : escapeHtml(row.name || 'Anggota')}</span>
+        <span class="text-xs font-mono tabular-nums text-cream/80">${(row.xp || 0).toLocaleString('id-ID')} XP</span>
       </div>`;
     }).join('');
     document.getElementById('leaderboardCard').classList.remove('hidden');
   } catch (err) {
     document.getElementById('leaderboardCard').classList.add('hidden');
+  }
+  if (!prefersReducedMotion && typeof ScrollTrigger !== 'undefined') {
+    requestAnimationFrame(() => ScrollTrigger.refresh());
   }
 }
 
@@ -534,7 +1052,9 @@ function renderOnboardStep() {
   obStepIds.forEach((id, i) => document.getElementById(id).classList.toggle('hidden', i !== obStep));
   document.querySelectorAll('.ob-dot').forEach((d, i) => {
     d.classList.toggle('bg-forest', i === obStep);
-    d.classList.toggle('bg-ink/15', i !== obStep);
+    d.classList.toggle('w-6', i === obStep);
+    d.classList.toggle('bg-ink/20', i !== obStep);
+    d.classList.toggle('w-2', i !== obStep);
   });
   document.getElementById('obBack').classList.toggle('hidden', obStep === 0);
   document.getElementById('obNext').textContent = obStep === 2 ? 'Start Monitoring' : 'Next';
@@ -542,11 +1062,20 @@ function renderOnboardStep() {
 function showOnboarding() {
   obStep = 0; renderOnboardStep();
   const el = document.getElementById('onboardOverlay');
+  const card = document.getElementById('onboardCard');
   el.classList.remove('hidden'); el.classList.add('flex');
+  if (!prefersReducedMotion && typeof gsap !== 'undefined') {
+    gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.22 });
+    gsap.fromTo(card, { opacity: 0, y: 18, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'power3.out', clearProps: 'transform' });
+  }
 }
 async function closeOnboarding() {
   const el = document.getElementById('onboardOverlay');
-  el.classList.add('hidden'); el.classList.remove('flex');
+  if (!prefersReducedMotion && typeof gsap !== 'undefined') {
+    gsap.to(el, { opacity: 0, duration: 0.18, onComplete: () => { el.classList.add('hidden'); el.classList.remove('flex'); } });
+  } else {
+    el.classList.add('hidden'); el.classList.remove('flex');
+  }
   if (sb && currentUser) {
     await sb.from('profiles').update({ onboarded_at: new Date().toISOString() }).eq('id', currentUser.id);
   }
@@ -556,53 +1085,114 @@ document.getElementById('obNext').addEventListener('click', () => {
 });
 document.getElementById('obBack').addEventListener('click', () => { if (obStep > 0) { obStep--; renderOnboardStep(); } });
 document.getElementById('helpBtn').addEventListener('click', showOnboarding);
+document.getElementById('onboardOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeOnboarding();
+});
 
-// ===== JOURNAL =====
+// ===== JOURNAL (Paper Note Cards matching index.html + ScrollTrigger.batch) =====
 let activePlantFilter = 'semua';
 let searchQuery = '';
 let allEntries = [];
+let journalBatchTriggers = [];
 const journalGrid = document.getElementById('journalGrid');
 const journalEmpty = document.getElementById('journalEmpty');
 const journalErrorState = document.getElementById('journalErrorState');
 
-function cardHtml(e) {
+function clearJournalTriggers() {
+  journalBatchTriggers.forEach((st) => st.kill());
+  journalBatchTriggers = [];
+}
+
+function cardHtml(e, idx) {
   const isKertas = e.plant_id === 'kertas';
+  const paperClass = isKertas ? 'jcc-kertas' : 'jcc-krokot';
+  const accentColor = isKertas ? 'var(--color-kertas)' : 'var(--color-krokot)';
+  const badgeClass = isKertas
+    ? 'text-kertas bg-kertas/10 border border-kertas/20 font-medium'
+    : 'text-krokot bg-krokot/10 border border-krokot/20 font-medium';
   const owner = e.profiles?.name || 'Anggota';
   const canManage = currentUser && e.user_id === currentUser.id;
   const hasMeasurements = (e.height_cm != null) || (e.leaf_count != null) || (e.leaf_width_cm != null);
   const photoUrl = safeImageUrl(e.photo_url);
+  const num = String(idx + 1).padStart(2, '0');
+
   const measurementHtml = hasMeasurements ? `
-    <div class="flex flex-wrap gap-1.5 mt-2.5 pt-2 border-t border-ink/8">
-      ${e.height_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono font-semibold bg-forest/10 text-forest px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>${e.height_cm} cm</span>` : ''}
-      ${e.leaf_count != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/5 text-ink/75 px-2 py-0.5 rounded-md"><i data-lucide="leaf" class="w-3 h-3"></i>${e.leaf_count} daun</span>` : ''}
-      ${e.leaf_width_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/5 text-ink/75 px-2 py-0.5 rounded-md"><i data-lucide="ruler" class="w-3 h-3"></i>lebar ${e.leaf_width_cm} cm</span>` : ''}
+    <div class="flex flex-wrap gap-1.5 mt-3 pt-2.5 border-t border-ink/10">
+      ${e.height_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono font-semibold bg-forest/10 text-forest border border-forest/15 px-2 py-0.5 rounded-md tabular-nums"><i data-lucide="ruler" class="w-3 h-3" aria-hidden="true"></i>${e.height_cm} cm</span>` : ''}
+      ${e.leaf_count != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/[0.06] text-ink/80 border border-ink/10 px-2 py-0.5 rounded-md tabular-nums"><i data-lucide="leaf" class="w-3 h-3" aria-hidden="true"></i>${e.leaf_count} daun</span>` : ''}
+      ${e.leaf_width_cm != null ? `<span class="inline-flex items-center gap-1 text-[11px] font-mono bg-ink/[0.06] text-ink/80 border border-ink/10 px-2 py-0.5 rounded-md tabular-nums"><i data-lucide="ruler" class="w-3 h-3" aria-hidden="true"></i>lebar ${e.leaf_width_cm} cm</span>` : ''}
     </div>` : '';
 
-  return `<article class="border ${isKertas ? 'border-kertas/25' : 'border-krokot/25'} rounded-2xl p-4" data-id="${e.id}">
-    <div class="flex items-center justify-between">
-      <span class="text-[10px] font-mono uppercase tracking-wider ${isKertas ? 'text-kertas' : 'text-krokot'}">${plantLabel[e.plant_id]}</span>
-      ${canManage ? `<button class="js-delete text-ink/60" data-id="${e.id}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : ''}
+  return `<article class="journal-note-shell" data-id="${e.id}">
+    <div class="journal-note-paper ${paperClass}">
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="font-display font-semibold text-base tabular-nums" style="color:${accentColor}">${num}</span>
+          <span class="text-[11px] ${badgeClass} px-2 py-0.5 rounded-md truncate">${plantLabel[e.plant_id] || e.plant_id}</span>
+        </div>
+        ${canManage ? `<button type="button" class="js-delete w-9 h-9 -mr-1.5 rounded-full inline-flex items-center justify-center text-ink/50 hover:text-kertas hover:bg-kertas/10 transition-colors shrink-0" data-id="${e.id}" aria-label="Hapus update ini"><i data-lucide="trash-2" class="w-4 h-4" aria-hidden="true"></i></button>` : ''}
+      </div>
+      ${photoUrl ? `<img src="${photoUrl}" width="640" height="320" class="w-full h-44 object-cover rounded-xl mb-2.5 border border-ink/10" loading="lazy" alt="Foto perkembangan ${plantLabel[e.plant_id] || 'tanaman'}">` : ''}
+      <p class="font-mono text-xs text-ink/65 mb-2">${formatDate(e.date)} · ${escapeHtml(owner)}</p>
+      <div class="h-1.5 bg-ink/10 rounded-full overflow-hidden mb-2">
+        <div class="h-full rounded-full" style="width:${stagePercent[e.stage] || 0}%;background:${accentColor}"></div>
+      </div>
+      <div class="flex items-center justify-between gap-2 mb-2">
+        <span class="text-xs font-semibold" style="color:${accentColor}">${stageLabel[e.stage] || e.stage}</span>
+        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-md bg-ink/[0.06] border border-ink/10 text-ink/85">${conditionDotHtml(e.condition, true)}${conditionLabel[e.condition] || e.condition}</span>
+      </div>
+      ${measurementHtml}
+      <p class="text-sm text-ink font-semibold leading-snug mt-2.5">${escapeHtml(e.activity)}</p>
+      ${e.notes ? `<p class="text-xs text-ink-soft/80 leading-relaxed mt-1">${escapeHtml(e.notes)}</p>` : ''}
     </div>
-    ${photoUrl ? `<img src="${photoUrl}" class="w-full h-32 object-cover rounded-lg mt-2" loading="lazy" alt="Foto update">` : ''}
-    <p class="font-mono text-[11px] text-ink/60 mt-2">${formatDate(e.date)} · ${escapeHtml(owner)}</p>
-    <div class="h-1.5 bg-ink/10 rounded-full overflow-hidden mt-2"><div class="h-full ${isKertas ? 'bg-kertas' : 'bg-krokot'}" style="width:${stagePercent[e.stage] || 0}%"></div></div>
-    <div class="flex items-center justify-between mt-1.5">
-      <span class="text-xs font-semibold">${stageLabel[e.stage] || e.stage}</span>
-      <span class="inline-flex items-center gap-1.5 text-[10px] bg-ink/5 px-2 py-0.5 rounded-full">${conditionDotHtml(e.condition)}${conditionLabel[e.condition] || e.condition}</span>
-    </div>
-    ${measurementHtml}
-    <p class="text-sm text-ink/70 mt-2">${escapeHtml(e.activity)}</p>
-    ${e.notes ? `<p class="text-xs text-ink/65 mt-1">${escapeHtml(e.notes)}</p>` : ''}
   </article>`;
 }
 
 function renderList() {
-  if (allEntries.length === 0) { journalGrid.classList.add('hidden'); journalEmpty.classList.remove('hidden'); return; }
-  journalGrid.classList.remove('hidden'); journalEmpty.classList.add('hidden');
+  clearJournalTriggers();
+  if (allEntries.length === 0) {
+    journalGrid.classList.add('hidden');
+    journalEmpty.classList.remove('hidden');
+    if (!prefersReducedMotion && typeof ScrollTrigger !== 'undefined') requestAnimationFrame(() => ScrollTrigger.refresh());
+    return;
+  }
+  journalGrid.classList.remove('hidden');
+  journalEmpty.classList.add('hidden');
   const q = searchQuery.trim().toLowerCase();
-  const filtered = allEntries.filter((e) => (activePlantFilter === 'semua' || e.plant_id === activePlantFilter) && (!q || (e.activity || '').toLowerCase().includes(q) || (e.notes || '').toLowerCase().includes(q)));
-  journalGrid.innerHTML = filtered.length ? filtered.map(cardHtml).join('') : '<p class="text-sm text-ink/60 text-center py-10">Gak ada yang cocok.</p>';
+  const filtered = allEntries.filter((e) =>
+    (activePlantFilter === 'semua' || e.plant_id === activePlantFilter) &&
+    (!q || (e.activity || '').toLowerCase().includes(q) || (e.notes || '').toLowerCase().includes(q))
+  );
+  journalGrid.innerHTML = filtered.length
+    ? filtered.map((e, i) => cardHtml(e, i)).join('')
+    : '<div class="glass-subcard rounded-2xl text-sm text-cream/75 text-center py-10 px-4">Tidak ada catatan yang cocok dengan filter atau pencarian ini.</div>';
   lucide.createIcons();
+
+  if (!prefersReducedMotion && typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    const cards = Array.from(journalGrid.querySelectorAll('.journal-note-shell'));
+    if (cards.length) {
+      gsap.set(cards, { opacity: 0, y: 26, scale: 0.97 });
+      journalBatchTriggers = ScrollTrigger.batch(cards, {
+        interval: 0.08,
+        batchMax: 5,
+        start: 'top 90%',
+        once: true,
+        onEnter: (batch) => {
+          gsap.to(batch, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.62,
+            stagger: 0.08,
+            ease: 'power3.out',
+            clearProps: 'transform',
+            overwrite: 'auto',
+          });
+        },
+      });
+    }
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+  }
 }
 
 async function loadJournal() {
@@ -634,10 +1224,37 @@ const photoInput = document.getElementById('photoInput');
 const photoPreview = document.getElementById('photoPreview');
 let selectedPhotoFile = null;
 
-document.getElementById('openAddForm').addEventListener('click', () => { overlay.classList.remove('hidden'); overlay.classList.add('flex'); });
+function openForm() {
+  const dateInput = document.getElementById('fDate');
+  if (dateInput && !dateInput.value) {
+    dateInput.value = new Date().toISOString().slice(0, 10);
+  }
+  overlay.classList.remove('hidden');
+  overlay.classList.add('flex');
+  if (!prefersReducedMotion && typeof gsap !== 'undefined') {
+    gsap.fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.22 });
+    gsap.fromTo(journalForm, { opacity: 0, y: 28, scale: 0.98 }, { opacity: 1, y: 0, scale: 1, duration: 0.34, ease: 'power3.out', clearProps: 'transform' });
+  }
+}
+function closeForm() {
+  if (!prefersReducedMotion && typeof gsap !== 'undefined') {
+    gsap.to(journalForm, { opacity: 0, y: 20, duration: 0.18, ease: 'power2.in' });
+    gsap.to(overlay, { opacity: 0, duration: 0.2, onComplete: () => { overlay.classList.add('hidden'); overlay.classList.remove('flex'); } });
+  } else {
+    overlay.classList.add('hidden'); overlay.classList.remove('flex');
+  }
+}
+
+document.getElementById('openAddForm').addEventListener('click', openForm);
 document.getElementById('closeAddForm').addEventListener('click', closeForm);
+document.getElementById('closeAddFormIcon').addEventListener('click', closeForm);
 overlay.addEventListener('click', (e) => { if (e.target === overlay) closeForm(); });
-function closeForm() { overlay.classList.add('hidden'); overlay.classList.remove('flex'); }
+window.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  if (!overlay.classList.contains('hidden')) closeForm();
+  const ob = document.getElementById('onboardOverlay');
+  if (ob && !ob.classList.contains('hidden')) closeOnboarding();
+});
 
 photoInput.addEventListener('change', () => {
   const file = photoInput.files[0];
@@ -733,15 +1350,15 @@ function renderMathReport() {
     if (widthSummaryEl) widthSummaryEl.textContent = 'Lebar daun: -';
     if (chartContainer) {
       chartContainer.innerHTML = `
-        <div class="py-8 text-center text-xs text-ink/60">
-          <i data-lucide="ruler" class="w-7 h-7 mx-auto mb-2 text-forest/60"></i>
-          <p class="font-medium text-ink/60 mb-0.5">Belum ada data tinggi tanaman</p>
-          <p class="text-[11px] text-ink/60">Isi kolom tinggi (cm) pada form Tambah Update untuk melihat kurva pertumbuhan.</p>
+        <div class="py-8 text-center text-xs text-cream/70">
+          <i data-lucide="ruler" class="w-7 h-7 mx-auto mb-2 text-lime/70" aria-hidden="true"></i>
+          <p class="font-medium text-cream/85 mb-0.5">Belum ada data tinggi tanaman</p>
+          <p class="text-[11px] text-cream/65">Isi kolom tinggi (cm) pada form Tambah Update untuk melihat kurva pertumbuhan.</p>
         </div>`;
       lucide.createIcons();
     }
     if (tableBody) {
-      tableBody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-ink/60">Belum ada data ukuran tersimpan.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-cream/65">Belum ada data ukuran tersimpan.</td></tr>`;
     }
     return;
   }
@@ -775,9 +1392,24 @@ function renderMathReport() {
     widthSummaryEl.textContent = latest.leaf_width_cm != null ? `Lebar daun: ${latest.leaf_width_cm} cm` : 'Lebar daun: -';
   }
 
-  // Render SVG Chart
+  // Render SVG Chart + animate stroke draw with GSAP
   if (chartContainer) {
     chartContainer.innerHTML = buildMathSvgChart(measuredEntries, activeMathPlant);
+    if (!prefersReducedMotion && typeof gsap !== 'undefined') {
+      const linePath = chartContainer.querySelector('.math-chart-line');
+      const areaPath = chartContainer.querySelector('.math-chart-area');
+      const dots = chartContainer.querySelectorAll('.math-chart-dot');
+      if (linePath && typeof linePath.getTotalLength === 'function') {
+        const len = linePath.getTotalLength();
+        gsap.fromTo(linePath, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.out' });
+      }
+      if (areaPath) {
+        gsap.fromTo(areaPath, { opacity: 0 }, { opacity: 1, duration: 0.7, delay: 0.15, ease: 'power2.out' });
+      }
+      if (dots.length) {
+        gsap.fromTo(dots, { opacity: 0, scale: 0.5, transformOrigin: 'center center' }, { opacity: 1, scale: 1, duration: 0.45, stagger: 0.06, delay: 0.2, ease: 'back.out(1.7)' });
+      }
+    }
   }
 
   // Render Table
@@ -798,13 +1430,13 @@ function renderMathReport() {
         rateStr = (curRate >= 0 ? '+' : '') + curRate.toFixed(2);
       }
       rowsHtml += `
-        <tr class="hover:bg-ink/5">
-          <td class="p-1.5 font-mono text-[10px]">${formatDate(entry.date)}</td>
-          <td class="p-1.5 font-bold font-mono text-forest">${h} cm</td>
-          <td class="p-1.5 font-mono text-ink/70">${deltaStr}</td>
-          <td class="p-1.5 font-mono text-ink/70">${rateStr}</td>
-          <td class="p-1.5 font-mono text-ink/70">${entry.leaf_count != null ? entry.leaf_count : '-'}</td>
-          <td class="p-1.5 font-mono text-ink/70">${entry.leaf_width_cm != null ? entry.leaf_width_cm + ' cm' : '-'}</td>
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="p-2 font-mono text-[11px] text-cream/85 whitespace-nowrap">${formatDate(entry.date)}</td>
+          <td class="p-2 font-bold font-mono text-lime tabular-nums whitespace-nowrap">${h} cm</td>
+          <td class="p-2 font-mono text-cream/80 tabular-nums whitespace-nowrap">${deltaStr}</td>
+          <td class="p-2 font-mono text-cream/80 tabular-nums whitespace-nowrap">${rateStr}</td>
+          <td class="p-2 font-mono text-cream/80 tabular-nums">${entry.leaf_count != null ? entry.leaf_count : '-'}</td>
+          <td class="p-2 font-mono text-cream/80 tabular-nums whitespace-nowrap">${entry.leaf_width_cm != null ? entry.leaf_width_cm + ' cm' : '-'}</td>
         </tr>`;
     }
     tableBody.innerHTML = rowsHtml;
@@ -814,15 +1446,15 @@ function renderMathReport() {
 
 function buildMathSvgChart(entries, plantId) {
   const isKertas = plantId === 'kertas';
-  const lineColor = isKertas ? '#A33260' : '#9C5A1C';
-  const fillColor = isKertas ? 'rgba(163,50,96,0.12)' : 'rgba(156,90,28,0.12)';
-  const dotColor = isKertas ? '#A33260' : '#9C5A1C';
+  const lineColor = isKertas ? '#E87BA8' : '#E8A96A';
+  const dotStroke = '#0D1A13';
+  const gradId = isKertas ? 'mathGradKertas' : 'mathGradKrokot';
 
   const W = 360;
-  const H = 160;
+  const H = 168;
   const padL = 36;
   const padR = 24;
-  const padT = 20;
+  const padT = 22;
   const padB = 30;
 
   const heights = entries.map((e) => parseFloat(e.height_cm));
@@ -843,37 +1475,41 @@ function buildMathSvgChart(entries, plantId) {
   const pathD = coords.reduce((acc, pt, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${pt.x.toFixed(1)},${pt.y.toFixed(1)}`, '');
   const areaD = `${pathD} L ${coords[coords.length - 1].x.toFixed(1)},${(padT + innerH).toFixed(1)} L ${coords[0].x.toFixed(1)},${(padT + innerH).toFixed(1)} Z`;
 
-  // Grid lines
   const gridSteps = 3;
   let gridSvg = '';
   for (let s = 0; s <= gridSteps; s++) {
     const val = minH + (s / gridSteps) * hRange;
     const yPos = padT + innerH - (s / gridSteps) * innerH;
     gridSvg += `
-      <line x1="${padL}" y1="${yPos.toFixed(1)}" x2="${W - padR}" y2="${yPos.toFixed(1)}" stroke="#0D1A13" stroke-opacity="0.08" stroke-dasharray="2 3"/>
-      <text x="${padL - 4}" y="${(yPos + 3).toFixed(1)}" font-size="8" text-anchor="end" fill="#0D1A13" fill-opacity="0.45" font-family="monospace">${val.toFixed(0)}</text>
+      <line x1="${padL}" y1="${yPos.toFixed(1)}" x2="${W - padR}" y2="${yPos.toFixed(1)}" stroke="#F7F4EA" stroke-opacity="0.12" stroke-dasharray="2 3"/>
+      <text x="${padL - 6}" y="${(yPos + 3).toFixed(1)}" font-size="8.5" text-anchor="end" fill="#F7F4EA" fill-opacity="0.58" font-family="monospace">${val.toFixed(0)}</text>
     `;
   }
 
-  // Dots and Labels
   let dotsSvg = '';
   coords.forEach((pt) => {
     const dObj = new Date(pt.date);
     const dateLabel = isNaN(dObj.getTime()) ? pt.date : `${dObj.getDate()}/${dObj.getMonth() + 1}`;
     dotsSvg += `
-      <g class="cursor-pointer">
-        <circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="4.5" fill="${dotColor}" stroke="#ffffff" stroke-width="2"/>
-        <text x="${pt.x.toFixed(1)}" y="${(pt.y - 7).toFixed(1)}" font-size="9" font-weight="700" text-anchor="middle" fill="#0D1A13" font-family="monospace">${pt.h}</text>
-        <text x="${pt.x.toFixed(1)}" y="${(H - 10).toFixed(1)}" font-size="8" text-anchor="middle" fill="#0D1A13" fill-opacity="0.5" font-family="monospace">${dateLabel}</text>
+      <g class="math-chart-dot">
+        <circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="4.5" fill="${lineColor}" stroke="${dotStroke}" stroke-width="2"/>
+        <text x="${pt.x.toFixed(1)}" y="${(pt.y - 8).toFixed(1)}" font-size="9" font-weight="700" text-anchor="middle" fill="#F7F4EA" font-family="monospace">${pt.h}</text>
+        <text x="${pt.x.toFixed(1)}" y="${(H - 10).toFixed(1)}" font-size="8.5" text-anchor="middle" fill="#F7F4EA" fill-opacity="0.62" font-family="monospace">${dateLabel}</text>
       </g>
     `;
   });
 
   return `
-    <svg viewBox="0 0 ${W} ${H}" class="w-full h-auto overflow-visible select-none" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 ${W} ${H}" class="w-full h-auto overflow-visible select-none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Grafik pertumbuhan tinggi tanaman">
+      <defs>
+        <linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${lineColor}" stop-opacity="0.30"/>
+          <stop offset="100%" stop-color="${lineColor}" stop-opacity="0.02"/>
+        </linearGradient>
+      </defs>
       ${gridSvg}
-      <path d="${areaD}" fill="${fillColor}" />
-      <path d="${pathD}" fill="none" stroke="${lineColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      <path class="math-chart-area" d="${areaD}" fill="url(#${gradId})" />
+      <path class="math-chart-line" d="${pathD}" fill="none" stroke="${lineColor}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
       ${dotsSvg}
     </svg>
   `;
@@ -890,7 +1526,7 @@ function copyMathTableToClipboard() {
   }
 
   const pName = plantLabel[activeMathPlant] || activeMathPlant;
-  let text = `Laporan Pertumbuhan Matematika — ${pName}\n\n`;
+  let text = `Laporan Pertumbuhan Matematika - ${pName}\n\n`;
   text += `No\tTanggal\tTinggi (cm)\tΔh (cm)\tLaju (cm/hari)\tJumlah Daun\tLebar Daun (cm)\n`;
 
   for (let i = 0; i < plantEntries.length; i++) {
@@ -962,14 +1598,18 @@ function exportMathCsv() {
 
 document.getElementById('mathTabKertas')?.addEventListener('click', () => {
   activeMathPlant = 'kertas';
-  document.getElementById('mathTabKertas').classList.add('active');
-  document.getElementById('mathTabKrokot').classList.remove('active');
+  const k = document.getElementById('mathTabKertas');
+  const p = document.getElementById('mathTabKrokot');
+  k.classList.add('active'); k.setAttribute('aria-selected', 'true');
+  p.classList.remove('active'); p.setAttribute('aria-selected', 'false');
   renderMathReport();
 });
 document.getElementById('mathTabKrokot')?.addEventListener('click', () => {
   activeMathPlant = 'krokot';
-  document.getElementById('mathTabKrokot').classList.add('active');
-  document.getElementById('mathTabKertas').classList.remove('active');
+  const k = document.getElementById('mathTabKertas');
+  const p = document.getElementById('mathTabKrokot');
+  p.classList.add('active'); p.setAttribute('aria-selected', 'true');
+  k.classList.remove('active'); k.setAttribute('aria-selected', 'false');
   renderMathReport();
 });
 document.getElementById('mathCopyTableBtn')?.addEventListener('click', copyMathTableToClipboard);

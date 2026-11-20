@@ -648,6 +648,49 @@
     max-width: 72rem;
     margin: 0 auto;
     background: rgba(255, 255, 255, 0.14);
+    will-change: transform;
+  }
+  .scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 60;
+    pointer-events: none;
+    transform-origin: left center;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, rgba(166, 224, 106, 0.55) 0%, #A6E06A 65%, #E7FAD0 100%);
+    box-shadow: 0 0 12px rgba(166, 224, 106, 0.48);
+    will-change: transform;
+  }
+  .hero-line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+  .hero-line {
+    display: inline-block;
+    will-change: transform, opacity;
+  }
+  .tl-orb {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 9px;
+    height: 9px;
+    margin-left: -4.5px;
+    margin-top: -4.5px;
+    border-radius: 9999px;
+    background: #DDF7BA;
+    box-shadow: 0 0 0 3px rgba(166, 224, 106, 0.24), 0 0 14px rgba(166, 224, 106, 0.85);
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+  .tl-row.is-reached .tl-node {
+    box-shadow: 0 0 0 4px rgba(166, 224, 106, 0.18), 0 0 16px rgba(166, 224, 106, 0.25);
   }
   /* ===== End Liquid Glass ===== */
 
@@ -767,10 +810,14 @@
     .panel-fade { animation: none; }
     #tabIndicator { transition: none; }
     .journal-dash-path { animation: none; }
+    .scroll-progress-bar, .tl-orb { display: none; }
   }
 </style>
 </head>
 <body class="bg-ink text-cream antialiased overflow-x-hidden relative">
+
+  <!-- Top Scroll Progress Hairline -->
+  <div id="scrollProgressBar" class="scroll-progress-bar" aria-hidden="true"></div>
 
   <!-- ================= FIXED PAINTERLY BACKGROUND ACROSS WHOLE LANDING PAGE ================= -->
   <div id="globalPaintingBg" class="fixed inset-0 -z-10 pointer-events-none overflow-hidden bg-ink" aria-hidden="true">
@@ -962,8 +1009,8 @@
     <!-- Centered Editorial Callout over Unobstructed Painting -->
     <div class="hero-center-copy relative z-10 max-w-4xl mx-auto px-4 sm:px-8 w-full text-center">
       <h1 class="hero-title hero-title-shadow font-display font-semibold text-white tracking-tight leading-[1.06] text-[2.15rem] sm:text-5xl md:text-[3.75rem]">
-        Growing Plants,<br>
-        as One Mission
+        <span class="hero-line-mask"><span class="hero-line">Growing Plants,</span></span>
+        <span class="hero-line-mask"><span class="hero-line">as One Mission</span></span>
       </h1>
       <p class="hero-sub hero-title-shadow mt-4 text-xs sm:text-sm md:text-base text-white/95 max-w-lg mx-auto leading-relaxed">Proyek kolaborasi menanam Bougainvillea &amp; Portulaca oleh Kelompok 4 · X TE 3, SMK Negeri 2 Purwokerto.</p>
       <div class="hero-ctas mt-6 flex flex-wrap justify-center gap-3">
@@ -1001,8 +1048,10 @@
         </nav>
 
         <div class="mt-6 sm:mt-8 overflow-hidden" aria-hidden="true">
-          <div class="hero-terrava-wordmark font-display font-semibold tracking-[-0.03em] leading-[0.88] text-center whitespace-nowrap select-none will-change-transform pb-1 text-cream/90 text-[2.2rem] sm:text-[4.6rem] md:text-[6.2rem] lg:text-[7.8rem]">
-            Growth Together
+          <div class="hero-wordmark-parallax will-change-transform">
+            <div class="hero-terrava-wordmark font-display font-semibold tracking-[-0.03em] leading-[0.88] text-center whitespace-nowrap select-none will-change-transform pb-1 text-cream/90 text-[2.2rem] sm:text-[4.6rem] md:text-[6.2rem] lg:text-[7.8rem]">
+              Growth Together
+            </div>
           </div>
         </div>
       </div>
@@ -1021,8 +1070,8 @@
           <p class="text-xs sm:text-sm font-medium text-cream/80 md:pb-1 shrink-0">Teknik Elektronika Industri · SMKN 2 Purwokerto</p>
         </div>
 
-        <div data-reveal class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-          <div class="lg:col-span-7 flex flex-col gap-5">
+        <div id="storyBento" class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          <div class="story-narrative-col lg:col-span-7 flex flex-col gap-5 will-change-transform">
             <article class="story-crystal-card rounded-2xl p-6 flex-1">
               <div class="flex items-baseline gap-2.5 mb-3">
                 <span class="font-mono text-xs font-medium text-lime tabular-nums shrink-0">01</span>
@@ -1040,14 +1089,14 @@
             </article>
           </div>
 
-          <div class="lg:col-span-5 flex flex-col justify-between gap-4">
+          <div class="story-stats-col lg:col-span-5 flex flex-col justify-between gap-4 will-change-transform">
             <div class="story-crystal-strip rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-5 flex-1">
               <div>
                 <p class="text-xs font-medium text-cream/70 mb-1">Keanekaragaman</p>
                 <h3 class="font-display font-semibold text-base sm:text-lg text-cream">2 Spesies Tanaman</h3>
                 <p class="text-xs text-cream/75 mt-1">Bougainvillea &amp; Portulaca dalam dua jalur rawat.</p>
               </div>
-              <span class="font-display font-medium text-3xl sm:text-4xl text-cream/90 tabular-nums shrink-0">02</span>
+              <span class="story-metric-num font-display font-medium text-3xl sm:text-4xl text-cream/90 tabular-nums shrink-0" data-count="2">02</span>
             </div>
 
             <div class="story-crystal-strip rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-5 flex-1">
@@ -1056,7 +1105,7 @@
                 <h3 class="font-display font-semibold text-base sm:text-lg text-cream">6 Anggota Tim</h3>
                 <p class="text-xs text-cream/75 mt-1">Membagi jadwal siram, cek tanah, dan catatan harian.</p>
               </div>
-              <span class="font-display font-medium text-3xl sm:text-4xl text-cream/90 tabular-nums shrink-0">06</span>
+              <span class="story-metric-num font-display font-medium text-3xl sm:text-4xl text-cream/90 tabular-nums shrink-0" data-count="6">06</span>
             </div>
 
             <div class="story-crystal-strip rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-5 flex-1">
@@ -1065,7 +1114,7 @@
                 <h3 class="font-display font-semibold text-base sm:text-lg text-cream">1 Tujuan Bersama</h3>
                 <p class="text-xs text-cream/75 mt-1">Konsisten menjaga pertumbuhan tanaman sejak hari pertama.</p>
               </div>
-              <span class="font-display font-medium text-3xl sm:text-4xl text-cream/90 tabular-nums shrink-0">01</span>
+              <span class="story-metric-num font-display font-medium text-3xl sm:text-4xl text-cream/90 tabular-nums shrink-0" data-count="1">01</span>
             </div>
           </div>
         </div>
@@ -1088,7 +1137,7 @@
           <button type="button" class="plant-tab relative z-10 px-6 py-2 rounded-full text-sm font-semibold transition-colors" data-plant="krokot">Portulaca</button>
         </div>
 
-        <div id="plantPanel" data-reveal class="mt-8 grid sm:grid-cols-2 gap-7 sm:gap-8 items-stretch"></div>
+        <div id="plantPanel" class="mt-8 grid sm:grid-cols-2 gap-7 sm:gap-8 items-stretch"></div>
       </div>
     </section>
 
@@ -1188,8 +1237,8 @@
       </div>
 
       <!-- Circular Testimonials for Our Team -->
-      <div data-reveal class="mt-12 flex justify-center">
-        <div class="w-full max-w-5xl glass-subcard rounded-3xl p-6 sm:p-8 md:p-12 relative overflow-hidden">
+      <div class="mt-12 flex justify-center">
+        <div id="teamStageCard" class="w-full max-w-5xl glass-subcard rounded-3xl p-6 sm:p-8 md:p-12 relative overflow-hidden">
           <div class="grid md:grid-cols-2 gap-8 md:gap-14 items-center">
             <!-- 3D Image Perspective Container -->
             <div id="teamImageContainer" data-cursor-label="Geser" class="relative w-full h-[22rem] sm:h-[24rem] md:h-[26rem]" style="perspective: 1000px;">
@@ -1253,6 +1302,7 @@
       <div id="timelineTrack" class="relative">
         <div id="timelineSpine" class="pointer-events-none absolute left-[22px] md:left-1/2 -translate-x-1/2 top-6 bottom-6 w-px bg-white/25" aria-hidden="true">
           <div id="timelineProgress" class="absolute inset-x-0 top-0 h-full bg-lime/85" style="transform: scaleY(0); transform-origin: top;"></div>
+          <div id="timelineOrb" class="tl-orb"></div>
         </div>
 
         <ol id="timelineSteps" class="relative space-y-5 sm:space-y-5 md:space-y-5 list-none m-0 p-0"></ol>
@@ -1274,10 +1324,10 @@
       </div>
 
       <!-- Rolling List Items -->
-      <div class="w-full flex flex-col border-t border-white/20" data-reveal>
+      <div id="journeyList" class="w-full flex flex-col border-t border-white/20">
             <!-- Item 1: Planting -->
-            <div data-cursor-label="Lihat" class="group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
-              <div class="relative overflow-hidden h-[48px] md:h-[64px]">
+            <div data-cursor-label="Lihat" class="journey-row group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
+              <div class="journey-title-track relative overflow-hidden h-[48px] md:h-[64px] will-change-transform">
                 <div class="transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
                   <div class="h-[48px] md:h-[64px] flex items-center">
                     <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold text-cream tracking-tight">Planting</h3>
@@ -1292,14 +1342,14 @@
                 <img src="images/perkembangan-1-planting.jpg" alt="Proses penanaman bibit tanaman" class="w-full h-full object-cover">
               </div>
               <div class="mt-3 md:hidden rounded-xl overflow-hidden aspect-video border border-white/15 relative">
-                <img src="images/perkembangan-1-planting.jpg" alt="Proses penanaman bibit tanaman" class="w-full h-full object-cover">
+                <img src="images/perkembangan-1-planting.jpg" alt="Proses penanaman bibit tanaman" class="journey-mobile-img w-full h-full object-cover will-change-transform">
                 <div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-md bg-ink/85 text-[11px] font-mono text-cream border border-white/15">01 · Persiapan &amp; penanaman bibit</div>
               </div>
             </div>
 
             <!-- Item 2: Sprouting -->
-            <div data-cursor-label="Lihat" class="group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
-              <div class="relative overflow-hidden h-[48px] md:h-[64px]">
+            <div data-cursor-label="Lihat" class="journey-row group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
+              <div class="journey-title-track relative overflow-hidden h-[48px] md:h-[64px] will-change-transform">
                 <div class="transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
                   <div class="h-[48px] md:h-[64px] flex items-center">
                     <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold text-cream tracking-tight">Sprouting</h3>
@@ -1314,14 +1364,14 @@
                 <img src="images/perkembangan-2-sprout.jpg" alt="Pertunasan dan pemupukan tanaman" class="w-full h-full object-cover">
               </div>
               <div class="mt-3 md:hidden rounded-xl overflow-hidden aspect-video border border-white/15 relative">
-                <img src="images/perkembangan-2-sprout.jpg" alt="Pertunasan dan pemupukan tanaman" class="w-full h-full object-cover">
+                <img src="images/perkembangan-2-sprout.jpg" alt="Pertunasan dan pemupukan tanaman" class="journey-mobile-img w-full h-full object-cover will-change-transform">
                 <div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-md bg-ink/85 text-[11px] font-mono text-cream border border-white/15">02 · Pertunasan &amp; pemupukan</div>
               </div>
             </div>
 
             <!-- Item 3: Caring -->
-            <div data-cursor-label="Lihat" class="group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
-              <div class="relative overflow-hidden h-[48px] md:h-[64px]">
+            <div data-cursor-label="Lihat" class="journey-row group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
+              <div class="journey-title-track relative overflow-hidden h-[48px] md:h-[64px] will-change-transform">
                 <div class="transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
                   <div class="h-[48px] md:h-[64px] flex items-center">
                     <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold text-cream tracking-tight">Caring</h3>
@@ -1336,14 +1386,14 @@
                 <img src="images/perkembangan-3-caring.jpg" alt="Penyiraman dan perawatan bersama tim" class="w-full h-full object-cover">
               </div>
               <div class="mt-3 md:hidden rounded-xl overflow-hidden aspect-video border border-white/15 relative">
-                <img src="images/perkembangan-3-caring.jpg" alt="Penyiraman dan perawatan bersama tim" class="w-full h-full object-cover">
+                <img src="images/perkembangan-3-caring.jpg" alt="Penyiraman dan perawatan bersama tim" class="journey-mobile-img w-full h-full object-cover will-change-transform">
                 <div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-md bg-ink/85 text-[11px] font-mono text-cream border border-white/15">03 · Perawatan &amp; penyiraman rutin</div>
               </div>
             </div>
 
             <!-- Item 4: Blooming -->
-            <div data-cursor-label="Lihat" class="group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
-              <div class="relative overflow-hidden h-[48px] md:h-[64px]">
+            <div data-cursor-label="Lihat" class="journey-row group relative w-full cursor-pointer border-b border-white/15 py-6 md:py-8">
+              <div class="journey-title-track relative overflow-hidden h-[48px] md:h-[64px] will-change-transform">
                 <div class="transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:-translate-y-1/2">
                   <div class="h-[48px] md:h-[64px] flex items-center">
                     <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-semibold text-cream tracking-tight">Blooming</h3>
@@ -1358,7 +1408,7 @@
                 <img src="images/perkembangan-4-bloom.jpg" alt="Bunga Bougainvillea mekar sempurna" class="w-full h-full object-cover">
               </div>
               <div class="mt-3 md:hidden rounded-xl overflow-hidden aspect-video border border-white/15 relative">
-                <img src="images/perkembangan-4-bloom.jpg" alt="Bunga Bougainvillea mekar sempurna" class="w-full h-full object-cover">
+                <img src="images/perkembangan-4-bloom.jpg" alt="Bunga Bougainvillea mekar sempurna" class="journey-mobile-img w-full h-full object-cover will-change-transform">
                 <div class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-md bg-ink/85 text-[11px] font-mono text-cream border border-white/15">04 · Bunga mekar sempurna</div>
               </div>
             </div>
@@ -1381,7 +1431,7 @@
       </div>
 
       <!-- Asymmetric Spread: Unadorned Cinema Frame Left + Architectural Tracklist Index Right -->
-      <div data-reveal class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      <div id="videoSpread" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
 
         <!-- Left (8 cols): QuickTime Dark Mode macOS Window Frame + Scrubber & Transport Below -->
         <div class="lg:col-span-8">
@@ -1503,16 +1553,16 @@
   <div class="px-6 sm:px-10"><div class="glass-divider"></div></div>
 
   <!-- ================= FOOTER ================= -->
-  <footer class="relative pt-14 pb-16 px-6 sm:px-10 overflow-hidden">
+  <footer id="siteFooter" class="relative pt-14 pb-16 px-6 sm:px-10 overflow-hidden">
     <div class="relative z-20 max-w-6xl mx-auto">
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-10 pb-10 border-b border-white/15">
-        <div>
+        <div data-footer-item>
           <div class="flex items-center gap-2 font-display font-semibold text-xl text-cream">
             <i data-lucide="leaf" class="w-5 h-5 text-lime"></i> Growth Together
           </div>
           <p class="text-sm text-cream/75 mt-2">One Team, One Earth, One Future</p>
         </div>
-        <div class="text-sm text-cream/80 space-y-1">
+        <div data-footer-item class="text-sm text-cream/80 space-y-1">
           <p class="text-cream font-medium">Kelompok 4 — X TE 3</p>
           <p>SMK Negeri 2 Purwokerto</p>
           <a href="mailto:fatan.aditiansyah02@gmail.com" class="inline-flex items-center gap-1.5 mt-2 text-lime hover:text-white transition-colors">
@@ -1520,7 +1570,7 @@
           </a>
         </div>
       </div>
-      <p class="pt-8 text-xs text-cream/70 font-mono">© 2026 Growth Together — Kelompok 4, X TE 3, SMK Negeri 2 Purwokerto.</p>
+      <p data-footer-item class="pt-8 text-xs text-cream/70 font-mono">© 2026 Growth Together — Kelompok 4, X TE 3, SMK Negeri 2 Purwokerto.</p>
     </div>
   </footer>
   </main>
@@ -1630,6 +1680,7 @@
 
     // 1) Daftarkan plugin ScrollTrigger ke GSAP
     gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
     // 1.5) Cek preferensi reduced motion — dipakai buat nonaktifkan Lenis & animasi berat
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1637,7 +1688,12 @@
     // 2) Lenis smooth scroll, disatukan ke gsap.ticker biar sinkron sama ScrollTrigger
     let lenis = null;
     if (!prefersReducedMotion) {
-      lenis = new Lenis({ anchors: true });
+      lenis = new Lenis({
+        anchors: true,
+        lerp: 0.085,
+        wheelMultiplier: 0.95,
+        touchMultiplier: 1.15,
+      });
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add((time) => { lenis.raf(time * 1000); });
       gsap.ticker.lagSmoothing(0);
@@ -2093,11 +2149,12 @@ void main(){
     })();
 
     // 4.5) Zigzag Botanical Timeline (#timelineSteps)
-    const syncTimelineReached = (function initZigzagTimeline() {
+    const timelineApi = (function initZigzagTimeline() {
       const track = document.getElementById('timelineTrack');
       const stepsEl = document.getElementById('timelineSteps');
       const spine = document.getElementById('timelineSpine');
-      if (!track || !stepsEl || !spine) return () => {};
+      const orb = document.getElementById('timelineOrb');
+      if (!track || !stepsEl || !spine) return { syncReached: () => {}, syncOrb: () => {} };
 
       const TIMELINE_STEPS = [
         { num: '01', title: 'Planning', phase: 'Persiapan Tim', desc: 'Menentukan tanaman dan pembagian tugas.' },
@@ -2118,7 +2175,7 @@ void main(){
           ? 'md:order-3 md:pl-9 md:justify-start'
           : 'md:order-1 md:pr-9 md:justify-end md:text-right';
 
-        return `<li class="tl-row group grid grid-cols-[44px_1fr] md:grid-cols-[1fr_56px_1fr] items-center gap-x-4 md:gap-x-0" data-reveal>
+        return `<li class="tl-row group grid grid-cols-[44px_1fr] md:grid-cols-[1fr_56px_1fr] items-center gap-x-4 md:gap-x-0" data-side="${isLeft ? 'left' : 'right'}">
           <div class="order-1 md:order-2 relative z-10 flex justify-center">
             <div class="tl-node w-11 h-11 rounded-full flex items-center justify-center font-mono text-xs font-medium tabular-nums text-lime">${step.num}</div>
           </div>
@@ -2142,6 +2199,7 @@ void main(){
       const rows = Array.from(stepsEl.querySelectorAll('.tl-row'));
       const nodes = Array.from(stepsEl.querySelectorAll('.tl-node'));
       let nodeFractions = [];
+      let spineSpan = 1;
 
       const offsetTopWithin = (el, root) => {
         let y = 0;
@@ -2158,10 +2216,10 @@ void main(){
         const centers = nodes.map((n) => offsetTopWithin(n, track) + n.offsetHeight / 2);
         const startY = centers[0];
         const endY = centers[centers.length - 1];
-        const span = Math.max(1, endY - startY);
+        spineSpan = Math.max(1, endY - startY);
         spine.style.top = `${startY}px`;
-        spine.style.height = `${span}px`;
-        nodeFractions = centers.map((c) => Math.max(0, Math.min(1, (c - startY) / span)));
+        spine.style.height = `${spineSpan}px`;
+        nodeFractions = centers.map((c) => Math.max(0, Math.min(1, (c - startY) / spineSpan)));
       };
 
       const syncReached = (progress) => {
@@ -2171,68 +2229,351 @@ void main(){
         });
       };
 
+      const syncOrb = (progress) => {
+        if (!orb) return;
+        const clamped = Math.max(0, Math.min(1, progress));
+        gsap.set(orb, {
+          y: spineSpan * clamped,
+          opacity: clamped > 0.01 ? (clamped < 0.995 ? 1 : 0.85) : 0,
+        });
+      };
+
       syncSpineGeometry();
       if (typeof ResizeObserver !== 'undefined') {
         new ResizeObserver(syncSpineGeometry).observe(stepsEl);
       }
       window.addEventListener('resize', syncSpineGeometry, { passive: true });
-      return syncReached;
+      return { syncReached, syncOrb };
     })();
 
-    // 5) Animasi & scroll-effect yang agak berat — dilewati kalau reduced motion aktif
+    // 5) Koreografi Scroll GSAP + ScrollTrigger (responsive via matchMedia, 60fps transform/opacity)
     if (!prefersReducedMotion) {
-      // Animasi masuk hero bergaya Terrava (jalan sekali begitu halaman dibuka)
-      gsap.timeline({ defaults: { ease: 'power3.out' } })
-        .from('.hero-title', { opacity: 0, y: 24, duration: 0.72 })
-        .from('.hero-sub', { opacity: 0, y: 14, duration: 0.6 }, '-=0.45')
-        .from('.hero-ctas', { opacity: 0, y: 14, duration: 0.6 }, '-=0.38')
-        .from('.hero-sheet-inner', { opacity: 0, y: 22, duration: 0.72 }, '-=0.42')
-        .from('.hero-terrava-wordmark', { yPercent: 45, opacity: 0, duration: 0.8, ease: 'power3.out' }, '-=0.58');
+      // 5.1) Top reading progress hairline
+      gsap.to('#scrollProgressBar', {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: document.body,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0.15,
+        },
+      });
 
-      // Parallax halus untuk lukisan background fixed & layer pembiasan lensa sepanjang halaman
+      // 5.2) Hero entrance bergaya editorial (masked headline lines + staggered glass sheet lip)
+      gsap.timeline({ defaults: { ease: 'power3.out' } })
+        .from('.hero-line', { yPercent: 112, opacity: 0, duration: 0.86, stagger: 0.11, clearProps: 'transform' })
+        .from('.hero-sub', { opacity: 0, y: 18, duration: 0.65, clearProps: 'transform' }, '-=0.48')
+        .from('.hero-ctas', { opacity: 0, y: 16, scale: 0.96, duration: 0.6, clearProps: 'transform' }, '-=0.42')
+        .from('.hero-sheet-inner > div:first-child, .hero-sheet-inner > nav', { opacity: 0, y: 18, duration: 0.65, stagger: 0.08, clearProps: 'transform' }, '-=0.45')
+        .from('.hero-terrava-wordmark', { yPercent: 68, opacity: 0, duration: 0.96, ease: 'power4.out', clearProps: 'transform' }, '-=0.52');
+
+      // 5.3) Parallax lukisan background + depth drift pada hero copy & wordmark
       gsap.fromTo('.hero-painting-bg',
-        { scale: 1.08, yPercent: -3 },
+        { scale: 1.1, yPercent: -4 },
         {
           scale: 1.0,
-          yPercent: 3,
+          yPercent: 4,
           ease: 'none',
-          scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: true },
+          scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
         }
       );
 
       gsap.to('.hero-center-copy', {
-        y: -26,
-        opacity: 0.45,
+        y: -52,
+        scale: 0.96,
+        opacity: 0.12,
         ease: 'none',
-        scrollTrigger: { trigger: '.hero-section', start: '20% top', end: 'bottom top', scrub: true },
+        scrollTrigger: { trigger: '.hero-section', start: '12% top', end: 'bottom top', scrub: 0.5 },
       });
 
-      // Fade-up buat elemen bertanda data-reveal begitu masuk layar
+      gsap.to('.hero-wordmark-parallax', {
+        y: 22,
+        scale: 0.95,
+        opacity: 0.55,
+        ease: 'none',
+        scrollTrigger: { trigger: '#heroTerravaGlass', start: 'top top', end: 'bottom top', scrub: 0.6 },
+      });
+
+      // 5.4) Architectural hairline dividers drawing in across sections
+      gsap.utils.toArray('.glass-divider').forEach((divider) => {
+        gsap.from(divider, {
+          scaleX: 0,
+          opacity: 0,
+          duration: 0.92,
+          ease: 'power3.out',
+          transformOrigin: 'center center',
+          clearProps: 'transform',
+          scrollTrigger: { trigger: divider, start: 'top 92%', once: true },
+        });
+      });
+
+      // 5.5) Generic editorial fade-up untuk header section & elemen bertanda [data-reveal]
       gsap.utils.toArray('[data-reveal]').forEach((el) => {
-        gsap.from(el, { opacity: 0, y: 34, duration: 0.8, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%' } });
+        gsap.from(el, {
+          opacity: 0,
+          y: 28,
+          duration: 0.8,
+          ease: 'power3.out',
+          clearProps: 'transform',
+          scrollTrigger: { trigger: el, start: 'top 86%', once: true },
+        });
       });
 
-      // Reveal berurutan (stagger) buat grid kartu
-      gsap.utils.toArray('[data-reveal-group]').forEach((group) => {
-        gsap.from(group.children, { opacity: 0, y: 28, duration: 0.7, stagger: 0.12, ease: 'power2.out', scrollTrigger: { trigger: group, start: 'top 85%' } });
+      // 5.6) Responsive scroll choreography via gsap.matchMedia()
+      const mm = gsap.matchMedia();
+
+      // Our Story Bento — staggered narrative, directional metrics + animated tabular counters
+      mm.add({ isDesktop: '(min-width: 1024px)', isCompact: '(max-width: 1023px)' }, (ctx) => {
+        const { isDesktop } = ctx.conditions;
+        const storyBento = document.getElementById('storyBento');
+        if (storyBento) {
+          gsap.from('#storyBento .story-crystal-card', {
+            opacity: 0,
+            y: 36,
+            scale: 0.97,
+            duration: 0.82,
+            stagger: 0.14,
+            ease: 'power3.out',
+            clearProps: 'transform',
+            scrollTrigger: { trigger: '#storyBento .story-narrative-col', start: 'top 84%', once: true },
+          });
+
+          gsap.from('#storyBento .story-crystal-strip', {
+            opacity: 0,
+            x: isDesktop ? 28 : 0,
+            y: isDesktop ? 10 : 26,
+            duration: 0.76,
+            stagger: 0.12,
+            ease: 'power3.out',
+            clearProps: 'transform',
+            scrollTrigger: { trigger: '#storyBento .story-stats-col', start: 'top 84%', once: true },
+          });
+
+          // Tabular counter roll-up (00 -> 02, 06, 01)
+          ScrollTrigger.create({
+            trigger: '#storyBento .story-stats-col',
+            start: 'top 84%',
+            once: true,
+            onEnter: () => {
+              storyBento.querySelectorAll('.story-metric-num[data-count]').forEach((numEl, idx) => {
+                const target = Number(numEl.dataset.count) || 0;
+                const counter = { val: 0 };
+                gsap.to(counter, {
+                  val: target,
+                  duration: 1.05,
+                  delay: idx * 0.12,
+                  ease: 'power2.out',
+                  onUpdate: () => {
+                    numEl.textContent = String(Math.round(counter.val)).padStart(2, '0');
+                  },
+                });
+              });
+            },
+          });
+
+          // Differential layered parallax antar kolom Our Story di desktop
+          if (isDesktop) {
+            gsap.fromTo('#storyBento .story-narrative-col',
+              { y: 14 },
+              {
+                y: -14,
+                ease: 'none',
+                scrollTrigger: { trigger: '#story', start: 'top bottom', end: 'bottom top', scrub: 0.7 },
+              }
+            );
+            gsap.fromTo('#storyBento .story-stats-col',
+              { y: 32 },
+              {
+                y: -26,
+                ease: 'none',
+                scrollTrigger: { trigger: '#story', start: 'top bottom', end: 'bottom top', scrub: 0.7 },
+              }
+            );
+          }
+        }
+
+        // Our Team — Glass stage lift + subtle 3D portrait stack parallax on desktop
+        const teamStage = document.getElementById('teamStageCard');
+        if (teamStage) {
+          gsap.from(teamStage, {
+            opacity: 0,
+            y: 40,
+            scale: 0.97,
+            duration: 0.88,
+            ease: 'power3.out',
+            clearProps: 'transform',
+            scrollTrigger: { trigger: teamStage, start: 'top 84%', once: true },
+          });
+          if (isDesktop) {
+            gsap.fromTo('#teamImageContainer',
+              { y: 18 },
+              {
+                y: -18,
+                ease: 'none',
+                scrollTrigger: { trigger: '#team', start: 'top bottom', end: 'bottom top', scrub: 0.65 },
+              }
+            );
+          }
+        }
+
+        // Video Cinema Stage entrance
+        const vcStage = document.getElementById('vcStage');
+        if (vcStage) {
+          gsap.from(vcStage, {
+            opacity: 0,
+            y: 40,
+            scale: 0.955,
+            duration: 0.9,
+            ease: 'power3.out',
+            clearProps: 'transform',
+            scrollTrigger: { trigger: vcStage, start: 'top 84%', once: true },
+          });
+        }
       });
 
-      // Garis timeline "tumbuh" mengikuti scroll & menyalakan milestone yang terlewati
+      // Timeline Zigzag + Journey Rolling List (breakpoint md = 768px)
+      mm.add({ isMd: '(min-width: 768px)', isSm: '(max-width: 767px)' }, (ctx) => {
+        const { isMd } = ctx.conditions;
+
+        // Zigzag timeline directional reveals (node pop -> twig draw -> card glide -> phase label)
+        gsap.utils.toArray('#timelineSteps .tl-row').forEach((row) => {
+          const isLeft = row.dataset.side === 'left';
+          const node = row.querySelector('.tl-node');
+          const branches = row.querySelectorAll('.tl-branch');
+          const card = row.querySelector('.tl-card');
+          const phase = row.querySelector('.tl-phase');
+
+          const tl = gsap.timeline({
+            scrollTrigger: { trigger: row, start: 'top 85%', once: true },
+          });
+
+          if (node) {
+            tl.from(node, { scale: 0.55, opacity: 0, duration: 0.52, ease: 'back.out(1.8)', clearProps: 'transform' });
+          }
+          if (branches.length) {
+            tl.from(branches, {
+              scaleX: 0,
+              opacity: 0,
+              duration: 0.42,
+              ease: 'power2.out',
+              transformOrigin: isMd ? (isLeft ? 'right center' : 'left center') : 'left center',
+              clearProps: 'transform',
+            }, '-=0.34');
+          }
+          if (card) {
+            tl.from(card, {
+              x: isMd ? (isLeft ? -34 : 34) : 18,
+              y: 16,
+              opacity: 0,
+              duration: 0.72,
+              ease: 'power3.out',
+              clearProps: 'transform',
+            }, '-=0.3');
+          }
+          if (phase && isMd) {
+            tl.from(phase, {
+              x: isLeft ? 20 : -20,
+              opacity: 0,
+              duration: 0.6,
+              ease: 'power3.out',
+              clearProps: 'transform',
+            }, '-=0.52');
+          }
+        });
+
+        // Dokumentasi Foto Rolling List — staggered editorial rows + subtle kinetic drift / mobile image parallax
+        gsap.utils.toArray('#journeyList .journey-row').forEach((row, idx) => {
+          gsap.from(row, {
+            opacity: 0,
+            y: 32,
+            duration: 0.78,
+            ease: 'power3.out',
+            clearProps: 'transform',
+            scrollTrigger: { trigger: row, start: 'top 88%', once: true },
+          });
+
+          if (isMd) {
+            const track = row.querySelector('.journey-title-track');
+            if (track) {
+              const dir = idx % 2 === 0 ? 1 : -1;
+              gsap.fromTo(track,
+                { x: -12 * dir },
+                {
+                  x: 12 * dir,
+                  ease: 'none',
+                  scrollTrigger: { trigger: row, start: 'top bottom', end: 'bottom top', scrub: 0.75 },
+                }
+              );
+            }
+          } else {
+            const mobImg = row.querySelector('.journey-mobile-img');
+            if (mobImg) {
+              gsap.fromTo(mobImg,
+                { scale: 1.09, yPercent: -5 },
+                {
+                  scale: 1.09,
+                  yPercent: 5,
+                  ease: 'none',
+                  scrollTrigger: { trigger: row, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+                }
+              );
+            }
+          }
+        });
+      });
+
+      // 5.7) Garis timeline "tumbuh" mengikuti scroll + traveling orb + nyalakan milestone
       gsap.to('#timelineProgress', {
-        scaleY: 1, ease: 'none',
+        scaleY: 1,
+        ease: 'none',
         scrollTrigger: {
           trigger: '#timelineTrack',
           start: 'top 68%',
           end: 'bottom 68%',
-          scrub: 0.6,
-          onUpdate: (self) => syncTimelineReached(self.progress),
+          scrub: 0.55,
+          onUpdate: (self) => {
+            timelineApi.syncReached(self.progress);
+            timelineApi.syncOrb(self.progress);
+          },
         },
       });
+
+      // 5.8) Reveal berurutan (stagger) buat grid kartu Reflection
+      gsap.utils.toArray('[data-reveal-group]').forEach((group) => {
+        gsap.from(group.children, {
+          opacity: 0,
+          y: 30,
+          duration: 0.76,
+          stagger: 0.11,
+          ease: 'power3.out',
+          clearProps: 'transform',
+          scrollTrigger: { trigger: group, start: 'top 85%', once: true },
+        });
+      });
+
+      // 5.9) Closing stagger untuk footer
+      const footerItems = document.querySelectorAll('#siteFooter [data-footer-item]');
+      if (footerItems.length) {
+        gsap.from(footerItems, {
+          opacity: 0,
+          y: 20,
+          duration: 0.72,
+          stagger: 0.09,
+          ease: 'power3.out',
+          clearProps: 'transform',
+          scrollTrigger: { trigger: '#siteFooter', start: 'top 92%', once: true },
+        });
+      }
+
+      // Sinkronkan ulang posisi ScrollTrigger setelah webfont & asset selesai dimuat
+      document.fonts?.ready?.then(() => ScrollTrigger.refresh());
+      window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
     } else {
       // versi statis buat reduced motion: langsung tampil penuh, gak usah nunggu scroll
       const tp = document.getElementById('timelineProgress');
       if (tp) tp.style.transform = 'scaleY(1)';
-      syncTimelineReached(1);
+      timelineApi.syncReached(1);
     }
 
     if (!prefersReducedMotion && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
@@ -2478,30 +2819,103 @@ void main(){
       const tabs = document.querySelectorAll('.plant-tab');
       if (!panel || !tabs.length || !indicator) return;
 
-      function renderPanel(key) {
+      let plantScrollTriggers = [];
+      let plantRevealed = false;
+
+      function clearPlantScrollTriggers() {
+        plantScrollTriggers.forEach((st) => st.kill());
+        plantScrollTriggers = [];
+      }
+
+      function setupPlantMotion(isSwitch) {
+        if (prefersReducedMotion || typeof ScrollTrigger === 'undefined') return;
+        clearPlantScrollTriggers();
+
+        const photoFrame = panel.querySelector('.plant-photo-frame');
+        const photoImg = panel.querySelector('.plant-photo-img');
+        const details = panel.querySelectorAll('.plant-detail-item');
+
+        const playReveal = () => {
+          plantRevealed = true;
+          const dur = isSwitch ? 0.62 : 0.92;
+          const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+          if (photoFrame) {
+            tl.fromTo(photoFrame,
+              { clipPath: 'inset(10% 0% 0% 0% round 16px)', opacity: 0, y: isSwitch ? 14 : 24 },
+              { clipPath: 'inset(0% 0% 0% 0% round 16px)', opacity: 1, y: 0, duration: dur, clearProps: 'clipPath,transform' }
+            );
+          }
+          if (photoImg) {
+            tl.fromTo(photoImg, { scale: 1.15 }, { scale: 1.06, duration: dur + 0.14, ease: 'power3.out' }, 0);
+          }
+          if (details.length) {
+            tl.fromTo(details,
+              { opacity: 0, y: isSwitch ? 12 : 20 },
+              { opacity: 1, y: 0, duration: isSwitch ? 0.45 : 0.68, stagger: 0.065, clearProps: 'transform' },
+              isSwitch ? 0.08 : 0.14
+            );
+          }
+        };
+
+        if (isSwitch || plantRevealed) {
+          playReveal();
+        } else {
+          if (photoFrame) gsap.set(photoFrame, { opacity: 0, y: 24 });
+          if (photoImg) gsap.set(photoImg, { scale: 1.15 });
+          if (details.length) gsap.set(details, { opacity: 0, y: 20 });
+          plantScrollTriggers.push(
+            ScrollTrigger.create({
+              trigger: panel,
+              start: 'top 84%',
+              once: true,
+              onEnter: playReveal,
+            })
+          );
+        }
+
+        if (photoImg) {
+          const parallaxTween = gsap.fromTo(photoImg,
+            { yPercent: -5 },
+            {
+              yPercent: 5,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: '#plants',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 0.7,
+              },
+            }
+          );
+          if (parallaxTween.scrollTrigger) plantScrollTriggers.push(parallaxTween.scrollTrigger);
+        }
+      }
+
+      function renderPanel(key, isSwitch) {
         const p = PLANTS[key];
         const statusId = key === 'kertas' ? 'plantStatusKertas' : 'plantStatusKrokot';
         panel.innerHTML =
-          '<div class="panel-fade relative rounded-2xl overflow-hidden aspect-[4/5] border border-white/15 shadow-lg">' +
-            '<img src="' + p.photo + '" alt="Foto ' + p.name + ' (' + p.local + ')" class="w-full h-full object-cover object-center" loading="eager" decoding="async">' +
+          '<div class="plant-photo-frame relative rounded-2xl overflow-hidden aspect-[4/5] border border-white/15 shadow-lg">' +
+            '<img src="' + p.photo + '" alt="Foto ' + p.name + ' (' + p.local + ')" class="plant-photo-img w-full h-full object-cover object-center will-change-transform" loading="eager" decoding="async">' +
             '<div class="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/0 to-ink/0"></div>' +
             '<span class="absolute bottom-4 left-4 font-mono text-xs text-cream/90">' + p.species + '</span>' +
           '</div>' +
-          '<div class="panel-fade flex flex-col">' +
-            '<h3 class="font-display font-semibold text-2xl text-cream">' + p.name + '</h3>' +
-            '<p class="text-sm text-cream/70 mt-1 mb-5">' + p.local + '</p>' +
+          '<div class="flex flex-col">' +
+            '<h3 class="plant-detail-item font-display font-semibold text-2xl text-cream">' + p.name + '</h3>' +
+            '<p class="plant-detail-item text-sm text-cream/70 mt-1 mb-5">' + p.local + '</p>' +
             '<ul class="space-y-3 text-sm text-cream/85 leading-relaxed">' +
               p.points.map(function (pt) {
-                return '<li class="flex gap-2.5"><i data-lucide="' + pt.icon + '" class="w-4 h-4 mt-0.5 shrink-0 text-cream/70"></i><span>' + pt.text + '</span></li>';
+                return '<li class="plant-detail-item flex gap-2.5"><i data-lucide="' + pt.icon + '" class="w-4 h-4 mt-0.5 shrink-0 text-cream/70"></i><span>' + pt.text + '</span></li>';
               }).join('') +
             '</ul>' +
-            '<p class="mt-6 text-xs text-cream/70">Dirawat oleh <span class="text-cream/90">' + p.team + '</span></p>' +
-            '<div id="' + statusId + '" class="mt-4 inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md w-fit bg-white/10 text-cream/90 border border-white/15">' +
+            '<p class="plant-detail-item mt-6 text-xs text-cream/70">Dirawat oleh <span class="text-cream/90">' + p.team + '</span></p>' +
+            '<div id="' + statusId + '" class="plant-detail-item mt-4 inline-flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-md w-fit bg-white/10 text-cream/90 border border-white/15">' +
               '<i data-lucide="sprout" class="w-3.5 h-3.5 text-lime"></i> <span class="status-text">' + p.status + '</span>' +
             '</div>' +
           '</div>';
         lucide.createIcons();
         if (typeof loadPlantStatus === 'function') loadPlantStatus();
+        setupPlantMotion(Boolean(isSwitch));
         if (!prefersReducedMotion && typeof ScrollTrigger !== 'undefined') {
           requestAnimationFrame(() => ScrollTrigger.refresh());
         }
@@ -2520,12 +2934,12 @@ void main(){
         btn.addEventListener('click', function () {
           const key = btn.dataset.plant;
           moveIndicator(btn, key);
-          renderPanel(key);
+          renderPanel(key, true);
         });
       });
 
       const firstTab = tabs[0];
-      renderPanel(firstTab.dataset.plant);
+      renderPanel(firstTab.dataset.plant, false);
       requestAnimationFrame(function () { moveIndicator(firstTab, firstTab.dataset.plant); });
       window.addEventListener('resize', function () {
         const active = Array.prototype.find.call(tabs, function (t) { return t.style.color === 'rgb(13, 26, 19)'; }) || firstTab;
@@ -2756,6 +3170,8 @@ void main(){
     function renderJournalList() {
       const svgEl = document.getElementById('journalSvgPath');
       if (allEntries.length === 0) {
+        clearJournalCardTriggers();
+        clearJournalPathTrigger();
         journalGrid.classList.add('hidden');
         journalEmpty.classList.remove('hidden');
         latestUpdateLine.textContent = '';
@@ -2768,6 +3184,8 @@ void main(){
       const filtered = applyJournalFilters();
 
       if (!filtered.length) {
+        clearJournalCardTriggers();
+        clearJournalPathTrigger();
         // preserve SVG element, clear cards only
         journalGrid.querySelectorAll('.journal-pin-card').forEach(c => c.remove());
         journalGrid.style.height = 'auto';
@@ -2801,13 +3219,87 @@ void main(){
       const latestName = latest.profiles?.name || 'Anggota';
       latestUpdateLine.textContent = `Latest: ${plantLabel[latest.plant_id]} is currently ${stageLabel[latest.stage]}. (by ${latestName})`;
 
-      if (!prefersReducedMotion) {
-        gsap.from('#journalGrid [data-id]', { opacity: 0, y: 16, duration: 0.4, stagger: 0.08, ease: 'power2.out' });
-        requestAnimationFrame(() => ScrollTrigger.refresh());
-      }
+      setupJournalScrollEffects();
     }
 
     const JOURNAL_GAP = 44;
+    let journalCardTriggers = [];
+    let journalPathTrigger = null;
+
+    function clearJournalCardTriggers() {
+      journalCardTriggers.forEach((st) => st.kill());
+      journalCardTriggers = [];
+    }
+
+    function clearJournalPathTrigger() {
+      if (journalPathTrigger) {
+        journalPathTrigger.kill();
+        journalPathTrigger = null;
+      }
+    }
+
+    function setupJournalPathDraw() {
+      clearJournalPathTrigger();
+      if (prefersReducedMotion || typeof ScrollTrigger === 'undefined') return;
+      const tracePath = document.getElementById('journalTracePath');
+      if (!tracePath || typeof tracePath.getTotalLength !== 'function') return;
+      const totalLen = tracePath.getTotalLength();
+      if (!totalLen) return;
+      gsap.set(tracePath, { strokeDasharray: totalLen, strokeDashoffset: totalLen });
+      const tween = gsap.to(tracePath, {
+        strokeDashoffset: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#journalGrid',
+          start: 'top 72%',
+          end: 'bottom 68%',
+          scrub: 0.55,
+        },
+      });
+      journalPathTrigger = tween.scrollTrigger || null;
+    }
+
+    function setupJournalScrollEffects() {
+      clearJournalCardTriggers();
+      if (prefersReducedMotion || typeof ScrollTrigger === 'undefined') return;
+      const inners = Array.from(journalGrid.querySelectorAll('.journal-pin-card-inner'));
+      if (!inners.length) {
+        requestAnimationFrame(() => ScrollTrigger.refresh());
+        return;
+      }
+
+      gsap.set(inners, { opacity: 0, y: 40, scale: 0.94 });
+      journalCardTriggers = ScrollTrigger.batch(inners, {
+        interval: 0.1,
+        batchMax: 4,
+        start: 'top 88%',
+        once: true,
+        onEnter: (batch) => {
+          gsap.fromTo(batch,
+            {
+              opacity: 0,
+              y: 40,
+              scale: 0.94,
+              rotation: (i, el) => (el.closest('.jpc-left') ? -2.4 : 2.4),
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              rotation: 0,
+              duration: 0.78,
+              stagger: 0.11,
+              ease: 'power3.out',
+              clearProps: 'transform',
+              overwrite: 'auto',
+            }
+          );
+        },
+      });
+
+      setupJournalPathDraw();
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    }
 
     function layoutJournalStagger() {
       const svgEl = document.getElementById('journalSvgPath');
@@ -2816,6 +3308,7 @@ void main(){
 
       if (window.innerWidth < 768) {
         journalGrid.style.height = 'auto';
+        clearJournalPathTrigger();
         if (svgEl) { svgEl.innerHTML = ''; svgEl.setAttribute('viewBox', '0 0 0 0'); }
         return;
       }
@@ -2827,6 +3320,7 @@ void main(){
       journalGrid.style.height = totalHeight + 'px';
 
       if (cards.length < 2) {
+        clearJournalPathTrigger();
         svgEl.innerHTML = '';
         svgEl.setAttribute('viewBox', '0 0 0 0');
         return;
@@ -2844,11 +3338,23 @@ void main(){
         pathD += ' C ' + cp1x + ' ' + fromY + ', ' + cp2x + ' ' + toY + ', ' + toX + ' ' + toY;
       }
       svgEl.setAttribute('viewBox', '0 0 1000 ' + totalHeight);
-      svgEl.innerHTML = `<path d="${pathD}" stroke="#F7F4EA" stroke-opacity="0.22" stroke-width="1.5" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke" class="journal-dash-path"/>`;
+      svgEl.innerHTML =
+        `<path d="${pathD}" stroke="#F7F4EA" stroke-opacity="0.18" stroke-width="1.5" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke" class="journal-dash-path"/>` +
+        (prefersReducedMotion ? '' : `<path id="journalTracePath" d="${pathD}" stroke="#A6E06A" stroke-opacity="0.62" stroke-width="1.8" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>`);
     }
 
-    // Re-calculate stagger height on resize
-    window.addEventListener('resize', layoutJournalStagger);
+    // Re-calculate stagger height & scroll path on resize (debounced)
+    let journalResizeTimer = 0;
+    window.addEventListener('resize', () => {
+      clearTimeout(journalResizeTimer);
+      journalResizeTimer = setTimeout(() => {
+        layoutJournalStagger();
+        setupJournalPathDraw();
+        if (!prefersReducedMotion && typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.refresh();
+        }
+      }, 160);
+    }, { passive: true });
 
     async function loadJournal() {
       journalErrorState.classList.add('hidden');
@@ -3130,6 +3636,19 @@ void main(){
       }).join('');
 
       const trackRows = Array.from(playlistEl.querySelectorAll('.cinema-index-row'));
+
+      if (!prefersReducedMotion && trackRows.length) {
+        gsap.from(trackRows, {
+          opacity: 0,
+          x: window.innerWidth >= 1024 ? 22 : 0,
+          y: window.innerWidth >= 1024 ? 0 : 16,
+          duration: 0.62,
+          stagger: 0.07,
+          ease: 'power3.out',
+          clearProps: 'transform',
+          scrollTrigger: { trigger: playlistEl, start: 'top 86%', once: true },
+        });
+      }
 
       function renderPlayUi(playing) {
         swapIcon(playToggleBtn, playing ? 'pause' : 'play', 'w-4 h-4 fill-current');
